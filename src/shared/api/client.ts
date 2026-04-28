@@ -14,7 +14,6 @@ export const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// Lazy import to avoid circular dep: client → store → client
 const getAuthStore = () =>
   require('../../entities/auth/model/store').useAuthStore;
 

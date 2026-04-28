@@ -1,0 +1,2191 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Payment Service",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Create Payment",
+        "operationId": "create_payment_api_v1_payments_post",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "List User Payments",
+        "operationId": "list_user_payments_api_v1_payments_get",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PaymentStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "order_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/{payment_id}": {
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Get Payment",
+        "operationId": "get_payment_api_v1_payments__payment_id__get",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/{payment_id}/refund": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Refund Payment",
+        "operationId": "refund_payment_api_v1_payments__payment_id__refund_post",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/PaymentRefundRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": " "
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/promo/validate": {
+      "post": {
+        "tags": [
+          "Promo Codes"
+        ],
+        "summary": "Validate Promo",
+        "operationId": "validate_promo_api_v1_promo_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromoValidateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoValidateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/promo-codes": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Create Promo Code",
+        "operationId": "create_promo_code_api_v1_admin_promo_codes_post",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromoCodeCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoCodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "List Promo Codes",
+        "operationId": "list_promo_codes_api_v1_admin_promo_codes_get",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Is Active"
+            }
+          },
+          {
+            "name": "discount_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/DiscountType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Discount Type"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/promo-codes/{promo_id}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get Promo Code",
+        "operationId": "get_promo_code_api_v1_admin_promo_codes__promo_id__get",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Promo Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoCodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update Promo Code",
+        "operationId": "update_promo_code_api_v1_admin_promo_codes__promo_id__patch",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Promo Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromoCodePatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoCodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Delete Promo Code",
+        "operationId": "delete_promo_code_api_v1_admin_promo_codes__promo_id__delete",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Promo Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/promo-codes/{promo_id}/statistics": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get Promo Code Statistics",
+        "operationId": "get_promo_code_statistics_api_v1_admin_promo_codes__promo_id__statistics_get",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Promo Id"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/StatsPeriod",
+              "default": "all"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoCodeStatistics"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/statistics/overview": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get Overview Statistics",
+        "operationId": "get_overview_statistics_api_v1_admin_statistics_overview_get",
+        "security": [
+          {
+            "X-User-ID": []
+          },
+          {
+            "X-User-Role": []
+          },
+          {
+            "X-User-Staff-Role": []
+          },
+          {
+            "X-User-Email": []
+          },
+          {
+            "X-User-Is-Active": []
+          },
+          {
+            "X-User-Is-Verified": []
+          },
+          {
+            "X-User-Venue-ID": []
+          },
+          {
+            "X-Request-ID": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From Date"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewStatistics"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/{gateway}": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Receive Webhook",
+        "operationId": "receive_webhook_api_v1_webhooks__gateway__post",
+        "parameters": [
+          {
+            "name": "gateway",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "bank_card",
+                "sbp"
+              ],
+              "type": "string",
+              "title": "Gateway"
+            }
+          },
+          {
+            "name": "X-Gateway-Signature",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Gateway-Signature"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DiscountType": {
+        "type": "string",
+        "enum": [
+          "fixed",
+          "percent"
+        ],
+        "title": "DiscountType"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthChecks": {
+        "properties": {
+          "database": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "failed"
+            ],
+            "title": "Database"
+          },
+          "cache": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ok",
+                  "failed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cache"
+          }
+        },
+        "type": "object",
+        "required": [
+          "database"
+        ],
+        "title": "HealthChecks"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "unhealthy"
+            ],
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "checks": {
+            "$ref": "#/components/schemas/HealthChecks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "checks"
+        ],
+        "title": "HealthResponse"
+      },
+      "OverviewPeriod": {
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Date"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Date"
+          }
+        },
+        "type": "object",
+        "title": "OverviewPeriod"
+      },
+      "OverviewStatistics": {
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/OverviewPeriod"
+          },
+          "payments": {
+            "$ref": "#/components/schemas/PaymentOverviewStatistics"
+          },
+          "promo_codes": {
+            "$ref": "#/components/schemas/PromoCodesOverviewStatistics"
+          },
+          "payment_methods": {
+            "items": {
+              "$ref": "#/components/schemas/PaymentMethodStatistics"
+            },
+            "type": "array",
+            "title": "Payment Methods"
+          }
+        },
+        "type": "object",
+        "required": [
+          "period",
+          "payments",
+          "promo_codes",
+          "payment_methods"
+        ],
+        "title": "OverviewStatistics"
+      },
+      "PaginatedResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
+        ],
+        "title": "PaginatedResponse"
+      },
+      "PaymentCreateRequest": {
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Order Id"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Amount"
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3,
+            "title": "Currency",
+            "default": "RUB"
+          },
+          "payment_method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "transaction_id": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Transaction Id"
+          },
+          "promo_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Promo Code"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "order_id",
+          "amount",
+          "payment_method",
+          "transaction_id"
+        ],
+        "title": "PaymentCreateRequest"
+      },
+      "PaymentMethod": {
+        "type": "string",
+        "enum": [
+          "bank_card",
+          "sbp"
+        ],
+        "title": "PaymentMethod"
+      },
+      "PaymentMethodStatistics": {
+        "properties": {
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "method",
+          "count",
+          "amount"
+        ],
+        "title": "PaymentMethodStatistics"
+      },
+      "PaymentOverviewStatistics": {
+        "properties": {
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count"
+          },
+          "succeeded_count": {
+            "type": "integer",
+            "title": "Succeeded Count"
+          },
+          "failed_count": {
+            "type": "integer",
+            "title": "Failed Count"
+          },
+          "refunded_count": {
+            "type": "integer",
+            "title": "Refunded Count"
+          },
+          "total_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total Amount"
+          },
+          "total_refunded_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total Refunded Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_count",
+          "succeeded_count",
+          "failed_count",
+          "refunded_count",
+          "total_amount",
+          "total_refunded_amount"
+        ],
+        "title": "PaymentOverviewStatistics"
+      },
+      "PaymentRefundRequest": {
+        "properties": {
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "title": "PaymentRefundRequest"
+      },
+      "PaymentResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "order_id": {
+            "type": "integer",
+            "title": "Order Id"
+          },
+          "transaction_id": {
+            "type": "string",
+            "title": "Transaction Id"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount"
+          },
+          "refunded_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Refunded Amount"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "payment_method": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PaymentMethod"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "promo_code_applied": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Promo Code Applied"
+          },
+          "discount_amount": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Discount Amount"
+          },
+          "failure_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Failure Reason"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "paid_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paid At"
+          },
+          "refunded_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refunded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "order_id",
+          "transaction_id",
+          "amount",
+          "refunded_amount",
+          "currency",
+          "status",
+          "payment_method",
+          "created_at"
+        ],
+        "title": "PaymentResponse"
+      },
+      "PaymentStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "succeeded",
+          "failed",
+          "refunded",
+          "partially_refunded"
+        ],
+        "title": "PaymentStatus"
+      },
+      "PromoCodeCreateRequest": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 50,
+            "pattern": "^[A-Z0-9_-]+$",
+            "title": "Code"
+          },
+          "discount_type": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discount_value": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Discount Value"
+          },
+          "min_order_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Min Order Amount",
+            "default": "0.00"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until"
+          },
+          "max_usages_per_user": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Usages Per User"
+          },
+          "total_max_usages": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Max Usages"
+          },
+          "rules_json": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Rules Json"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "discount_type",
+          "discount_value"
+        ],
+        "title": "PromoCodeCreateRequest"
+      },
+      "PromoCodePatchRequest": {
+        "properties": {
+          "discount_value": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Discount Value"
+          },
+          "min_order_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Order Amount"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until"
+          },
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Active"
+          },
+          "max_usages_per_user": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Usages Per User"
+          },
+          "total_max_usages": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Max Usages"
+          },
+          "rules_json": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rules Json"
+          }
+        },
+        "type": "object",
+        "title": "PromoCodePatchRequest"
+      },
+      "PromoCodeResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "discount_type": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discount_value": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Discount Value"
+          },
+          "min_order_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Min Order Amount"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "max_usages_per_user": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Usages Per User"
+          },
+          "total_max_usages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Max Usages"
+          },
+          "current_usages": {
+            "type": "integer",
+            "title": "Current Usages"
+          },
+          "rules_json": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Rules Json"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "discount_type",
+          "discount_value",
+          "min_order_amount",
+          "valid_until",
+          "is_active",
+          "max_usages_per_user",
+          "total_max_usages",
+          "current_usages",
+          "rules_json",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PromoCodeResponse"
+      },
+      "PromoCodeStatistics": {
+        "properties": {
+          "promo_code_id": {
+            "type": "string",
+            "title": "Promo Code Id"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "total_usages": {
+            "type": "integer",
+            "title": "Total Usages"
+          },
+          "total_discount_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total Discount Amount"
+          },
+          "total_order_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total Order Amount"
+          },
+          "unique_users": {
+            "type": "integer",
+            "title": "Unique Users"
+          },
+          "usage_by_period": {
+            "items": {
+              "$ref": "#/components/schemas/PromoUsagePeriodEntry"
+            },
+            "type": "array",
+            "title": "Usage By Period"
+          },
+          "recent_usages": {
+            "items": {
+              "$ref": "#/components/schemas/PromoUsageEntry"
+            },
+            "type": "array",
+            "title": "Recent Usages"
+          },
+          "conversion_rate": {
+            "type": "number",
+            "title": "Conversion Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "promo_code_id",
+          "code",
+          "total_usages",
+          "total_discount_amount",
+          "total_order_amount",
+          "unique_users",
+          "usage_by_period",
+          "recent_usages",
+          "conversion_rate"
+        ],
+        "title": "PromoCodeStatistics"
+      },
+      "PromoCodesOverviewStatistics": {
+        "properties": {
+          "active_count": {
+            "type": "integer",
+            "title": "Active Count"
+          },
+          "inactive_count": {
+            "type": "integer",
+            "title": "Inactive Count"
+          },
+          "total_usages": {
+            "type": "integer",
+            "title": "Total Usages"
+          },
+          "total_discount_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total Discount Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "active_count",
+          "inactive_count",
+          "total_usages",
+          "total_discount_amount"
+        ],
+        "title": "PromoCodesOverviewStatistics"
+      },
+      "PromoUsageEntry": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "order_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Order Id"
+          },
+          "payment_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payment Id"
+          },
+          "discount_applied": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Discount Applied"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "order_id",
+          "payment_id",
+          "discount_applied",
+          "created_at"
+        ],
+        "title": "PromoUsageEntry"
+      },
+      "PromoUsagePeriodEntry": {
+        "properties": {
+          "period": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Period"
+          },
+          "usages": {
+            "type": "integer",
+            "title": "Usages"
+          },
+          "discount_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Discount Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "period",
+          "usages",
+          "discount_amount"
+        ],
+        "title": "PromoUsagePeriodEntry"
+      },
+      "PromoValidateRequest": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Code"
+          },
+          "order_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Order Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "order_amount"
+        ],
+        "title": "PromoValidateRequest"
+      },
+      "PromoValidateResponse": {
+        "properties": {
+          "is_valid": {
+            "type": "boolean",
+            "title": "Is Valid"
+          },
+          "discount_type": {
+            "$ref": "#/components/schemas/DiscountType"
+          },
+          "discount_value": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Discount Value"
+          },
+          "discount_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Discount Amount"
+          },
+          "final_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Final Amount"
+          },
+          "min_order_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Min Order Amount"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until"
+          },
+          "usages_left": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usages Left"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_valid",
+          "discount_type",
+          "discount_value",
+          "discount_amount",
+          "final_amount",
+          "min_order_amount"
+        ],
+        "title": "PromoValidateResponse"
+      },
+      "StatsPeriod": {
+        "type": "string",
+        "enum": [
+          "day",
+          "week",
+          "month",
+          "all"
+        ],
+        "title": "StatsPeriod"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WebhookResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "WebhookResponse"
+      }
+    },
+    "securitySchemes": {
+      "X-User-ID": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-ID"
+      },
+      "X-User-Role": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Role"
+      },
+      "X-User-Staff-Role": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Staff-Role"
+      },
+      "X-User-Email": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Email"
+      },
+      "X-User-Is-Active": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Is-Active"
+      },
+      "X-User-Is-Verified": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Is-Verified"
+      },
+      "X-User-Venue-ID": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Venue-ID"
+      },
+      "X-Request-ID": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Request-ID"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/payments"
+    }
+  ]
+}

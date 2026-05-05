@@ -13,6 +13,10 @@ export const styles = StyleSheet.create({
   cardCompact: {
     maxWidth: 260,
   },
+  cardHorizontal: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+  },
   image: {
     width: '100%',
     aspectRatio: 1,
@@ -22,6 +26,10 @@ export const styles = StyleSheet.create({
   },
   imageCompact: {
     aspectRatio: 4 / 3,
+  },
+  imageHorizontal: {
+    width: 120,
+    aspectRatio: 1,
   },
   body: {
     flex: 1,

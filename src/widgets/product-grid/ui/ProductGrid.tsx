@@ -18,11 +18,11 @@ export interface ProductGridProps {
   ListHeaderComponent?: React.ReactElement | null;
 }
 
-function resolveColumns(isWeb: boolean, isAtLeast: (k: 'sm'|'md'|'lg'|'xl') => boolean): number {
-  if (!isWeb) return 2;
-  if (isAtLeast('lg')) return 4;
-  if (isAtLeast('md')) return 3;
-  return 2;
+function resolveColumns(isAtLeast: (k: 'sm'|'md'|'lg'|'xl') => boolean): number {
+  if (isAtLeast('xl')) return 4;
+  if (isAtLeast('lg')) return 3;
+  if (isAtLeast('md')) return 2;
+  return 1;
 }
 
 export const ProductGrid = ({
@@ -34,8 +34,9 @@ export const ProductGrid = ({
   ListHeaderComponent,
 }: ProductGridProps) => {
   const { t } = useTranslation('catalog');
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const numColumns = resolveColumns(isWeb, isAtLeast);
+  const { isAtLeast } = useBreakpoint();
+  const numColumns = resolveColumns(isAtLeast);
+  const horizontal = numColumns === 1;
 
   if (isLoading) {
     return (
@@ -61,6 +62,7 @@ export const ProductGrid = ({
             product={product}
             onPressDetails={onPressDetails}
             quantitySlot={renderQuantitySlot(item, product)}
+            horizontal={horizontal}
           />
         );
       }}

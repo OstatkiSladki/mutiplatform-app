@@ -1,0 +1,20 @@
+export const ruCommon = {
+  back: 'Назад',
+  cancel: 'Отмена',
+  save: 'Сохранить',
+  retry: 'Повторить',
+  loading: 'Загрузка…',
+  open: 'Открыто',
+  closed: 'Закрыто',
+  cartA11y: 'Корзина',
+  mapPlaceholder: 'Карта появится позже',
+  tabs: {
+    home: 'Главная',
+    cart: 'Корзина',
+    orders: 'Заказы',
+    profile: 'Профиль',
+    businessDashboard: 'Кабинет',
+  },
+  profileFallback: 'Профиль',
+  brand: 'Остатки Сладки',
+} as const;

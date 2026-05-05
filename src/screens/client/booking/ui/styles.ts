@@ -29,8 +29,32 @@ export const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: theme.spacing[3],
-    paddingBottom: theme.spacing[10],
     gap: theme.spacing[3],
+  },
+  scrollContentMobile: {
+    paddingBottom: 120,
+  },
+  scrollContentDesktop: {
+    paddingBottom: theme.spacing[6],
+    maxWidth: theme.layout.containerMaxWidth,
+    width: '100%',
+    alignSelf: 'center',
+  },
+  bodyWrap: {
+    flex: 1,
+  },
+  layoutRow: {
+    flexDirection: 'row',
+    gap: theme.spacing[5],
+    alignItems: 'flex-start',
+  },
+  mainCol: {
+    flex: 1,
+    gap: theme.spacing[3],
+  },
+  summaryCol: {
+    width: 360,
+    flexShrink: 0,
   },
   section: {
     backgroundColor: theme.colors.neutral.white,

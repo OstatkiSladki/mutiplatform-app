@@ -12,12 +12,10 @@ import {
   selectVenueTotal,
   useCartStore,
 } from '../../../../entities/order';
-import { Button } from '../../../../shared/ui/button';
 import { Icon } from '../../../../shared/ui/icon';
 import { Loader } from '../../../../shared/ui/loader';
 import { useBreakpoint } from '../../../../shared/lib/responsive';
 import { theme } from '../../../../shared/config/theme';
-import { formatPrice } from '../../../../shared/lib/format';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { SurpriseBoxCard } from '../../../../widgets/surprise-box-card';
 import {
@@ -33,6 +31,7 @@ import {
 } from '../../../../features/payment';
 import { OrderItemsList } from './OrderItemsList';
 import { PriceBreakdown } from './PriceBreakdown';
+import { CheckoutSummary } from './CheckoutSummary';
 import { styles } from './styles';
 
 type BookingRoute = RouteProp<ClientStackParamList, 'Booking'>;
@@ -46,7 +45,8 @@ export const BookingScreen = () => {
   const { venueId } = route.params;
 
   const venueQuery = useVenue(venueId);
-  const { isAtLeast } = useBreakpoint();
+  const { isAtLeast, isWeb } = useBreakpoint();
+  const isDesktop = isWeb && isAtLeast('md');
   const upsellColumns = isAtLeast('lg') ? 3 : isAtLeast('md') ? 2 : 1;
   const upsellOffersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 3 });
 
@@ -137,63 +137,95 @@ export const BookingScreen = () => {
         <Text style={styles.topTitle}>{t('title')}</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{venue.name}</Text>
-        </View>
+      <View style={styles.bodyWrap}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContent,
+            isDesktop ? styles.scrollContentDesktop : styles.scrollContentMobile,
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={isDesktop ? styles.layoutRow : null}>
+            <View style={isDesktop ? styles.mainCol : null}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>{venue.name}</Text>
+              </View>
 
-        <CheckoutForm
-          slot={slot}
-          onChangeSlot={setSlot}
-          address={venue.address}
-          amount={subtotal}
-          appliedPromo={appliedPromo}
-          onApplyPromo={setAppliedPromo}
-        />
+              <CheckoutForm
+                slot={slot}
+                onChangeSlot={setSlot}
+                address={venue.address}
+                amount={subtotal}
+                appliedPromo={appliedPromo}
+                onApplyPromo={setAppliedPromo}
+              />
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('yourOrder')}</Text>
-          <OrderItemsList
-            items={cart.items}
-            onChangeQuantity={(productId, quantity) =>
-              setQuantity(venueId, productId, quantity)
-            }
-          />
-        </View>
-
-        <PriceBreakdown
-          subtotal={subtotal}
-          serviceFee={fee}
-          discount={discount}
-          total={total}
-        />
-
-        {upsellOffersQuery.data?.items?.length ? (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('upsellTitle')}</Text>
-            <View
-              style={[
-                styles.upsellGrid,
-                upsellColumns === 1 ? styles.upsellGridStack : styles.upsellGridRow,
-              ]}
-            >
-              {upsellOffersQuery.data.items.slice(0, upsellColumns).map((offer) => (
-                <SurpriseBoxCard
-                  key={offer.id}
-                  offer={offer}
-                  venueName={venueQuery.data?.name ?? ''}
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>{t('yourOrder')}</Text>
+                <OrderItemsList
+                  items={cart.items}
+                  onChangeQuantity={(productId, quantity) =>
+                    setQuantity(venueId, productId, quantity)
+                  }
                 />
-              ))}
-            </View>
-          </View>
-        ) : null}
+              </View>
 
-        <Button
-          title={t('payCtaWithAmount', { amount: formatPrice(total) })}
-          onPress={openPayment}
-          disabled={total === 0}
-        />
-      </ScrollView>
+              {!isDesktop ? (
+                <PriceBreakdown
+                  subtotal={subtotal}
+                  serviceFee={fee}
+                  discount={discount}
+                  total={total}
+                />
+              ) : null}
+
+              {upsellOffersQuery.data?.items?.length ? (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>{t('upsellTitle')}</Text>
+                  <View
+                    style={[
+                      styles.upsellGrid,
+                      upsellColumns === 1 ? styles.upsellGridStack : styles.upsellGridRow,
+                    ]}
+                  >
+                    {upsellOffersQuery.data.items.slice(0, upsellColumns).map((offer) => (
+                      <SurpriseBoxCard
+                        key={offer.id}
+                        offer={offer}
+                        venueName={venueQuery.data?.name ?? ''}
+                      />
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+            </View>
+
+            {isDesktop ? (
+              <View style={styles.summaryCol}>
+                <CheckoutSummary
+                  mode="desktop"
+                  subtotal={subtotal}
+                  serviceFee={fee}
+                  discount={discount}
+                  total={total}
+                  onPay={openPayment}
+                />
+              </View>
+            ) : null}
+          </View>
+        </ScrollView>
+
+        {!isDesktop ? (
+          <CheckoutSummary
+            mode="mobile-bar"
+            subtotal={subtotal}
+            serviceFee={fee}
+            discount={discount}
+            total={total}
+            onPay={openPayment}
+          />
+        ) : null}
+      </View>
 
       <PaymentBottomSheet
         ref={sheetRef}

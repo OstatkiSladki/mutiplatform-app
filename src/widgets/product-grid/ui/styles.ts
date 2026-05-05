@@ -10,12 +10,18 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     ...theme.shadows.tight[2],
   },
+  cardCompact: {
+    maxWidth: 260,
+  },
   image: {
     width: '100%',
     aspectRatio: 1,
     backgroundColor: theme.colors.primary[10],
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  imageCompact: {
+    aspectRatio: 4 / 3,
   },
   body: {
     padding: theme.spacing[3],
@@ -47,6 +53,9 @@ export const styles = StyleSheet.create({
   list: {
     paddingHorizontal: theme.spacing[2],
     paddingBottom: theme.spacing[10],
+    width: '100%',
+    maxWidth: theme.layout.containerMaxWidth,
+    alignSelf: 'center',
   },
   emptyWrapper: {
     paddingTop: theme.spacing[6],

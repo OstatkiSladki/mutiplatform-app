@@ -44,6 +44,7 @@ export const ClientTabs = () => {
       tabBar={useWebHeader ? renderWebHeader : undefined}
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarPosition: useWebHeader ? 'top' : 'bottom',
         tabBarActiveTintColor: theme.colors.primary[100],
         tabBarInactiveTintColor: theme.colors.neutral[5],
         tabBarLabel: t(tabLabelKeys[route.name]),

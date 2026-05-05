@@ -4,6 +4,9 @@ import { theme } from '../../../../shared/config/theme';
 export const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: theme.spacing[8],
+    width: '100%',
+    maxWidth: theme.layout.containerMaxWidth,
+    alignSelf: 'center',
   },
   section: {
     paddingHorizontal: theme.spacing[4],
@@ -49,12 +52,14 @@ export const styles = StyleSheet.create({
   },
   surpriseCell2: {
     flexBasis: '48%',
-    flexGrow: 1,
+    flexGrow: 0,
+    flexShrink: 1,
     minWidth: 0,
   },
   surpriseCell3: {
     flexBasis: '31%',
-    flexGrow: 1,
+    flexGrow: 0,
+    flexShrink: 1,
     minWidth: 0,
   },
 });

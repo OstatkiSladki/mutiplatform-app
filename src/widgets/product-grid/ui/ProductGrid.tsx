@@ -36,7 +36,6 @@ export const ProductGrid = ({
   const { t } = useTranslation('catalog');
   const { isAtLeast } = useBreakpoint();
   const numColumns = resolveColumns(isAtLeast);
-  const horizontal = numColumns === 1;
 
   if (isLoading) {
     return (
@@ -62,7 +61,6 @@ export const ProductGrid = ({
             product={product}
             onPressDetails={onPressDetails}
             quantitySlot={renderQuantitySlot(item, product)}
-            horizontal={horizontal}
           />
         );
       }}

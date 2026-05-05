@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { tokenStorage } from '../../../shared/lib/storage';
 import type { UserProfileResponse } from './types';
 
 interface AuthState {
@@ -10,22 +11,33 @@ interface AuthState {
 
 interface AuthActions {
   setUser: (user: UserProfileResponse, accessToken?: string) => void;
+  setAccessToken: (accessToken: string | null) => void;
   clearAuth: () => void;
   setInitializing: (value: boolean) => void;
 }
 
-export const useAuthStore = create<AuthState & AuthActions>()((set) => ({
+export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
   user: null,
   isAuthenticated: false,
   isInitializing: true,
   accessToken: null,
 
-  setUser: (user, accessToken) =>
-    set({ user, isAuthenticated: true, accessToken: accessToken ?? null }),
+  setUser: (user, accessToken) => {
+    const token = accessToken ?? get().accessToken;
+    set({ user, isAuthenticated: true, accessToken: token });
+    if (accessToken) tokenStorage.save(accessToken);
+  },
 
-  clearAuth: () =>
-    set({ user: null, isAuthenticated: false, accessToken: null }),
+  setAccessToken: (accessToken) => {
+    set({ accessToken });
+    if (accessToken) tokenStorage.save(accessToken);
+    else tokenStorage.clear();
+  },
 
-  setInitializing: (value) =>
-    set({ isInitializing: value }),
+  clearAuth: () => {
+    set({ user: null, isAuthenticated: true, accessToken: null });
+    tokenStorage.clear();
+  },
+
+  setInitializing: (value) => set({ isInitializing: value }),
 }));

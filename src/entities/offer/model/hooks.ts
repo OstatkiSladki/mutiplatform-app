@@ -1,15 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { offerApi } from '../api/offer-api';
 import type { OfferCreate, OfferListParams, OfferUpdate } from './types';
+import { withMockFallback } from '../../../shared/dev/with-mock-fallback';
+import { MOCK_OFFER_LIST_RESPONSE } from '../../../shared/dev/mocks';
 
 export const useOfferList = (params?: OfferListParams) =>
-  useQuery({
-    queryKey: ['offers', 'list', params ?? {}],
-    queryFn: async () => {
-      const { data } = await offerApi.list(params);
-      return data;
-    },
-  });
+  withMockFallback(
+    useQuery({
+      queryKey: ['offers', 'list', params ?? {}],
+      queryFn: async () => {
+        const { data } = await offerApi.list(params);
+        return data;
+      },
+    }),
+    MOCK_OFFER_LIST_RESPONSE,
+  );
 
 export const useOffer = (id: number) =>
   useQuery({

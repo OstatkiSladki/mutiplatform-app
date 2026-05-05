@@ -34,7 +34,11 @@ export const useLogout = () => {
   });
 };
 
-export const useGetMe = () =>
+interface UseGetMeOptions {
+  enabled?: boolean;
+}
+
+export const useGetMe = ({ enabled = true }: UseGetMeOptions = {}) =>
   useQuery({
     queryKey: ['auth', 'me'],
     queryFn: async () => {
@@ -43,4 +47,5 @@ export const useGetMe = () =>
     },
     retry: false,
     staleTime: Infinity,
+    enabled,
   });

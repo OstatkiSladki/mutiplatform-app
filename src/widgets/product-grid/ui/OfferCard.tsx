@@ -13,7 +13,6 @@ export interface OfferCardProps {
   product?: Product;
   onPressDetails: (offer: Offer, product?: Product) => void;
   quantitySlot: ReactNode;
-  horizontal?: boolean;
 }
 
 const resolveDisplayName = (offer: Offer, product?: Product): string => {
@@ -28,33 +27,23 @@ const resolveWeight = (product?: Product): string | null => {
   return typeof weight === 'string' ? weight : null;
 };
 
-export const OfferCard = ({
-  offer,
-  product,
-  onPressDetails,
-  quantitySlot,
-  horizontal = false,
-}: OfferCardProps) => {
+export const OfferCard = ({ offer, product, onPressDetails, quantitySlot }: OfferCardProps) => {
   const price = parseFloat(offer.current_price) || 0;
   const name = resolveDisplayName(offer, product);
   const weight = resolveWeight(product);
   const { isWeb, isAtLeast } = useBreakpoint();
-  const compact = isWeb && isAtLeast('md') && !horizontal;
+  const compact = isWeb && isAtLeast('md');
 
   return (
-    <View style={[styles.card, compact && styles.cardCompact, horizontal && styles.cardHorizontal]}>
+    <View style={[styles.card, compact && styles.cardCompact]}>
       <TouchableOpacity
-        style={[
-          styles.image,
-          compact && styles.imageCompact,
-          horizontal && styles.imageHorizontal,
-        ]}
+        style={[styles.image, compact && styles.imageCompact]}
         activeOpacity={0.9}
         onPress={() => onPressDetails(offer, product)}
         accessibilityRole="button"
         accessibilityLabel={name}
       >
-        <Icon name="gift" size={horizontal ? 36 : 48} color={theme.colors.primary[100]} />
+        <Icon name="gift" size={48} color={theme.colors.primary[100]} />
       </TouchableOpacity>
       <View style={styles.body}>
         <Text style={styles.name} numberOfLines={2}>

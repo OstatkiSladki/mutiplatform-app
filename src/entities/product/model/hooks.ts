@@ -1,15 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { productApi } from '../api/product-api';
 import type { ProductCreate, ProductListParams, ProductUpdate } from './types';
+import { withMockFallback } from '../../../shared/dev/with-mock-fallback';
+import { MOCK_PRODUCT_LIST_RESPONSE } from '../../../shared/dev/mocks';
 
 export const useProductList = (params?: ProductListParams) =>
-  useQuery({
-    queryKey: ['products', 'list', params ?? {}],
-    queryFn: async () => {
-      const { data } = await productApi.list(params);
-      return data;
-    },
-  });
+  withMockFallback(
+    useQuery({
+      queryKey: ['products', 'list', params ?? {}],
+      queryFn: async () => {
+        const { data } = await productApi.list(params);
+        return data;
+      },
+    }),
+    MOCK_PRODUCT_LIST_RESPONSE,
+  );
 
 export const useProduct = (id: number) =>
   useQuery({

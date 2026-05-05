@@ -68,7 +68,8 @@ export const PromoInput = ({ amount, applied, onApply }: PromoInputProps) => {
               title={t('cancel', { ns: 'common' })}
               variant="neutral"
               onPress={handleClear}
-              density="compact"
+              density="comfortable"
+              style={styles.btn}
             />
           ) : (
             <Button
@@ -76,7 +77,8 @@ export const PromoInput = ({ amount, applied, onApply }: PromoInputProps) => {
               onPress={handleApply}
               isLoading={validate.isPending}
               disabled={!code.trim()}
-              density="compact"
+              density="comfortable"
+              style={styles.btn}
             />
           )}
         </View>
@@ -111,6 +113,10 @@ const styles = StyleSheet.create({
   },
   btnCol: {
     flexShrink: 0,
+  },
+  btn: {
+    minWidth: 140,
+    paddingVertical: theme.spacing[3],
   },
   success: {
     fontFamily: theme.typography.fontFamilies.inter,

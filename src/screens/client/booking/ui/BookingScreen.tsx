@@ -18,6 +18,7 @@ import { useBreakpoint } from '../../../../shared/lib/responsive';
 import { theme } from '../../../../shared/config/theme';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { SurpriseBoxCard } from '../../../../widgets/surprise-box-card';
+import { ClientDesktopHeader } from '../../../../widgets/web-header';
 import {
   type AppliedPromo,
   CheckoutForm,
@@ -47,8 +48,7 @@ export const BookingScreen = () => {
   const venueQuery = useVenue(venueId);
   const { isAtLeast, isWeb } = useBreakpoint();
   const isDesktop = isWeb && isAtLeast('md');
-  const upsellColumns = isAtLeast('lg') ? 3 : isAtLeast('md') ? 2 : 1;
-  const upsellOffersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 3 });
+  const upsellOffersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 6 });
 
   const cart = useCartStore(selectVenueCart(venueId));
   const subtotal = useCartStore(selectVenueTotal(venueId));
@@ -124,6 +124,7 @@ export const BookingScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+      {isDesktop ? <ClientDesktopHeader activeTab="Cart" /> : null}
       <View style={styles.topBar}>
         <TouchableOpacity
           style={styles.backButton}
@@ -182,20 +183,32 @@ export const BookingScreen = () => {
               {upsellOffersQuery.data?.items?.length ? (
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>{t('upsellTitle')}</Text>
-                  <View
-                    style={[
-                      styles.upsellGrid,
-                      upsellColumns === 1 ? styles.upsellGridStack : styles.upsellGridRow,
-                    ]}
-                  >
-                    {upsellOffersQuery.data.items.slice(0, upsellColumns).map((offer) => (
-                      <SurpriseBoxCard
-                        key={offer.id}
-                        offer={offer}
-                        venueName={venueQuery.data?.name ?? ''}
-                      />
-                    ))}
-                  </View>
+                  {isDesktop ? (
+                    <View style={styles.upsellRow}>
+                      {upsellOffersQuery.data.items.slice(0, 2).map((offer) => (
+                        <SurpriseBoxCard
+                          key={offer.id}
+                          offer={offer}
+                          venueName={venueQuery.data?.name ?? ''}
+                        />
+                      ))}
+                    </View>
+                  ) : (
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={styles.upsellCarousel}
+                    >
+                      {upsellOffersQuery.data.items.map((offer) => (
+                        <View key={offer.id} style={styles.upsellSlide}>
+                          <SurpriseBoxCard
+                            offer={offer}
+                            venueName={venueQuery.data?.name ?? ''}
+                          />
+                        </View>
+                      ))}
+                    </ScrollView>
+                  )}
                 </View>
               ) : null}
             </View>

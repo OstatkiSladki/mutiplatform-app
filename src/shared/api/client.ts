@@ -4,7 +4,7 @@ interface RetryableRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000';
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:81';
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -46,6 +46,12 @@ apiClient.interceptors.response.use(
     const original: RetryableRequestConfig = error.config;
 
     if (error.response?.status !== 401 || original._retry) {
+      return Promise.reject(error);
+    }
+
+    if (original.url?.includes('/auth/refresh')) {
+      const store = getAuthStore();
+      store.getState().clearAuth();
       return Promise.reject(error);
     }
 

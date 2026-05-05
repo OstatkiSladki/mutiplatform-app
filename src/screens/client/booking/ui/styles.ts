@@ -115,14 +115,16 @@ export const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes[10],
     color: theme.colors.primary[100],
   },
-  upsellGrid: {
-    gap: theme.spacing[3],
-  },
-  upsellGridRow: {
+  upsellRow: {
     flexDirection: 'row',
     alignItems: 'stretch',
+    gap: theme.spacing[3],
   },
-  upsellGridStack: {
-    flexDirection: 'column',
+  upsellCarousel: {
+    gap: theme.spacing[3],
+    paddingRight: theme.spacing[3],
+  },
+  upsellSlide: {
+    width: 280,
   },
 });

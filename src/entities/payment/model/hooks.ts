@@ -42,8 +42,10 @@ export const useCreatePayment = () => {
       const { data: payment } = await paymentApi.create(data);
       return payment;
     },
-    onSuccess: () => {
+    onSuccess: (payment) => {
       queryClient.invalidateQueries({ queryKey: paymentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ['orders', 'list'] });
+      queryClient.invalidateQueries({ queryKey: ['orders', 'detail', payment.order_id] });
     },
   });
 };

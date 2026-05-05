@@ -8,17 +8,17 @@ import type {
 
 export const authApi = {
   login: (data: LoginRequest) =>
-    apiClient.post<UserProfileResponse>('/api/v1/auth/login', data),
+    apiClient.post<UserProfileResponse>('/auth/api/v1/auth/login', data),
 
   register: (data: RegisterRequest) =>
-    apiClient.post<UserProfileResponse>('/api/v1/auth/register', data),
+    apiClient.post<UserProfileResponse>('/auth/api/v1/auth/register', data),
 
   logout: () =>
-    apiClient.post<MessageResponse>('/api/v1/auth/logout'),
+    apiClient.post<MessageResponse>('/auth/api/v1/auth/logout'),
 
   refresh: () =>
-    apiClient.post<MessageResponse>('/api/v1/auth/refresh'),
+    apiClient.post<MessageResponse>('/auth/api/v1/auth/refresh'),
 
   getMe: () =>
-    apiClient.get<UserProfileResponse>('/api/v1/users/me'),
+    apiClient.get<UserProfileResponse>('/auth/api/v1/users/me'),
 };

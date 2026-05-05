@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { cartApi } from '../api/cart-api';
 import { orderApi } from '../api/order-api';
 import type { CartItemCreate, OrderListParams, OrderStatusUpdate } from './types';
+import { withMockFallback } from '../../../shared/dev/with-mock-fallback';
+import { MOCK_ORDER_LIST_RESPONSE } from '../../../shared/dev/mocks';
 
 const cartKeys = {
   root: ['cart'] as const,
@@ -49,13 +51,16 @@ export const useClearCart = () => {
 };
 
 export const useOrders = (params?: OrderListParams) =>
-  useQuery({
-    queryKey: orderKeys.list(params),
-    queryFn: async () => {
-      const { data } = await orderApi.list(params);
-      return data;
-    },
-  });
+  withMockFallback(
+    useQuery({
+      queryKey: orderKeys.list(params),
+      queryFn: async () => {
+        const { data } = await orderApi.list(params);
+        return data;
+      },
+    }),
+    MOCK_ORDER_LIST_RESPONSE,
+  );
 
 export const useOrder = (id: number) =>
   useQuery({

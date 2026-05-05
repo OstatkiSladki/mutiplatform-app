@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { theme } from '../../../shared/config/theme';
 
 export const styles = StyleSheet.create({
@@ -7,6 +7,8 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.colors.neutral.white,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.neutral[8],
+    zIndex: 10,
+    ...(Platform.OS === 'web' ? ({ position: 'sticky', top: 0 } as object) : null),
   },
   inner: {
     flexDirection: 'row',

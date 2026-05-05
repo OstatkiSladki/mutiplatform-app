@@ -13,6 +13,8 @@ import type {
   VenueListParams,
   VenueUpdate,
 } from './types';
+import { withMockFallback } from '../../../shared/dev/with-mock-fallback';
+import { MOCK_VENUE_LIST_RESPONSE, MOCK_VENUES } from '../../../shared/dev/mocks';
 
 // --- Company hooks ---
 
@@ -78,23 +80,29 @@ export const useDeleteCompany = () => {
 // --- Venue hooks ---
 
 export const useVenueList = (params?: VenueListParams) =>
-  useQuery({
-    queryKey: ['venues', 'list', params ?? {}],
-    queryFn: async () => {
-      const { data } = await venueApi.list(params);
-      return data;
-    },
-  });
+  withMockFallback(
+    useQuery({
+      queryKey: ['venues', 'list', params ?? {}],
+      queryFn: async () => {
+        const { data } = await venueApi.list(params);
+        return data;
+      },
+    }),
+    MOCK_VENUE_LIST_RESPONSE,
+  );
 
 export const useVenue = (id: number) =>
-  useQuery({
-    queryKey: ['venues', 'detail', id],
-    queryFn: async () => {
-      const { data } = await venueApi.getById(id);
-      return data;
-    },
-    enabled: !!id,
-  });
+  withMockFallback(
+    useQuery({
+      queryKey: ['venues', 'detail', id],
+      queryFn: async () => {
+        const { data } = await venueApi.getById(id);
+        return data;
+      },
+      enabled: !!id,
+    }),
+    MOCK_VENUES[0],
+  );
 
 export const useCreateVenue = () => {
   const queryClient = useQueryClient();

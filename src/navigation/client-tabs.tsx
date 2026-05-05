@@ -1,5 +1,8 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useCallback } from 'react';
+import {
+  createBottomTabNavigator,
+  type BottomTabBarProps,
+} from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
 import { ClientTabsParamList } from './types';
 import { HomeScreen } from '../screens/client/home';
@@ -31,10 +34,14 @@ export const ClientTabs = () => {
   const { t } = useTranslation('common');
   const { isWeb, isAtLeast } = useBreakpoint();
   const useWebHeader = isWeb && isAtLeast('md');
+  const renderWebHeader = useCallback(
+    (props: BottomTabBarProps) => <WebHeader {...props} />,
+    [],
+  );
 
   return (
     <Tab.Navigator
-      tabBar={useWebHeader ? WebHeader : undefined}
+      tabBar={useWebHeader ? renderWebHeader : undefined}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: theme.colors.primary[100],

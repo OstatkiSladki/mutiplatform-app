@@ -174,6 +174,15 @@ export const tokens = {
     xl: 24,
     full: 9999,
   },
+  breakpoints: {
+    sm: 640,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
+  },
+  layout: {
+    containerMaxWidth: 1200,
+  },
 } as const;
 
 export const theme = {
@@ -182,6 +191,8 @@ export const theme = {
   typography: tokens.typography,
   spacing: tokens.spacing,
   radius: tokens.radius,
+  breakpoints: tokens.breakpoints,
+  layout: tokens.layout,
 } as const;
 
 export type AppTheme = typeof theme;

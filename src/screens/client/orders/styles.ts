@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[2],
     paddingHorizontal: theme.spacing[3],
     paddingVertical: theme.spacing[2],
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.lg,
     backgroundColor: theme.colors.primary[10],
   },
   pickupBtnText: {

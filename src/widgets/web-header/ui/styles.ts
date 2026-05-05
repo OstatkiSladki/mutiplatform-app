@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[2],
     paddingHorizontal: theme.spacing[4],
     paddingVertical: theme.spacing[2],
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.lg,
   },
   tabActive: {
     backgroundColor: theme.colors.primary[10],

@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.lg,
   },
   small: {
     paddingVertical: theme.spacing[2],

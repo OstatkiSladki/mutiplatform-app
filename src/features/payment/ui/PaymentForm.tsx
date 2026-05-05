@@ -133,7 +133,6 @@ export const PaymentForm = ({
 const styles = StyleSheet.create({
   container: {
     gap: theme.spacing[3],
-    paddingBottom: theme.spacing[5],
   },
   title: {
     fontFamily: theme.typography.fontFamilies.inter,

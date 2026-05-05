@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   TouchableOpacity,
   Text,
@@ -9,12 +8,35 @@ import {
   TouchableOpacityProps,
 } from 'react-native';
 import { theme } from '../../config/theme';
+import { useBreakpoint } from '../../lib/responsive';
+
+export type ButtonSize = 'small' | 'medium' | 'large';
+export type ButtonDensity = 'comfortable' | 'compact';
 
 export interface ButtonProps extends TouchableOpacityProps {
   title: string;
   variant?: 'primary' | 'secondary' | 'neutral';
-  size?: 'small' | 'medium' | 'large';
+  size?: ButtonSize;
   isLoading?: boolean;
+  density?: ButtonDensity;
+}
+
+function effectiveSize(
+  size: ButtonSize,
+  density: ButtonDensity | undefined,
+  isWebDesktop: boolean,
+): ButtonSize {
+  if (density === 'comfortable') return size;
+  if (density === 'compact') {
+    if (size === 'large') return 'medium';
+    if (size === 'medium') return 'small';
+    return 'small';
+  }
+  if (isWebDesktop) {
+    if (size === 'large') return 'medium';
+    if (size === 'medium') return 'small';
+  }
+  return size;
 }
 
 export const Button = ({
@@ -22,10 +44,14 @@ export const Button = ({
   variant = 'primary',
   size = 'medium',
   isLoading = false,
+  density,
   disabled,
   style,
   ...props
 }: ButtonProps) => {
+  const { isWeb, isAtLeast } = useBreakpoint();
+  const sized = effectiveSize(size, density, isWeb && isAtLeast('md'));
+
   const isPrimary = variant === 'primary';
   const isSecondary = variant === 'secondary';
 
@@ -38,12 +64,13 @@ export const Button = ({
     : theme.colors.actionNeutral.default;
 
   const textColor = isPrimary || isSecondary ? theme.colors.neutral.white : theme.colors.neutral[1];
+  const textSizeStyle = sized === 'small' ? styles.textSmall : styles.text;
 
   return (
     <TouchableOpacity
       style={[
         styles.button,
-        styles[size],
+        styles[sized],
         { backgroundColor },
         disabled && styles.disabled,
         style as ViewStyle,
@@ -55,7 +82,7 @@ export const Button = ({
       {isLoading ? (
         <ActivityIndicator color={textColor} />
       ) : (
-        <Text style={[styles.text, { color: textColor } as TextStyle]}>{title}</Text>
+        <Text style={[textSizeStyle, { color: textColor } as TextStyle]}>{title}</Text>
       )}
     </TouchableOpacity>
   );
@@ -87,5 +114,10 @@ const styles = StyleSheet.create({
     fontFamily: theme.typography.fontFamilies.inter,
     fontWeight: '600',
     fontSize: theme.typography.fontSizes[4],
+  },
+  textSmall: {
+    fontFamily: theme.typography.fontFamilies.inter,
+    fontWeight: '600',
+    fontSize: theme.typography.fontSizes[3],
   },
 });

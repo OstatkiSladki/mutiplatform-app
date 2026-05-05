@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
     aspectRatio: 4 / 3,
   },
   body: {
+    flex: 1,
     padding: theme.spacing[3],
     gap: theme.spacing[2],
   },
@@ -43,6 +44,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: theme.spacing[2],
+    marginTop: 'auto',
   },
   price: {
     fontFamily: theme.typography.fontFamilies.inter,

@@ -7,13 +7,16 @@ export const styles = StyleSheet.create({
   },
   listContent: {
     padding: theme.spacing[4],
-    gap: theme.spacing[3],
   },
-  columnWrapper: {
-    gap: theme.spacing[3],
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -theme.spacing[2],
+    marginVertical: -theme.spacing[2],
   },
-  cardCell: {
-    flex: 1,
+  cell: {
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[2],
   },
   title: {
     fontFamily: theme.typography.fontFamilies.inter,

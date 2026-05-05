@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { FlatList, RefreshControl, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +24,7 @@ export const OrdersScreen = () => {
   const sheetRef = useRef<AppBottomSheetRef>(null);
   const { isAtLeast } = useBreakpoint();
   const numColumns = isAtLeast('lg') ? 4 : isAtLeast('md') ? 3 : 2;
+  const cellBasis = `${100 / numColumns}%` as const;
 
   const goHome = useCallback(() => {
     navigation.navigate('ClientTabs', { screen: 'Home' });
@@ -54,19 +55,9 @@ export const OrdersScreen = () => {
           />
         </View>
       ) : (
-        <FlatList
-          key={numColumns}
+        <ScrollView
           style={styles.list}
           contentContainerStyle={styles.listContent}
-          data={orders}
-          keyExtractor={(item) => String(item.id)}
-          numColumns={numColumns}
-          columnWrapperStyle={styles.columnWrapper}
-          renderItem={({ item }) => (
-            <View style={styles.cardCell}>
-              <OrderCard order={item} onPressPickupCode={onPressPickupCode} />
-            </View>
-          )}
           refreshControl={
             <RefreshControl
               refreshing={isFetching}
@@ -74,7 +65,15 @@ export const OrdersScreen = () => {
               tintColor={theme.colors.primary[100]}
             />
           }
-        />
+        >
+          <View style={styles.grid}>
+            {orders.map((item) => (
+              <View key={item.id} style={[styles.cell, { flexBasis: cellBasis }]}>
+                <OrderCard order={item} onPressPickupCode={onPressPickupCode} />
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       )}
 
       <PickupCodeModal

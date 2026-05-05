@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -17,8 +17,7 @@ import { EmptyState } from '../../../../widgets/empty-state';
 import { ClientDesktopHeader } from '../../../../widgets/web-header';
 import { useBreakpoint } from '../../../../shared/lib/responsive';
 import { AddToCartStepper } from '../../../../features/add-to-cart';
-import { ProductDetailsSheet } from '../../../../features/product-details';
-import type { AppBottomSheetRef } from '../../../../shared/ui/bottom-sheet';
+import { ProductDetailsSheet, type ProductDetailsSheetRef } from '../../../../features/product-details';
 import { VenueHeader } from './VenueHeader';
 import { styles } from './styles';
 
@@ -45,14 +44,10 @@ export const VenueScreen = () => {
     return map;
   }, [productsQuery.data]);
 
-  const sheetRef = useRef<AppBottomSheetRef>(null);
-  const [activeOffer, setActiveOffer] = useState<Offer | null>(null);
-  const [activeProduct, setActiveProduct] = useState<Product | undefined>();
+  const sheetRef = useRef<ProductDetailsSheetRef>(null);
 
   const openDetails = useCallback((offer: Offer, product?: Product) => {
-    setActiveOffer(offer);
-    setActiveProduct(product);
-    sheetRef.current?.present();
+    sheetRef.current?.present({ offer, product });
   }, []);
 
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
@@ -124,8 +119,6 @@ export const VenueScreen = () => {
         ref={sheetRef}
         venueId={venueId}
         venueName={venue.name}
-        offer={activeOffer}
-        product={activeProduct}
       />
     </SafeAreaView>
   );

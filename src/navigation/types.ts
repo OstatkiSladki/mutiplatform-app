@@ -1,4 +1,6 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
+import type { Offer } from '../entities/offer';
+import type { Product } from '../entities/product';
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -16,6 +18,12 @@ export type ClientStackParamList = {
   ClientTabs: NavigatorScreenParams<ClientTabsParamList>;
   Venue: { venueId: number };
   Booking: { venueId: number };
+  ProductDetails: {
+    venueId: number;
+    venueName: string;
+    offer: Offer;
+    product?: Product;
+  };
 };
 
 export type BusinessTabsParamList = {

@@ -8,5 +8,7 @@ export { CartScreen } from './client/cart';
 export { OrdersScreen } from './client/orders';
 export { ProfileScreen } from './client/profile';
 export { ProductDetailsScreen } from './client/product-details';
+export { ProfileEditScreen } from './client/profile-edit';
+export { PlaceholderScreen } from './client/placeholder';
 
 export { BusinessDashboardScreen } from './business/dashboard';

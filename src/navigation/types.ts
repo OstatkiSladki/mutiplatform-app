@@ -24,6 +24,11 @@ export type ClientStackParamList = {
     offer: Offer;
     product?: Product;
   };
+  ProfileEdit: undefined;
+  Support: undefined;
+  Addresses: undefined;
+  NotificationsSettings: undefined;
+  About: undefined;
 };
 
 export type BusinessTabsParamList = {

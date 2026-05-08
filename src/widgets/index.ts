@@ -18,3 +18,6 @@ export type { ProductGridProps, OfferCardProps } from './product-grid';
 
 export { CartSummary } from './cart-summary';
 export type { CartSummaryProps } from './cart-summary';
+
+export { AuthRequiredScreen } from './auth-required';
+export type { AuthRequiredScreenProps } from './auth-required';

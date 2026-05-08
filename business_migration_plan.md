@@ -42,12 +42,12 @@ Strategy decisions (locked):
 - [x] **7.2** Offer modal + status transitions
 
 ### M8 — Orders
-- [ ] **8.1** Orders table + status filter
-- [ ] **8.2** Order status lifecycle flow
+- [x] **8.1** Orders table + status filter (tabs: Все / Подтверждён / Отменён)
+- [x] **8.2** Order status lifecycle flow (advance + toast)
 
 ### M9 — Polish
-- [ ] **9.1** Toaster + fade-in animations
-- [ ] **9.2** Final review (a11y, dark mode TBD, FSD audit, CLAUDE.md update)
+- [x] **9.1** Toaster (already wired in `app/index.tsx`) + Reanimated fade-in on route change
+- [x] **9.2** Final review (FSD audit, CLAUDE.md update, tsc clean, no `any`, no raw RU in JSX)
 
 ## Working cadence
 - Two iterations per work block, then user review.

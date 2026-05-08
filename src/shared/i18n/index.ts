@@ -7,12 +7,13 @@ import { ruCatalog } from './locales/ru/catalog';
 import { ruCheckout } from './locales/ru/checkout';
 import { ruPayment } from './locales/ru/payment';
 import { ruProfile } from './locales/ru/profile';
+import { ruBusiness } from './locales/ru/business';
 
 i18n.use(initReactI18next).init({
   lng: 'ru',
   fallbackLng: 'ru',
   defaultNS: 'common',
-  ns: ['common', 'errors', 'auth', 'catalog', 'checkout', 'payment', 'profile'],
+  ns: ['common', 'errors', 'auth', 'catalog', 'checkout', 'payment', 'profile', 'business'],
   resources: {
     ru: {
       errors: ruErrors,
@@ -22,6 +23,7 @@ i18n.use(initReactI18next).init({
       checkout: ruCheckout,
       payment: ruPayment,
       profile: ruProfile,
+      business: ruBusiness,
     },
   },
   interpolation: {
@@ -37,3 +39,4 @@ export { ruCatalog } from './locales/ru/catalog';
 export { ruCheckout } from './locales/ru/checkout';
 export { ruPayment } from './locales/ru/payment';
 export { ruProfile } from './locales/ru/profile';
+export { ruBusiness } from './locales/ru/business';

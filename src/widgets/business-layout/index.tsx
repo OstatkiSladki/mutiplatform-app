@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import type { BusinessStackParamList } from '../../navigation/types';
 import { BusinessSidebar } from './business-sidebar';
 import { BusinessTopbar } from './business-topbar';
@@ -17,7 +18,13 @@ export const BusinessLayout = ({ routeName, children }: BusinessLayoutProps) => 
     <BusinessSidebar activeRoute={routeName} />
     <View style={styles.content}>
       <BusinessTopbar routeName={routeName} />
-      <View style={styles.mainContent}>{children}</View>
+      <Animated.View
+        key={routeName}
+        entering={FadeIn.duration(220)}
+        style={styles.mainContent}
+      >
+        {children}
+      </Animated.View>
     </View>
   </View>
 );

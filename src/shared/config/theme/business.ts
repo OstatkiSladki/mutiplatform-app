@@ -32,6 +32,8 @@ export const businessTokens = {
     border: '#e7e0da',
     input: '#e7e0da',
     ring: '#fa591e',
+    scrim: 'rgba(0,0,0,0.4)',
+    scrimLight: 'rgba(0,0,0,0.18)',
 
     sidebar: {
       background: '#e4ddd8',

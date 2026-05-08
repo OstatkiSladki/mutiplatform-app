@@ -15,7 +15,7 @@ Strategy decisions (locked):
 
 ### M1 — Foundation
 - [x] **1.1** `react-native-svg` installed; `theme.business` sub-theme + this checklist file
-- [ ] **1.2** Block screen + `business` i18n namespace + root-navigator gating
+- [x] **1.2** Block screen + `business` i18n namespace + root-navigator gating
 
 ### M2 — Layout shell
 - [ ] **2.1** `BusinessStack` (4 native-stack routes, empty placeholders)

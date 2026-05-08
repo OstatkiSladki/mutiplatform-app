@@ -47,6 +47,7 @@ export const RegisterScreen = () => {
         password: values.password,
         privacy_policy_accepted: values.privacy_policy_accepted,
       });
+      navigation.getParent()?.goBack();
     } catch (error) {
       Toast.show({ type: 'error', text1: mapAuthError(error, 'register') });
     }

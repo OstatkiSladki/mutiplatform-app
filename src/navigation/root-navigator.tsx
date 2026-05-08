@@ -21,7 +21,7 @@ const BusinessGate = () => {
 };
 
 // TODO(M9): remove before production. Forces business stack for local dev only.
-const DEV_FORCE_BUSINESS = __DEV__;
+const DEV_FORCE_BUSINESS = false;
 
 export const RootNavigator = () => {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -35,15 +35,22 @@ export const RootNavigator = () => {
     );
   }
 
+  if (isAuthenticated && isBusinessUser(user)) {
+    return (
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Business" component={BusinessGate} />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {!isAuthenticated ? (
-        <Stack.Screen name="Auth" component={AuthNavigator} />
-      ) : isBusinessUser(user) ? (
-        <Stack.Screen name="Business" component={BusinessGate} />
-      ) : (
-        <Stack.Screen name="Client" component={ClientStack} />
-      )}
+      <Stack.Screen name="Client" component={ClientStack} />
+      <Stack.Screen
+        name="Auth"
+        component={AuthNavigator}
+        options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+      />
     </Stack.Navigator>
   );
 };

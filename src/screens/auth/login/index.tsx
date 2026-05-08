@@ -32,6 +32,7 @@ export const LoginScreen = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await login.mutateAsync(values);
+      navigation.getParent()?.goBack();
     } catch (error) {
       Toast.show({ type: 'error', text1: mapAuthError(error, 'login') });
     }

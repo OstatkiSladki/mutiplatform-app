@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import { AuthNavigator } from './auth-navigator';
 import { ClientStack } from './client-stack';
-import { BusinessTabs } from './business-tabs';
+import { BusinessStack } from './business-stack';
 import { BusinessBlockedScreen } from '../screens/business/blocked';
 import { useAuthStore } from '../entities/auth/model/store';
 import { useBreakpoint } from '../shared/lib/responsive';
@@ -17,12 +17,23 @@ const isBusinessUser = (user: UserProfileResponse | null): boolean =>
 const BusinessGate = () => {
   const { isWeb, isAtLeast } = useBreakpoint();
   const eligible = isWeb && isAtLeast('md');
-  return eligible ? <BusinessTabs /> : <BusinessBlockedScreen />;
+  return eligible ? <BusinessStack /> : <BusinessBlockedScreen />;
 };
+
+// TODO(M9): remove before production. Forces business stack for local dev only.
+const DEV_FORCE_BUSINESS = __DEV__;
 
 export const RootNavigator = () => {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const user = useAuthStore((s) => s.user);
+
+  if (DEV_FORCE_BUSINESS) {
+    return (
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Business" component={BusinessGate} />
+      </Stack.Navigator>
+    );
+  }
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

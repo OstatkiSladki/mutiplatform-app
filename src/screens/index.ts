@@ -11,4 +11,7 @@ export { ProductDetailsScreen } from './client/product-details';
 export { ProfileEditScreen } from './client/profile-edit';
 export { PlaceholderScreen } from './client/placeholder';
 
-export { BusinessDashboardScreen } from './business/dashboard';
+export { BusinessOverviewScreen } from './business/overview';
+export { BusinessForecastScreen } from './business/forecast';
+export { BusinessOffersScreen } from './business/offers';
+export { BusinessOrdersScreen } from './business/orders';

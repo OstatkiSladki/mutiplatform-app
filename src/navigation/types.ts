@@ -31,12 +31,15 @@ export type ClientStackParamList = {
   About: undefined;
 };
 
-export type BusinessTabsParamList = {
-  Dashboard: undefined;
+export type BusinessStackParamList = {
+  Overview: undefined;
+  Forecast: undefined;
+  Offers: undefined;
+  Orders: undefined;
 };
 
 export type RootStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
   Client: NavigatorScreenParams<ClientStackParamList>;
-  Business: NavigatorScreenParams<BusinessTabsParamList>;
+  Business: NavigatorScreenParams<BusinessStackParamList>;
 };

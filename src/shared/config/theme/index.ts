@@ -174,7 +174,18 @@ export const tokens = {
     xl: 24,
     full: 9999,
   },
+  breakpoints: {
+    sm: 640,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
+  },
+  layout: {
+    containerMaxWidth: 1200,
+  },
 } as const;
+
+import { businessTokens } from './business';
 
 export const theme = {
   colors: tokens.colors,
@@ -182,6 +193,11 @@ export const theme = {
   typography: tokens.typography,
   spacing: tokens.spacing,
   radius: tokens.radius,
+  breakpoints: tokens.breakpoints,
+  layout: tokens.layout,
+  business: businessTokens,
 } as const;
 
 export type AppTheme = typeof theme;
+export { businessTokens } from './business';
+export type { BusinessTheme } from './business';

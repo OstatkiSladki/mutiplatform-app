@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, TextInput, TextInputProps, StyleSheet, Text } from 'react-native';
+import { View, TextInput, TextInputProps, StyleSheet, Text, StyleProp, ViewStyle } from 'react-native';
 import { theme } from '../../config/theme';
 
 export interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-export const Input = ({ label, error, style, ...props }: InputProps) => {
+export const Input = ({ label, error, style, containerStyle, ...props }: InputProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={[

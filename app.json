@@ -25,6 +25,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Приложение использует ваше местоположение, чтобы показать ближайшие заведения."
+        }
+      ]
+    ]
   }
 }

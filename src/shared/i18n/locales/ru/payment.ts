@@ -1,0 +1,23 @@
+export const ruPayment = {
+  title: 'Оплата',
+  method: 'Способ оплаты',
+  methodCard: 'Банковская карта',
+  methodSbp: 'СБП',
+  cardNumber: 'Номер карты',
+  cardExpiry: 'Срок',
+  cardCvc: 'CVC',
+  cardHolder: 'Имя на карте',
+  cardHolderPlaceholder: 'IVAN PETROV',
+  payCta: 'Оплатить',
+  processing: 'Проводим оплату…',
+  success: 'Оплачено',
+  errorGeneric: 'Не удалось провести оплату',
+  errors: {
+    panInvalid: 'Введите 16 цифр',
+    panLuhn: 'Неверный номер карты',
+    expiryInvalid: 'Формат ММ/ГГ',
+    expiryPast: 'Срок истёк',
+    cvcInvalid: '3 или 4 цифры',
+    cardholderShort: 'Минимум 2 символа',
+  },
+} as const;

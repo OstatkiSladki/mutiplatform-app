@@ -9,7 +9,7 @@ export interface CardProps extends ViewProps {
 
 export const Card = ({
   variant = 'elevated',
-  elevation = '2',
+  elevation = 2,
   style,
   children,
   ...props

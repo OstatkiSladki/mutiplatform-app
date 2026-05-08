@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import { useBusinessAppStore } from '../../../entities/business-app/model/store';
 import { showBusinessToast } from '../../../shared/lib/business-toast';
+import { OfferEditModal, useOfferEdit } from '../../../features/business/offer-edit';
 import { PublishedCounter } from './components/published-counter';
 import { OfferTabs, type OfferTabValue } from './components/offer-tabs';
 import { OfferRow } from './components/offer-row';
@@ -11,14 +12,16 @@ import { styles } from './styles';
 
 export const BusinessOffersScreen = () => {
   const { t } = useTranslation('business');
-  const { offers, publishOffer, removeOffer } = useBusinessAppStore(
+  const { offers, publishOffer, removeOffer, updateOffer } = useBusinessAppStore(
     useShallow((state) => ({
       offers: state.offers,
       publishOffer: state.publishOffer,
       removeOffer: state.removeOffer,
+      updateOffer: state.updateOffer,
     }))
   );
   const [tab, setTab] = useState<OfferTabValue>('all');
+  const editor = useOfferEdit();
 
   const filtered = useMemo(
     () => (tab === 'all' ? offers : offers.filter((o) => o.status === tab)),
@@ -47,11 +50,20 @@ export const BusinessOffersScreen = () => {
     showBusinessToast(t('offers.toast.removed'));
   };
 
-  const handleEdit = (_id: string) => {
-    // Stage 7.2 wires this to the edit modal.
+  const handleEdit = (id: string) => {
+    const offer = offers.find((o) => o.id === id);
+    if (offer) editor.open(offer);
+  };
+
+  const handleSave = () => {
+    if (!editor.editing) return;
+    updateOffer(editor.editing.id, { price: editor.form.price, stock: editor.form.stock });
+    showBusinessToast(t('offers.toast.updated', { name: editor.editing.name }));
+    editor.close();
   };
 
   return (
+    <>
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <PublishedCounter label={t('offers.counter')} count={publishedCount} />
 
@@ -87,5 +99,16 @@ export const BusinessOffersScreen = () => {
         ))}
       </View>
     </ScrollView>
+
+    <OfferEditModal
+      offer={editor.editing}
+      form={editor.form}
+      isValid={editor.isValid}
+      onChangePrice={editor.setPrice}
+      onChangeStock={editor.setStock}
+      onCancel={editor.close}
+      onSave={handleSave}
+    />
+    </>
   );
 };

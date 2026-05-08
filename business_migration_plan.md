@@ -39,7 +39,7 @@ Strategy decisions (locked):
 
 ### M7 — Offers
 - [x] **7.1** Offers list with draft/published tabs + inline edit
-- [ ] **7.2** Offer modal + status transitions
+- [x] **7.2** Offer modal + status transitions
 
 ### M8 — Orders
 - [ ] **8.1** Orders table + status filter

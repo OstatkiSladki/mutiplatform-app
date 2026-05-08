@@ -7,6 +7,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { useVenue } from '../../../../entities/venue';
 import { useOfferList } from '../../../../entities/offer';
+import { useAuthStore } from '../../../../entities/auth/model/store';
+import { AuthRequiredScreen } from '../../../../widgets/auth-required';
 import {
   selectVenueCart,
   selectVenueTotal,
@@ -39,6 +41,12 @@ type BookingRoute = RouteProp<ClientStackParamList, 'Booking'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
 export const BookingScreen = () => {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  if (!isAuthenticated) return <AuthRequiredScreen />;
+  return <BookingScreenContent />;
+};
+
+const BookingScreenContent = () => {
   const route = useRoute<BookingRoute>();
   const navigation = useNavigation<Nav>();
   const { t } = useTranslation('checkout');

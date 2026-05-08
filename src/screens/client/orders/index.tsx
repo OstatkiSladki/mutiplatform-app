@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useOrders, type Order } from '../../../entities/order';
 import { EmptyState } from '../../../widgets/empty-state';
+import { AuthRequiredScreen } from '../../../widgets/auth-required';
+import { useAuthStore } from '../../../entities/auth/model/store';
 import { theme } from '../../../shared/config/theme';
 import { useBreakpoint } from '../../../shared/lib/responsive';
 import type { ClientStackParamList } from '../../../navigation/types';
@@ -17,6 +19,12 @@ import { styles } from './styles';
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
 export const OrdersScreen = () => {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  if (!isAuthenticated) return <AuthRequiredScreen />;
+  return <OrdersScreenContent />;
+};
+
+const OrdersScreenContent = () => {
   const { t } = useTranslation('catalog');
   const navigation = useNavigation<Nav>();
   const { data, isFetching, refetch } = useOrders();

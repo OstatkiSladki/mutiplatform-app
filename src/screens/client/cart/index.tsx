@@ -6,10 +6,12 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../../shared/ui/screen';
 import { EmptyState } from '../../../widgets/empty-state';
+import { AuthRequiredScreen } from '../../../widgets/auth-required';
 import {
   useCartStore,
   type DraftVenueCart,
 } from '../../../entities/order';
+import { useAuthStore } from '../../../entities/auth/model/store';
 import { formatPrice } from '../../../shared/lib/format';
 import type { ClientStackParamList } from '../../../navigation/types';
 import { styles } from './styles';
@@ -41,6 +43,7 @@ const aggregate = (cart: DraftVenueCart): CartCardData => {
 export const CartScreen = () => {
   const { t } = useTranslation('catalog');
   const navigation = useNavigation<Nav>();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const rawCarts = useCartStore(useShallow((s) => Object.values(s.carts)));
   const carts = useMemo(() => rawCarts.map(aggregate), [rawCarts]);
@@ -55,6 +58,10 @@ export const CartScreen = () => {
   const goHome = useCallback(() => {
     navigation.navigate('ClientTabs', { screen: 'Home' });
   }, [navigation]);
+
+  if (!isAuthenticated) {
+    return <AuthRequiredScreen />;
+  }
 
   if (carts.length === 0) {
     return (

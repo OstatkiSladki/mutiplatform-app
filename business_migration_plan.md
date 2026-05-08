@@ -18,16 +18,16 @@ Strategy decisions (locked):
 - [x] **1.2** Block screen + `business` i18n namespace + root-navigator gating
 
 ### M2 — Layout shell
-- [ ] **2.1** `BusinessStack` (4 native-stack routes, empty placeholders)
-- [ ] **2.2** `BusinessLayout` widget (sidebar 260px + topbar 42px h1)
+- [x] **2.1** `BusinessStack` (4 native-stack routes, empty placeholders)
+- [x] **2.2** `BusinessLayout` widget (sidebar 260px + topbar 42px h1)
 
 ### M3 — Business UI atoms
-- [ ] **3.1** `b-card`, `b-button`, `b-badge`, `status-pill`
-- [ ] **3.2** `b-table`, `b-dialog`, `b-tabs`, `b-select`, `b-input`, `b-skeleton`
+- [x] **3.1** `b-card`, `b-button`, `b-badge`, `status-pill`
+- [x] **3.2** `b-table`, `b-dialog`, `b-tabs`, `b-select`, `b-input`, `b-skeleton`
 
 ### M4 — Mock data + store
-- [ ] **4.1** Business mocks ported from `useAppStore`
-- [ ] **4.2** `useBusinessAppStore` with full action set
+- [x] **4.1** Business mocks ported from `useAppStore`
+- [x] **4.2** `useBusinessAppStore` with full action set
 
 ### M5 — Overview
 - [ ] **5.1** KPI stats + top-sales table + outsider list

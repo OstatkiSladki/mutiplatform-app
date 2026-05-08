@@ -185,4 +185,29 @@ export const ruBusiness = {
       save: 'Сохранить',
     },
   },
+  orders: {
+    tabs: {
+      all: 'Все',
+      confirmed: 'Подтверждён',
+      cancelled: 'Отменён',
+      categories: 'Категории',
+    },
+    table: {
+      order: 'Заказ',
+      client: 'Клиент',
+      items: 'Состав',
+      amount: 'Сумма',
+      time: 'Время',
+      status: 'Статус',
+      action: 'Действие',
+    },
+    actions: {
+      advance: 'В «выполнен»',
+      noAction: '—',
+    },
+    toast: {
+      advanced: 'Заказ #{{id}} обновлён',
+    },
+    timeWindow: '19:00–20:00',
+  },
 } as const;

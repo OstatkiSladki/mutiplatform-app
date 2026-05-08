@@ -185,6 +185,8 @@ export const tokens = {
   },
 } as const;
 
+import { businessTokens } from './business';
+
 export const theme = {
   colors: tokens.colors,
   shadows: tokens.shadows,
@@ -193,6 +195,9 @@ export const theme = {
   radius: tokens.radius,
   breakpoints: tokens.breakpoints,
   layout: tokens.layout,
+  business: businessTokens,
 } as const;
 
 export type AppTheme = typeof theme;
+export { businessTokens } from './business';
+export type { BusinessTheme } from './business';

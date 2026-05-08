@@ -34,7 +34,7 @@ Strategy decisions (locked):
 - [x] **5.2** `RevenueLineChart` + `HourlyBarChart` (react-native-svg)
 
 ### M6 — Forecast
-- [ ] **6.1** Forecast table + risk filter chips
+- [x] **6.1** Forecast table + risk filter chips
 - [ ] **6.2** Forecast modal (surprise box / single offer)
 
 ### M7 — Offers

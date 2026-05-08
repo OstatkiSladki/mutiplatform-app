@@ -89,4 +89,35 @@ export const ruBusiness = {
       legendPlan: 'План',
     },
   },
+  forecast: {
+    banner: {
+      title: '{{count}} товаров с высоким риском списания',
+      description: 'Оценочная стоимость: ₽{{loss}} · Создайте «сюрприз-пакеты», чтобы вернуть до 70%.',
+      cta: 'Сгенерировать',
+    },
+    filters: {
+      all: 'Все',
+      high: 'Высокий',
+      mid: 'Средний',
+      low: 'Низкий',
+      categories: 'Категории',
+    },
+    table: {
+      product: 'Товар',
+      category: 'Категория',
+      stock: 'Остаток',
+      demand: 'Прогноз спроса',
+      risk: 'Риск',
+      action: 'Действие',
+      surplus: '+{{n}} избыток',
+      deficit: '{{n}} дефицит',
+      createOffer: 'Создать предложение',
+    },
+    toast: {
+      created: 'Предложение «{{name}}» создано',
+      published: 'Предложение «{{name}}» опубликовано',
+      boxPublished: 'Сюрприз-бокс «{{name}}» опубликован',
+      boxRebuilt: 'Состав бокса пересобран',
+    },
+  },
 } as const;

@@ -35,7 +35,7 @@ Strategy decisions (locked):
 
 ### M6 — Forecast
 - [x] **6.1** Forecast table + risk filter chips
-- [ ] **6.2** Forecast modal (surprise box / single offer)
+- [x] **6.2** Forecast modal (surprise box / single offer)
 
 ### M7 — Offers
 - [ ] **7.1** Offers list with draft/published tabs + inline edit

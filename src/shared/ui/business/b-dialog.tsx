@@ -53,27 +53,30 @@ export const BDialog = ({ visible, onClose, title, closeLabel = 'Закрыть'
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      <Pressable style={styles.backdrop} onPress={onClose} accessibilityRole="button" accessibilityLabel={closeLabel}>
+      <View style={styles.backdrop}>
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel={closeLabel}
+        />
         <View
           style={styles.panel}
           accessibilityRole={Platform.OS === 'web' ? 'dialog' : 'none'}
           accessibilityViewIsModal
         >
-          {/* Stop tap propagation to backdrop by absorbing presses on the panel */}
-          <Pressable onPress={() => undefined} style={styles.panelInner}>
-            {title && (
-              <View style={styles.header}>
-                <Text style={styles.titleText}>{title}</Text>
-                <Pressable onPress={onClose} style={styles.closeBtn} accessibilityRole="button" accessibilityLabel={closeLabel}>
-                  <Text style={styles.closeBtnText}>✕</Text>
-                </Pressable>
-              </View>
-            )}
-            <View style={styles.content}>{children}</View>
-            {footer && <View style={styles.footer}>{footer}</View>}
-          </Pressable>
+          {title && (
+            <View style={styles.header}>
+              <Text style={styles.titleText}>{title}</Text>
+              <Pressable onPress={onClose} style={styles.closeBtn} accessibilityRole="button" accessibilityLabel={closeLabel}>
+                <Text style={styles.closeBtnText}>✕</Text>
+              </Pressable>
+            </View>
+          )}
+          <View style={styles.content}>{children}</View>
+          {footer && <View style={styles.footer}>{footer}</View>}
         </View>
-      </Pressable>
+      </View>
     </Modal>
   );
 };
@@ -90,12 +93,10 @@ const styles = StyleSheet.create({
     backgroundColor: b.colors.card,
     borderRadius: b.radius.xl,
     width: '100%',
-    maxWidth: 520,
+    maxWidth: 640,
+    maxHeight: '92%',
     ...b.shadows.card,
     overflow: 'hidden',
-  },
-  panelInner: {
-    flex: 1,
   },
   header: {
     flexDirection: 'row',

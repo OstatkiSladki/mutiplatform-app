@@ -76,6 +76,17 @@ export const ruBusiness = {
       },
     },
     sold: '{{count}} продано',
-    chartsPlaceholder: 'Графики появятся в следующей итерации',
+    revenueChart: {
+      title: 'Выручка',
+      subtitle: 'Фильтр по периоду — наведите на точку для деталей',
+      unit: 'тыс. ₽',
+    },
+    hourlyChart: {
+      title: 'Продажи по часам',
+      subtitle: 'Пик: 18:00–20:00',
+      unit: 'тыс.',
+      legendSales: 'Продажи',
+      legendPlan: 'План',
+    },
   },
 } as const;

@@ -30,8 +30,8 @@ Strategy decisions (locked):
 - [x] **4.2** `useBusinessAppStore` with full action set
 
 ### M5 — Overview
-- [ ] **5.1** KPI stats + top-sales table + outsider list
-- [ ] **5.2** `RevenueLineChart` + `HourlyBarChart` (react-native-svg)
+- [x] **5.1** KPI stats + top-sales table + outsider list
+- [x] **5.2** `RevenueLineChart` + `HourlyBarChart` (react-native-svg)
 
 ### M6 — Forecast
 - [ ] **6.1** Forecast table + risk filter chips

@@ -38,7 +38,7 @@ Strategy decisions (locked):
 - [x] **6.2** Forecast modal (surprise box / single offer)
 
 ### M7 — Offers
-- [ ] **7.1** Offers list with draft/published tabs + inline edit
+- [x] **7.1** Offers list with draft/published tabs + inline edit
 - [ ] **7.2** Offer modal + status transitions
 
 ### M8 — Orders

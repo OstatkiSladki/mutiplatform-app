@@ -151,4 +151,38 @@ export const ruBusiness = {
       publish: 'Опубликовать',
     },
   },
+  offers: {
+    counter: 'Опубликованы',
+    tabs: {
+      all: 'Все',
+      published: 'Опубликовано',
+      draft: 'Черновик',
+      categories: 'Категории',
+    },
+    table: {
+      product: 'Товар',
+      category: 'Категория',
+      stock: 'Остаток',
+      oldPrice: 'Цена до',
+      price: 'Цена',
+      status: 'Статус',
+      action: 'Действие',
+    },
+    actions: {
+      publish: 'Опубликовать',
+      edit: 'Изменить',
+      remove: 'Удалить',
+    },
+    toast: {
+      published: 'Опубликовано',
+      removed: 'Предложение удалено',
+      updated: '«{{name}}» обновлено',
+    },
+    edit: {
+      price: 'Цена, ₽',
+      stock: 'Количество',
+      cancel: 'Отмена',
+      save: 'Сохранить',
+    },
+  },
 } as const;

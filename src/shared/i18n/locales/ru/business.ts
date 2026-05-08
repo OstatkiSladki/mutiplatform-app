@@ -10,6 +10,10 @@ export const ruBusiness = {
   },
   layout: {
     searchPlaceholder: 'Поиск по заведениям, заказам, продуктам',
+    logoAlt: 'Остатки Сладки',
+    collapseMenu: 'Свернуть меню',
+    userFallback: 'Пользователь',
+    userMenuLabel: 'Меню пользователя',
     nav: {
       overview: 'Обзор',
       forecast: 'Прогноз',

@@ -3,14 +3,15 @@ import { View, Text, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
 import { useBusinessAppStore } from '../../../entities/business-app/model/store';
+import { showBusinessToast } from '../../../shared/lib/business-toast';
 import { OrderTabs, type OrderTabValue } from './components/order-tabs';
 import { OrderRow } from './components/order-row';
 import { styles } from './styles';
 
 export const BusinessOrdersScreen = () => {
   const { t } = useTranslation('business');
-  const { orders } = useBusinessAppStore(
-    useShallow((state) => ({ orders: state.orders }))
+  const { orders, advanceOrder } = useBusinessAppStore(
+    useShallow((state) => ({ orders: state.orders, advanceOrder: state.advanceOrder }))
   );
   const [tab, setTab] = useState<OrderTabValue>('all');
 
@@ -28,6 +29,11 @@ export const BusinessOrdersScreen = () => {
   const advanceLabel = t('orders.actions.advance');
   const noActionLabel = t('orders.actions.noAction');
   const timeWindow = t('orders.timeWindow');
+
+  const handleAdvance = (id: string) => {
+    advanceOrder(id);
+    showBusinessToast(t('orders.toast.advanced', { id }));
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
@@ -56,7 +62,7 @@ export const BusinessOrdersScreen = () => {
             timeWindow={timeWindow}
             advanceLabel={advanceLabel}
             noActionLabel={noActionLabel}
-            onAdvance={() => {}}
+            onAdvance={() => handleAdvance(order.id)}
           />
         ))}
       </View>

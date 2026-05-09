@@ -186,6 +186,7 @@ export const tokens = {
 } as const;
 
 import { businessTokens } from './business';
+import { clientTokens } from './client';
 
 export const theme = {
   colors: tokens.colors,
@@ -196,8 +197,11 @@ export const theme = {
   breakpoints: tokens.breakpoints,
   layout: tokens.layout,
   business: businessTokens,
+  client: clientTokens,
 } as const;
 
 export type AppTheme = typeof theme;
 export { businessTokens } from './business';
 export type { BusinessTheme } from './business';
+export { clientTokens } from './client';
+export type { ClientTheme } from './client';

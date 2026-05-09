@@ -2,28 +2,39 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 
+export type ChipVariant = 'default' | 'accent' | 'success';
+
 export interface ChipProps {
   label: string;
   active?: boolean;
+  variant?: ChipVariant;
   onPress?: () => void;
 }
 
-export const Chip = ({ label, active = false, onPress }: ChipProps) => {
-  const content = (
-    <Text style={[styles.text, active && styles.textActive]}>{label}</Text>
-  );
+export const Chip = ({ label, active = false, variant = 'default', onPress }: ChipProps) => {
+  const containerStyle = [
+    styles.chip,
+    variant === 'accent' && styles.chipAccent,
+    variant === 'success' && styles.chipSuccess,
+    active && styles.chipActive,
+  ];
+
+  const textStyle = [
+    styles.text,
+    variant === 'accent' && styles.textAccent,
+    variant === 'success' && styles.textSuccess,
+    active && styles.textActive,
+  ];
+
+  const content = <Text style={textStyle}>{label}</Text>;
 
   if (onPress) {
     return (
-      <TouchableOpacity
-        style={[styles.chip, active && styles.chipActive]}
-        onPress={onPress}
-        activeOpacity={0.7}
-      >
+      <TouchableOpacity style={containerStyle} onPress={onPress} activeOpacity={0.7}>
         {content}
       </TouchableOpacity>
     );
   }
 
-  return <View style={[styles.chip, active && styles.chipActive]}>{content}</View>;
+  return <View style={containerStyle}>{content}</View>;
 };

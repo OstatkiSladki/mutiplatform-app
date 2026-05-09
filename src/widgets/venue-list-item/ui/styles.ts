@@ -8,45 +8,64 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[3],
     paddingVertical: theme.spacing[3],
     paddingHorizontal: theme.spacing[3],
-    backgroundColor: theme.colors.neutral.white,
-    borderRadius: theme.radius.lg,
+    borderRadius: theme.client.radius.md,
   },
   logo: {
-    width: 48,
-    height: 48,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.primary[20],
+    width: 56,
+    height: 56,
+    borderRadius: theme.client.radius.md,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logoLetter: {
+  logoText: {
     fontFamily: theme.typography.fontFamilies.inter,
     fontWeight: '700',
-    fontSize: theme.typography.fontSizes[7],
-    color: theme.colors.primary[100],
+    fontSize: 11,
   },
   body: {
     flex: 1,
-    gap: theme.spacing[1],
+    gap: theme.spacing[2],
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: theme.spacing[2],
+  },
+  titleBlock: {
+    flex: 1,
+    minWidth: 0,
   },
   name: {
     fontFamily: theme.typography.fontFamilies.inter,
     fontWeight: '600',
-    fontSize: theme.typography.fontSizes[5],
-    color: theme.colors.neutral[1],
+    fontSize: 15,
+    color: theme.client.colors.foreground,
   },
   address: {
     fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[3],
+    fontSize: 12,
+    color: theme.client.colors.mutedForeground,
+    marginTop: 2,
   },
-  meta: {
-    alignItems: 'flex-end',
+  hours: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: theme.spacing[1],
   },
-  metaText: {
+  hoursText: {
     fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[2],
+    fontSize: 12,
+    color: theme.client.colors.mutedForeground,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing[2],
+  },
+  tags: {
+    flexDirection: 'row',
+    gap: theme.spacing[1],
   },
 });

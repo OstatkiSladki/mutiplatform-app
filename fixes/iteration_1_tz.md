@@ -124,23 +124,23 @@ clientTokens = {
 ## Прогресс
 
 - [x] Phase 0 — context + decisions
-- [ ] Stage 1 — theme.client tokens
-  - [ ] 1.1 client.ts
-  - [ ] 1.2 mount in theme
-  - [ ] 1.3 export type
-  - [ ] 1.4 TS gate
-  - [ ] 1.5 commit
-- [ ] Stage 2 — atoms parity
-  - [ ] 2.1 Button variants
-  - [ ] 2.2 Chip variants
-  - [ ] 2.3 Input pill + leading/clear
-  - [ ] 2.4 Card padding preset
-  - [ ] 2.5 Stars variant
-  - [ ] 2.6 Avatar atom
-  - [ ] 2.7 Stepper size variants
-  - [ ] 2.8 barrel export
-  - [ ] 2.9 TS gate
-  - [ ] 2.10 simplifier
-  - [ ] 2.11 review
-  - [ ] 2.12 Playwright smoke
-  - [ ] 2.13 commit
+- [x] Stage 1 — theme.client tokens (commit `cd40cc3`)
+  - [x] 1.1 client.ts
+  - [x] 1.2 mount in theme
+  - [x] 1.3 export type
+  - [x] 1.4 TS gate
+  - [x] 1.5 commit
+- [x] Stage 2 — atoms parity (commit `7ec5d30`)
+  - [x] 2.1 Button variants (pill / ghost / iconCircle)
+  - [x] 2.2 Chip variants (accent / success)
+  - [x] 2.3 Input pill + leadingIcon + onClear
+  - [x] 2.4 Card padding preset (default 'sm' = 16 для совместимости)
+  - [x] 2.5 Stars variant (sm/md)
+  - [x] 2.6 Avatar atom (image / initials / Icon fallback)
+  - [x] 2.7 Stepper size variants (sm/md/lg)
+  - [x] 2.8 barrel export
+  - [x] 2.9 TS gate (no new errors; baseline `convert.js` errors pre-existing)
+  - [x] 2.10 simplifier (применил: убран nested-ternary в Card/Button, dynamic style объект → StyleSheet в Avatar)
+  - [x] 2.11 review (Critical = 0; 4 Important fixes применены — Avatar source type + empty fallback, Button iconCircle a11yLabel, Input pillWrap layout shift)
+  - [x] 2.12 Playwright smoke (no new errors; warnings/errors все pre-existing)
+  - [x] 2.13 commit

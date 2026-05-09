@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Offer } from '../../../entities/offer';
-import { Stepper } from '../../../shared/ui/stepper';
+import { Stepper, type StepperSize } from '../../../shared/ui/stepper';
 import { useAddToCart } from '../model/use-add-to-cart';
 
 export interface AddToCartStepperProps {
@@ -9,6 +9,8 @@ export interface AddToCartStepperProps {
   offer: Offer;
   displayName?: string;
   imageUrl?: string;
+  size?: StepperSize;
+  spread?: boolean;
 }
 
 export const AddToCartStepper = ({
@@ -17,6 +19,8 @@ export const AddToCartStepper = ({
   offer,
   displayName,
   imageUrl,
+  size,
+  spread,
 }: AddToCartStepperProps) => {
   const { quantity, max, setQuantity } = useAddToCart({
     venueId,
@@ -26,5 +30,14 @@ export const AddToCartStepper = ({
     imageUrl,
   });
 
-  return <Stepper value={quantity} onChange={setQuantity} min={0} max={max} />;
+  return (
+    <Stepper
+      value={quantity}
+      onChange={setQuantity}
+      min={0}
+      max={max}
+      size={size}
+      spread={spread}
+    />
+  );
 };

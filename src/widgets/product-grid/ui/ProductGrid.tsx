@@ -9,6 +9,8 @@ import { EmptyState } from '../../../widgets/empty-state';
 import { OfferCard } from './OfferCard';
 import { styles } from './styles';
 
+export type ProductGridLayout = 'list' | 'flex';
+
 export interface ProductGridProps {
   offers: Offer[];
   productsById: Record<number, Product>;
@@ -16,13 +18,13 @@ export interface ProductGridProps {
   onPressDetails: (offer: Offer, product?: Product) => void;
   renderQuantitySlot: (offer: Offer, product?: Product) => ReactNode;
   ListHeaderComponent?: React.ReactElement | null;
+  layout?: ProductGridLayout;
 }
 
-function resolveColumns(isAtLeast: (k: 'sm'|'md'|'lg'|'xl') => boolean): number {
+function resolveColumns(isAtLeast: (k: 'sm' | 'md' | 'lg' | 'xl') => boolean): number {
   if (isAtLeast('xl')) return 4;
-  if (isAtLeast('lg')) return 3;
-  if (isAtLeast('md')) return 2;
-  return 1;
+  if (isAtLeast('md')) return 3;
+  return 2;
 }
 
 export const ProductGrid = ({
@@ -32,6 +34,7 @@ export const ProductGrid = ({
   onPressDetails,
   renderQuantitySlot,
   ListHeaderComponent,
+  layout = 'list',
 }: ProductGridProps) => {
   const { t } = useTranslation('catalog');
   const { isAtLeast } = useBreakpoint();
@@ -45,6 +48,44 @@ export const ProductGrid = ({
     );
   }
 
+  if (offers.length === 0) {
+    return (
+      <View style={styles.emptyWrapper}>
+        <EmptyState
+          icon="package"
+          title={t('emptyProducts')}
+          description={t('emptyProductsDescription')}
+        />
+      </View>
+    );
+  }
+
+  const productFor = (offer: Offer) => {
+    const productId = offer.items?.[0]?.product_id;
+    return productId != null ? productsById[productId] : undefined;
+  };
+
+  if (layout === 'flex') {
+    const colWidth = `${100 / numColumns}%` as const;
+    return (
+      <View style={styles.flexWrap}>
+        {offers.map((offer) => {
+          const product = productFor(offer);
+          return (
+            <View key={offer.id} style={[styles.flexCell, { width: colWidth }]}>
+              <OfferCard
+                offer={offer}
+                product={product}
+                onPressDetails={onPressDetails}
+                quantitySlot={renderQuantitySlot(offer, product)}
+              />
+            </View>
+          );
+        })}
+      </View>
+    );
+  }
+
   return (
     <FlatList
       key={numColumns}
@@ -53,8 +94,7 @@ export const ProductGrid = ({
       numColumns={numColumns}
       ListHeaderComponent={ListHeaderComponent}
       renderItem={({ item }) => {
-        const productId = item.items?.[0]?.product_id;
-        const product = productId != null ? productsById[productId] : undefined;
+        const product = productFor(item);
         return (
           <OfferCard
             offer={item}
@@ -65,15 +105,6 @@ export const ProductGrid = ({
         );
       }}
       contentContainerStyle={styles.list}
-      ListEmptyComponent={
-        <View style={styles.emptyWrapper}>
-          <EmptyState
-            icon="package"
-            title={t('emptyProducts')}
-            description={t('emptyProductsDescription')}
-          />
-        </View>
-      }
       showsVerticalScrollIndicator={false}
     />
   );

@@ -1,68 +1,83 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { theme } from '../../../../shared/config/theme';
+
+const cardShadow = Platform.select({
+  web: { boxShadow: '0 2px 12px rgba(0, 0, 0, 0.06)' },
+  default: theme.client.shadows.card,
+}) as object;
 
 export const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: theme.colors.neutral[9],
+    backgroundColor: theme.client.colors.background,
   },
-  header: {
-    paddingHorizontal: theme.spacing[4],
-    paddingTop: theme.spacing[3],
-    paddingBottom: theme.spacing[4],
-    backgroundColor: theme.colors.neutral.white,
-    gap: theme.spacing[2],
-    borderBottomLeftRadius: theme.radius.lg,
-    borderBottomRightRadius: theme.radius.lg,
-  },
-  topRow: {
+  backRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing[3],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
   },
-  logo: {
-    width: 56,
-    height: 56,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.primary[20],
+  backButton: {
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: theme.client.radius.pill,
+    backgroundColor: theme.client.colors.card,
+    borderWidth: 1,
+    borderColor: theme.client.colors.border,
   },
-  logoLetter: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[10],
-    color: theme.colors.primary[100],
+  desktopScroll: {
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[6],
+    width: '100%',
+    maxWidth: theme.layout.containerMaxWidthDesktop,
+    alignSelf: 'center',
+    gap: theme.spacing[6],
   },
-  name: {
-    flex: 1,
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[8],
-    color: theme.colors.neutral[1],
-  },
-  address: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[3],
-  },
-  metaRow: {
+  desktopMain: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing[2],
+    alignItems: 'flex-start',
+    gap: theme.spacing[6],
   },
-  metaText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[2],
+  desktopLeft: {
+    flex: 1,
+    gap: theme.spacing[6],
   },
-  sectionTitle: {
-    paddingHorizontal: theme.spacing[4],
-    paddingTop: theme.spacing[5],
-    paddingBottom: theme.spacing[2],
-    fontFamily: theme.typography.fontFamilies.inter,
+  desktopRight: {
+    width: 320,
+  },
+  productsCard: {
+    backgroundColor: theme.client.colors.card,
+    borderRadius: theme.client.radius.card,
+    borderWidth: 1,
+    borderColor: theme.client.colors.border,
+    padding: theme.spacing[5],
+    gap: theme.spacing[4],
+    ...cardShadow,
+  },
+  productsTitle: {
+    fontFamily: theme.client.typography.fontFamily,
     fontWeight: '700',
     fontSize: theme.typography.fontSizes[7],
-    color: theme.colors.neutral[1],
+    color: theme.client.colors.foreground,
+  },
+  mobileColumn: {
+    flex: 1,
+  },
+  mobileHeaderWrap: {
+    paddingHorizontal: theme.spacing[3],
+    paddingTop: theme.spacing[2],
+    paddingBottom: theme.spacing[2],
+    gap: theme.spacing[3],
+  },
+  sectionTitle: {
+    paddingHorizontal: theme.spacing[3],
+    paddingTop: theme.spacing[3],
+    paddingBottom: theme.spacing[1],
+    fontFamily: theme.client.typography.fontFamily,
+    fontWeight: '700',
+    fontSize: theme.typography.fontSizes[7],
+    color: theme.client.colors.foreground,
   },
 });

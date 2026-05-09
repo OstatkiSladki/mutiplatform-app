@@ -13,6 +13,7 @@ export interface StepperProps {
   max?: number;
   step?: number;
   size?: StepperSize;
+  spread?: boolean;
 }
 
 const ICON_SIZE: Record<StepperSize, number> = {
@@ -28,6 +29,7 @@ export const Stepper = ({
   max = 99,
   step = 1,
   size = 'md',
+  spread = false,
 }: StepperProps) => {
   const decrement = () => onChange(Math.max(min, value - step));
   const increment = () => onChange(Math.min(max, value + step));
@@ -35,22 +37,25 @@ export const Stepper = ({
   const incDisabled = value >= max;
 
   const isLg = size === 'lg';
+  const useDarkIcon = isLg || spread;
 
   const buttonStyle = [
     styles.button,
     size === 'sm' && styles.buttonSm,
     isLg && styles.buttonLg,
+    spread && !isLg && styles.buttonSecondary,
   ];
   const buttonDisabledStyle = isLg ? styles.buttonLgDisabled : styles.buttonDisabled;
   const valueStyle = [
     styles.value,
     isLg && styles.valueLg,
     size === 'sm' && styles.valueSm,
+    spread && !isLg && styles.valueSpread,
   ];
-  const iconColor = isLg ? theme.client.colors.foreground : theme.colors.neutral.white;
+  const iconColor = useDarkIcon ? theme.client.colors.foreground : theme.colors.neutral.white;
 
   return (
-    <View style={[styles.row, isLg && styles.rowLg]}>
+    <View style={[styles.row, spread && styles.rowSpread, isLg && styles.rowLg]}>
       <TouchableOpacity
         style={[buttonStyle, decDisabled && buttonDisabledStyle]}
         onPress={decrement}

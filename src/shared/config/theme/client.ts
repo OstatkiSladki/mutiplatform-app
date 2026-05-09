@@ -23,6 +23,10 @@ export const clientTokens = {
     // hsl(0 0% 96%) — input bg / nav pill bg
     secondary: '#f5f5f5',
     secondaryForeground: '#1a1a1a',
+    // bg-secondary/40 equivalent — used for product image well, soft chip backgrounds
+    secondaryMuted: '#fafafa',
+    // hsl(30 15% 75%) — large stepper pill bg in product modal
+    stepperLgBg: '#c9bfb6',
 
     muted: '#f5f5f5',
     // hsl(0 0% 45%)

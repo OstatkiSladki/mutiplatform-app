@@ -182,6 +182,7 @@ export const tokens = {
   },
   layout: {
     containerMaxWidth: 1200,
+    containerMaxWidthDesktop: 1280,
   },
 } as const;
 

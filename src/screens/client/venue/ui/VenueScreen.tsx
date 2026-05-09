@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, Text, TouchableOpacity, View, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -15,14 +15,20 @@ import { ProductGrid } from '../../../../widgets/product-grid';
 import { CartSummary } from '../../../../widgets/cart-summary';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { ClientDesktopHeader } from '../../../../widgets/web-header';
+import { VenueHeaderCard } from '../../../../widgets/venue-header-card';
 import { useBreakpoint } from '../../../../shared/lib/responsive';
 import { AddToCartStepper } from '../../../../features/add-to-cart';
 import { ProductDetailsSheet, type ProductDetailsSheetRef } from '../../../../features/product-details';
-import { VenueHeader } from './VenueHeader';
 import { styles } from './styles';
 
 type VenueRoute = RouteProp<ClientStackParamList, 'Venue'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
+
+// Web-only `position: sticky` — RN core type lacks it but RN-Web supports it natively.
+const stickySidebarStyle =
+  Platform.OS === 'web'
+    ? ({ position: 'sticky', top: theme.spacing[6] } as unknown as ViewStyle)
+    : null;
 
 export const VenueScreen = () => {
   const route = useRoute<VenueRoute>();
@@ -33,6 +39,7 @@ export const VenueScreen = () => {
   const venueQuery = useVenue(venueId);
   const { isAtLeast, isWeb } = useBreakpoint();
   const showDesktopHeader = isWeb && isAtLeast('md');
+  const isDesktop = isWeb && isAtLeast('lg');
   const offersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 50 });
   const productsQuery = useProductList({ limit: 100 });
 
@@ -65,23 +72,83 @@ export const VenueScreen = () => {
   }
 
   const venue = venueQuery.data;
+  const offers = offersQuery.data?.items ?? [];
+
+  const renderQuantitySlot = (offer: Offer, product?: Product) => (
+    <AddToCartStepper
+      venueId={venueId}
+      venueName={venue.name}
+      offer={offer}
+      displayName={product?.name}
+      imageUrl={product?.image_urls?.[0]}
+      size="sm"
+      spread
+    />
+  );
+
+  if (isDesktop) {
+    return (
+      <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+        <ClientDesktopHeader />
+        <ScrollView
+          contentContainerStyle={styles.desktopScroll}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.desktopMain}>
+            <View style={styles.desktopLeft}>
+              <VenueHeaderCard venue={venue} />
+              <View style={styles.productsCard}>
+                <Text style={styles.productsTitle}>{t('productsAvailable')}</Text>
+                {offersQuery.isError ? (
+                  <EmptyState
+                    icon="alert-triangle"
+                    title={t('loadError')}
+                    actionLabel={t('retry')}
+                    onAction={() => offersQuery.refetch()}
+                  />
+                ) : (
+                  <ProductGrid
+                    layout="flex"
+                    offers={offers}
+                    productsById={productsById}
+                    isLoading={offersQuery.isLoading}
+                    onPressDetails={openDetails}
+                    renderQuantitySlot={renderQuantitySlot}
+                  />
+                )}
+              </View>
+            </View>
+            <View style={[styles.desktopRight, stickySidebarStyle]}>
+              <CartSummary
+                mode="sidebar"
+                venueId={venueId}
+                onPressCheckout={goToBooking}
+                onPressBackToVenues={goBack}
+              />
+            </View>
+          </View>
+        </ScrollView>
+        <ProductDetailsSheet ref={sheetRef} venueId={venueId} venueName={venue.name} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
       {showDesktopHeader ? <ClientDesktopHeader /> : null}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: theme.spacing[3], paddingVertical: theme.spacing[2] }}>
+      <View style={styles.backRow}>
         <TouchableOpacity
           onPress={goBack}
           accessibilityRole="button"
-          accessibilityLabel="Назад"
+          accessibilityLabel={t('back')}
           activeOpacity={0.7}
-          style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: theme.radius.full, backgroundColor: theme.colors.neutral.white }}
+          style={styles.backButton}
         >
-          <Icon name="chevron-left" size={20} color={theme.colors.neutral[1]} />
+          <Icon name="chevron-left" size={20} color={theme.client.colors.foreground} />
         </TouchableOpacity>
       </View>
 
-      <View style={{ flex: 1 }}>
+      <View style={styles.mobileColumn}>
         {offersQuery.isError ? (
           <EmptyState
             icon="alert-triangle"
@@ -91,35 +158,24 @@ export const VenueScreen = () => {
           />
         ) : (
           <ProductGrid
-            offers={offersQuery.data?.items ?? []}
+            layout="list"
+            offers={offers}
             productsById={productsById}
             isLoading={offersQuery.isLoading}
             onPressDetails={openDetails}
-            renderQuantitySlot={(offer, product) => (
-              <AddToCartStepper
-                venueId={venueId}
-                venueName={venue.name}
-                offer={offer}
-                displayName={product?.name}
-                imageUrl={product?.image_urls?.[0]}
-              />
-            )}
+            renderQuantitySlot={renderQuantitySlot}
             ListHeaderComponent={
-              <View>
-                <VenueHeader venue={venue} />
+              <View style={styles.mobileHeaderWrap}>
+                <VenueHeaderCard venue={venue} />
                 <Text style={styles.sectionTitle}>{t('productsAvailable')}</Text>
               </View>
             }
           />
         )}
-        <CartSummary venueId={venueId} onPressCheckout={goToBooking} />
+        <CartSummary mode="dock" venueId={venueId} onPressCheckout={goToBooking} />
       </View>
 
-      <ProductDetailsSheet
-        ref={sheetRef}
-        venueId={venueId}
-        venueName={venue.name}
-      />
+      <ProductDetailsSheet ref={sheetRef} venueId={venueId} venueName={venue.name} />
     </SafeAreaView>
   );
 };

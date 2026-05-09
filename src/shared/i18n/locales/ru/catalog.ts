@@ -25,13 +25,16 @@ export const ruCatalog = {
   retry: 'Повторить',
   cart: {
     title: 'Корзина',
-    emptyTitle: 'В вашей корзине пока пусто',
+    emptyTitle: 'В вашей корзине\nпока пусто',
     emptyDescription: 'Выберите заведение и добавьте товары.',
     emptyCta: 'Перейти к заведениям',
+    total: 'Итого',
+    backToVenues: '← Вернуться к заведениям',
     venueItemsCount_one: '{{count}} товар',
     venueItemsCount_few: '{{count}} товара',
     venueItemsCount_many: '{{count}} товаров',
   },
+  back: 'Назад',
   orders: {
     title: 'История заказов',
     emptyTitle: 'Заказов пока нет',
@@ -57,7 +60,17 @@ export const ruCatalog = {
     fallbackName: 'Сюрприз бокс №{{id}}',
     available: 'Доступно: {{count}} шт.',
     addToCart: 'Добавить в корзину',
+    addShort: 'Добавить',
     inCart: 'В корзине: {{count}}',
+    ingredientsFallback:
+      'Кардамон, бананы, сахар, растительное масло, соль, ванильный сахар, мука пшеничная, разрыхлитель теста, овсяная крупа, вода, мука миндальная',
+    nutrition: {
+      kcal: 'ккал',
+      protein: 'белки',
+      fat: 'жиры',
+      carbs: 'углеводы',
+    },
+    close: 'Закрыть',
   },
   surpriseBox: {
     title: 'Сюрприз бокс',

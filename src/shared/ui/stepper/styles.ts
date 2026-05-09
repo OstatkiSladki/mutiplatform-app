@@ -7,6 +7,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: theme.spacing[2],
   },
+  rowSpread: {
+    flex: 1,
+    justifyContent: 'space-between',
+    gap: 0,
+  },
   rowLg: {
     gap: theme.spacing[3],
     height: 40,
@@ -25,6 +30,12 @@ export const styles = StyleSheet.create({
   buttonSm: {
     width: 28,
     height: 28,
+  },
+  buttonSecondary: {
+    backgroundColor: theme.client.colors.secondary,
+  },
+  valueSpread: {
+    color: theme.client.colors.foreground,
   },
   buttonLg: {
     width: 32,

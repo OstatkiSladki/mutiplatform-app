@@ -45,3 +45,9 @@ export type { MapPlaceholderProps } from './map-placeholder';
 
 export { AppBottomSheet } from './bottom-sheet';
 export type { AppBottomSheetProps, AppBottomSheetRef } from './bottom-sheet';
+
+export { Popover } from './popover';
+export type { PopoverProps, PopoverRenderProps } from './popover';
+
+export { ProfileMenu } from './profile-menu';
+export type { ProfileMenuProps } from './profile-menu';

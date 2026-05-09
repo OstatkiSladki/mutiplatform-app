@@ -1,6 +1,9 @@
 export { AppHeader } from './header';
 export type { AppHeaderProps, HeaderAction } from './header';
 
+export { ClientMobileHeader } from './client-mobile-header';
+export type { ClientMobileHeaderProps } from './client-mobile-header';
+
 export { EmptyState } from './empty-state';
 export type { EmptyStateProps } from './empty-state';
 

@@ -17,4 +17,20 @@ export const ruCommon = {
   },
   profileFallback: 'Профиль',
   brand: 'Остатки Сладки',
+  header: {
+    searchPlaceholder: 'Поиск заведений',
+    locationDefault: 'ул. Текучева 140',
+    locationA11y: 'Текущая локация',
+    profileA11y: 'Профиль',
+    profileGuest: 'Гость',
+    settingsLink: 'Настройки',
+    menu: {
+      orders: 'История заказов',
+      support: 'Поддержка',
+      notifications: 'Уведомления',
+      about: 'О сервисе',
+      logout: 'Выйти из аккаунта',
+    },
+    comingSoon: 'Скоро появится',
+  },
 } as const;

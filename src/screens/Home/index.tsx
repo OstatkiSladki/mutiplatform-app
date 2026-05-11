@@ -1,14 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScreenContainer } from '../../shared/ui/layout';
+import { OffersSection } from '../../widgets/home';
 
 export const HomeScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>Home Screen</Text>
-    </View>
+    <ScreenContainer scrollable>
+      <OffersSection />
+    </ScreenContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-});

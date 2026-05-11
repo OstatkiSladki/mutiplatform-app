@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { AppProvider } from './providers';
-import { RootNavigator } from '../navigation';
+import { RootNavigator } from '@/navigation';
+import { theme } from '@/shared/config/theme';
 
 export const AppEntry = () => {
   return (
@@ -21,6 +22,6 @@ export const AppEntry = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.neutral.white,
   },
 });

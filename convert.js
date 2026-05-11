@@ -117,7 +117,8 @@ const tokens = {
   radius
 };
 
-const fileContent = \`export const tokens = \${JSON.stringify(tokens, null, 2)} as const;
+const fileContent = `export const tokens = ${JSON.stringify(tokens, null, 2)} as const;
+
 
 export const theme = {
   colors: tokens.colors,
@@ -128,7 +129,7 @@ export const theme = {
 } as const;
 
 export type AppTheme = typeof theme;
-\`;
+`;
 
 fs.mkdirSync(path.join(__dirname, 'src', 'shared', 'config', 'theme'), { recursive: true });
 fs.writeFileSync(outPath, fileContent, 'utf8');

@@ -201,6 +201,34 @@ Rules:
 * All code must respect domain separation
 * Do NOT mix domains inside one module
 
+# Localization Rules
+
+The application uses Russian localization by default.
+
+Currency:
+- use Russian rubles (₽)
+- NEVER use USD ($)
+- prices must be formatted like:
+  - 250 ₽
+  - 1 200 ₽
+
+Language:
+- UI text should support Russian
+- component examples should use Russian labels when possible
+
+Formatting:
+- use localized price formatting
+- avoid US locale formatting
+
+# Price Formatting Rules
+
+All prices must go through centralized formatting helpers.
+
+Example:
+formatPrice(250) -> "250 ₽"
+
+Do NOT hardcode currency symbols inside UI components.
+
 ---
 
 # COMPLEX FLOWS
@@ -269,6 +297,42 @@ widgets/offer-list/ui/
 * Reuse components from `shared/ui`
 * Do not invent new patterns
 * Keep components small and composable
+
+# Layout Rules
+
+The app MUST use a responsive grid system.
+
+Grid configuration:
+- columns: 2
+- screen horizontal padding: 16
+- gutter between columns: 8
+
+Rules:
+- all layouts must adapt to different screen sizes
+- avoid fixed widths when possible
+- use flex layouts
+- cards inside grids must stretch evenly
+- spacing must use theme tokens
+- use Dimensions or responsive helpers when needed
+
+Example:
+- two-column offer list
+- responsive cards with equal width
+- stretch layout with consistent gutters
+
+# Responsive Rules
+
+The UI must work correctly on:
+- small phones
+- modern iPhones
+- Android devices
+
+Rules:
+- avoid hardcoded dimensions
+- use flexbox
+- support dynamic screen widths
+- images should scale proportionally
+- cards should maintain aspect ratio
 
 # DESIGN TOKENS
 

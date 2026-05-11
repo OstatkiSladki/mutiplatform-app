@@ -28,6 +28,12 @@ Build a clean, logic-free screen component that acts purely as a composition lay
    - The screen component MUST NOT contain business logic.
    - No direct API calls or heavy local state inside the screen itself. 
    - State and logic should be handled mostly by the integrated features and entities.
+Before generating imports:
+- inspect the real repository structure
+- verify exports exist
+- never assume barrel exports
+- never invent components or paths
+- only import from existing files
 
 ## Reference
 - See `copilot-instructions.md` for architectural constraints and rules.

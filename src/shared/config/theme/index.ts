@@ -1,3 +1,6 @@
+import { businessTokens } from './business';
+import { clientTokens } from './client';
+
 export const tokens = {
   colors: {
     primary: {
@@ -185,9 +188,6 @@ export const tokens = {
     containerMaxWidthDesktop: 1280,
   },
 } as const;
-
-import { businessTokens } from './business';
-import { clientTokens } from './client';
 
 export const theme = {
   colors: tokens.colors,

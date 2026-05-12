@@ -1,81 +1,128 @@
+import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
-import { Icon, IconName } from '../../../shared/ui/icon';
+import { Avatar } from '../../../shared/ui/avatar';
+import { Button } from '../../../shared/ui/button';
+import { Icon } from '../../../shared/ui/icon';
+import { Input } from '../../../shared/ui/input';
+import { Popover } from '../../../shared/ui/popover';
+import { ProfileMenu } from '../../../shared/ui/profile-menu';
 import { theme } from '../../../shared/config/theme';
+import { clientAssets } from '../../../shared/assets/client';
+import { useCartStore, selectTotalItemCount } from '../../../entities/order';
+import { useAuthStore } from '../../../entities/auth';
+import { useLogout } from '../../../entities/auth/model/hooks';
+import { showBusinessToast } from '../../../shared/lib/business-toast';
 import type { ClientTabsParamList } from '../../../navigation/types';
 import { styles } from './styles';
 
-const tabIcons: Record<keyof ClientTabsParamList, IconName> = {
-  Home: 'home',
-  Cart: 'shopping-bag',
-  Orders: 'package',
-  Profile: 'user',
-};
-
-const tabLabelKeys: Record<keyof ClientTabsParamList, string> = {
-  Home: 'tabs.home',
-  Cart: 'tabs.cart',
-  Orders: 'tabs.orders',
-  Profile: 'tabs.profile',
-};
-
-export function WebHeader({ state, navigation }: BottomTabBarProps) {
+export function WebHeader({ navigation }: BottomTabBarProps) {
   const { t } = useTranslation('common');
+  const [query, setQuery] = useState('');
+  const cartCount = useCartStore(selectTotalItemCount);
+  const user = useAuthStore((s) => s.user);
+  const logoutMutation = useLogout();
+
+  const goToTab = (tab: keyof ClientTabsParamList) => navigation.navigate(tab);
 
   return (
     <View style={styles.bar}>
       <View style={styles.inner}>
         <Pressable
           style={styles.brand}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => goToTab('Home')}
           accessibilityRole="button"
+          accessibilityLabel={t('brand')}
         >
+          <Image
+            source={clientAssets.logoHands}
+            style={styles.logo}
+            contentFit="contain"
+          />
           <Text style={styles.brandText}>{t('brand')}</Text>
         </Pressable>
 
-        <View style={styles.tabs}>
-          {state.routes.map((route, index) => {
-            const isFocused = state.index === index;
-            const routeName = route.name as keyof ClientTabsParamList;
-            const label = t(tabLabelKeys[routeName]);
-            const iconName = tabIcons[routeName];
-
-            const onPress = () => {
-              const event = navigation.emit({
-                type: 'tabPress',
-                target: route.key,
-                canPreventDefault: true,
-              });
-              if (!isFocused && !event.defaultPrevented) {
-                navigation.navigate(route.name, route.params);
-              }
-            };
-
-            const iconColor = isFocused
-              ? theme.colors.primary[100]
-              : theme.colors.neutral[3];
-
-            return (
-              <Pressable
-                key={route.key}
-                onPress={onPress}
-                style={[styles.tab, isFocused && styles.tabActive]}
-                accessibilityRole="tab"
-                accessibilityState={{ selected: isFocused }}
-              >
-                <Icon name={iconName} size={18} color={iconColor} />
-                <Text
-                  style={[styles.tabLabel, isFocused && styles.tabLabelActive]}
-                >
-                  {label}
-                </Text>
-              </Pressable>
-            );
-          })}
+        <View style={styles.searchWrap}>
+          <Input
+            variant="pill"
+            leadingIcon="search"
+            value={query}
+            onChangeText={setQuery}
+            onClear={() => setQuery('')}
+            placeholder={t('header.searchPlaceholder')}
+          />
         </View>
 
-        <View style={styles.spacer} />
+        <View style={styles.actions}>
+          <Button
+            variant="pill"
+            icon="map-pin"
+            iconColor={theme.client.colors.primary}
+            title={t('header.locationDefault')}
+            accessibilityLabel={t('header.locationA11y')}
+          />
+          <View>
+            <Button
+              variant="iconCircle"
+              icon="shopping-bag"
+              accessibilityLabel={t('cartA11y')}
+              onPress={() => goToTab('Cart')}
+            />
+            {cartCount > 0 ? (
+              <View style={styles.cartBadge} pointerEvents="none">
+                <Text style={styles.cartBadgeText}>
+                  {cartCount > 99 ? '99+' : cartCount}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+
+          <Popover
+            align="end"
+            width={320}
+            trigger={({ open }) => (
+              <Pressable
+                onPress={open}
+                accessibilityRole="button"
+                accessibilityLabel={t('header.profileA11y')}
+              >
+                <Avatar name={user?.email ?? undefined} size="md" />
+              </Pressable>
+            )}
+          >
+            {({ close }) => (
+              <ProfileMenu
+                userName={user?.email ?? t('header.profileGuest')}
+                onOrders={() => {
+                  close();
+                  goToTab('Orders');
+                }}
+                onSettings={() => {
+                  close();
+                  goToTab('Profile');
+                }}
+                onSupport={() => {
+                  close();
+                  showBusinessToast(t('header.comingSoon'), 'info');
+                }}
+                onNotifications={() => {
+                  close();
+                  showBusinessToast(t('header.comingSoon'), 'info');
+                }}
+                onAbout={() => {
+                  close();
+                  showBusinessToast(t('header.comingSoon'), 'info');
+                }}
+                onLogout={() => {
+                  close();
+                  logoutMutation.mutate();
+                }}
+              />
+            )}
+          </Popover>
+        </View>
       </View>
     </View>
   );

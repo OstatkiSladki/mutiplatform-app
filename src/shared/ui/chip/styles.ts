@@ -9,6 +9,12 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.colors.neutral[9],
     alignSelf: 'flex-start',
   },
+  chipAccent: {
+    backgroundColor: theme.client.colors.accent,
+  },
+  chipSuccess: {
+    backgroundColor: theme.client.colors.chipGreenBg,
+  },
   chipActive: {
     backgroundColor: theme.colors.primary[100],
   },
@@ -16,6 +22,14 @@ export const styles = StyleSheet.create({
     fontFamily: theme.typography.fontFamilies.inter,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[1],
+  },
+  textAccent: {
+    color: theme.client.colors.accentForeground,
+    fontWeight: '500',
+  },
+  textSuccess: {
+    color: theme.client.colors.chipGreenFg,
+    fontWeight: '500',
   },
   textActive: {
     color: theme.colors.neutral.white,

@@ -3,22 +3,34 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
+  View,
   ViewStyle,
   TextStyle,
   TouchableOpacityProps,
 } from 'react-native';
 import { theme } from '../../config/theme';
 import { useBreakpoint } from '../../lib/responsive';
+import { Icon, IconName } from '../icon';
 
 export type ButtonSize = 'small' | 'medium' | 'large';
 export type ButtonDensity = 'comfortable' | 'compact';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'neutral'
+  | 'pill'
+  | 'ghost'
+  | 'iconCircle';
 
 export interface ButtonProps extends TouchableOpacityProps {
-  title: string;
-  variant?: 'primary' | 'secondary' | 'neutral';
+  title?: string;
+  variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
   density?: ButtonDensity;
+  icon?: IconName;
+  iconColor?: string;
+  iconSize?: number;
 }
 
 function effectiveSize(
@@ -29,7 +41,6 @@ function effectiveSize(
   if (density === 'comfortable') return size;
   if (density === 'compact') {
     if (size === 'large') return 'medium';
-    if (size === 'medium') return 'small';
     return 'small';
   }
   if (isWebDesktop) {
@@ -46,22 +57,124 @@ export const Button = ({
   isLoading = false,
   density,
   disabled,
+  icon,
+  iconColor,
+  iconSize,
   style,
   ...props
 }: ButtonProps) => {
   const { isWeb, isAtLeast } = useBreakpoint();
-  const sized = effectiveSize(size, density, isWeb && isAtLeast('md'));
+  const isWebDesktop = isWeb && isAtLeast('md');
+  const sized = effectiveSize(size, density, isWebDesktop);
+
+  if (variant === 'pill') {
+    const heightStyle = isWebDesktop ? styles.pillWeb : styles.pillMobile;
+    const textColor = theme.client.colors.foreground;
+    return (
+      <TouchableOpacity
+        style={[
+          styles.pill,
+          heightStyle,
+          disabled && styles.disabled,
+          style as ViewStyle,
+        ]}
+        disabled={disabled || isLoading}
+        activeOpacity={0.8}
+        {...props}
+      >
+        {isLoading ? (
+          <ActivityIndicator color={textColor} />
+        ) : (
+          <View style={styles.row}>
+            {icon && (
+              <Icon name={icon} size={iconSize ?? 18} color={iconColor ?? textColor} />
+            )}
+            {title && (
+              <Text style={[styles.pillText, { color: textColor } as TextStyle]}>
+                {title}
+              </Text>
+            )}
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  }
+
+  if (variant === 'ghost') {
+    const textColor = theme.client.colors.foreground;
+    return (
+      <TouchableOpacity
+        style={[
+          styles.ghost,
+          styles[sized],
+          disabled && styles.disabled,
+          style as ViewStyle,
+        ]}
+        disabled={disabled || isLoading}
+        activeOpacity={0.7}
+        {...props}
+      >
+        {isLoading ? (
+          <ActivityIndicator color={textColor} />
+        ) : (
+          <View style={styles.row}>
+            {icon && (
+              <Icon name={icon} size={iconSize ?? 18} color={iconColor ?? textColor} />
+            )}
+            {title && (
+              <Text
+                style={[
+                  sized === 'small' ? styles.textSmall : styles.text,
+                  { color: textColor } as TextStyle,
+                ]}
+              >
+                {title}
+              </Text>
+            )}
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  }
+
+  if (variant === 'iconCircle') {
+    const fg = theme.client.colors.foreground;
+    const iconA11yLabel = props.accessibilityLabel ?? icon;
+    return (
+      <TouchableOpacity
+        {...props}
+        accessibilityRole="button"
+        accessibilityLabel={iconA11yLabel}
+        style={[
+          styles.iconCircle,
+          disabled && styles.disabled,
+          style as ViewStyle,
+        ]}
+        disabled={disabled || isLoading}
+        activeOpacity={0.7}
+      >
+        {isLoading ? (
+          <ActivityIndicator color={fg} />
+        ) : icon ? (
+          <Icon name={icon} size={iconSize ?? 20} color={iconColor ?? fg} />
+        ) : null}
+      </TouchableOpacity>
+    );
+  }
 
   const isPrimary = variant === 'primary';
   const isSecondary = variant === 'secondary';
 
-  const backgroundColor = disabled
-    ? theme.colors.neutral[6]
-    : isPrimary
-    ? theme.colors.actionPrimary.default
-    : isSecondary
-    ? theme.colors.actionSecondary.default
-    : theme.colors.actionNeutral.default;
+  let backgroundColor: string;
+  if (disabled) {
+    backgroundColor = theme.colors.neutral[6];
+  } else if (isPrimary) {
+    backgroundColor = theme.colors.actionPrimary.default;
+  } else if (isSecondary) {
+    backgroundColor = theme.colors.actionSecondary.default;
+  } else {
+    backgroundColor = theme.colors.actionNeutral.default;
+  }
 
   const textColor = isPrimary || isSecondary ? theme.colors.neutral.white : theme.colors.neutral[1];
   const textSizeStyle = sized === 'small' ? styles.textSmall : styles.text;
@@ -119,5 +232,44 @@ const styles = StyleSheet.create({
     fontFamily: theme.typography.fontFamilies.inter,
     fontWeight: '600',
     fontSize: theme.typography.fontSizes[3],
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing[2],
+  },
+  pill: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: theme.client.radius.pill,
+    backgroundColor: theme.client.colors.secondary,
+    paddingHorizontal: theme.spacing[4],
+  },
+  pillMobile: {
+    height: 44,
+  },
+  pillWeb: {
+    height: 48,
+  },
+  pillText: {
+    fontFamily: theme.typography.fontFamilies.inter,
+    fontWeight: '600',
+    fontSize: theme.typography.fontSizes[4],
+  },
+  ghost: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: theme.client.radius.lg,
+    backgroundColor: 'transparent',
+  },
+  iconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: theme.client.radius.pill,
+    backgroundColor: theme.client.colors.secondary,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

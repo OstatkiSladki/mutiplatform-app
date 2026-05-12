@@ -14,13 +14,6 @@ export interface SurpriseBoxesSectionProps {
   onAdded?: (venueId: number) => void;
 }
 
-function resolveSurpriseColumns(isWeb: boolean, isAtLeast: (k: 'sm'|'md'|'lg'|'xl') => boolean): number {
-  if (!isWeb) return 1;
-  if (isAtLeast('lg')) return 3;
-  if (isAtLeast('md')) return 2;
-  return 1;
-}
-
 export const SurpriseBoxesSection = ({
   offers,
   isLoading,
@@ -28,14 +21,8 @@ export const SurpriseBoxesSection = ({
   onAdded,
 }: SurpriseBoxesSectionProps) => {
   const { t } = useTranslation('catalog');
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const numColumns = resolveSurpriseColumns(isWeb, isAtLeast);
-  const cellStyle =
-    numColumns === 3
-      ? styles.surpriseCell3
-      : numColumns === 2
-        ? styles.surpriseCell2
-        : styles.surpriseCell1;
+  const { isAtLeast } = useBreakpoint();
+  const twoCol = isAtLeast('lg');
 
   return (
     <View style={styles.section}>
@@ -47,7 +34,10 @@ export const SurpriseBoxesSection = ({
       ) : offers && offers.length > 0 ? (
         <View style={styles.surpriseGrid}>
           {offers.map((offer) => (
-            <View key={offer.id} style={cellStyle}>
+            <View
+              key={offer.id}
+              style={twoCol ? styles.surpriseCell2 : styles.surpriseCell1}
+            >
               <SurpriseBoxCard
                 offer={offer}
                 venueName={

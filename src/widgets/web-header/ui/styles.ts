@@ -4,9 +4,9 @@ import { theme } from '../../../shared/config/theme';
 export const styles = StyleSheet.create({
   bar: {
     width: '100%',
-    backgroundColor: theme.colors.neutral.white,
+    backgroundColor: theme.client.colors.background,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.neutral[8],
+    borderBottomColor: theme.client.colors.border,
     zIndex: 10,
     ...(Platform.OS === 'web' ? ({ position: 'sticky', top: 0 } as object) : null),
   },
@@ -14,10 +14,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    maxWidth: theme.layout.containerMaxWidth,
+    maxWidth: 1280,
     alignSelf: 'center',
     paddingHorizontal: theme.spacing[6],
-    paddingVertical: theme.spacing[3],
+    paddingVertical: theme.spacing[4],
     gap: theme.spacing[6],
   },
   brand: {
@@ -25,43 +25,41 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: theme.spacing[2],
   },
+  logo: {
+    width: 36,
+    height: 36,
+  },
   brandText: {
     fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[7],
-    fontWeight: theme.typography.fontWeights.interBold,
-    color: theme.colors.primary[100],
-    letterSpacing: theme.typography.letterSpacing[3],
+    fontSize: 15,
+    fontWeight: '600',
+    color: theme.client.colors.foreground,
   },
-  tabs: {
+  searchWrap: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: theme.spacing[2],
+    maxWidth: 576,
   },
-  tab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing[2],
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2],
-    borderRadius: theme.radius.lg,
-  },
-  tabActive: {
-    backgroundColor: theme.colors.primary[10],
-  },
-  tabLabel: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[4],
-    fontWeight: theme.typography.fontWeights.interRegular,
-    color: theme.colors.neutral[3],
-  },
-  tabLabelActive: {
-    color: theme.colors.primary[100],
-    fontWeight: theme.typography.fontWeights.interBold,
-  },
-  spacer: {
+  actions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing[3],
+  },
+  cartBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+    borderRadius: 9,
+    backgroundColor: theme.client.colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartBadgeText: {
+    color: theme.client.colors.primaryForeground,
+    fontFamily: theme.typography.fontFamilies.inter,
+    fontSize: 10,
+    fontWeight: '700',
   },
 });

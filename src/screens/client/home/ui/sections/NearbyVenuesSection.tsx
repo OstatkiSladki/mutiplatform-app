@@ -14,6 +14,49 @@ export interface NearbyVenuesSectionProps {
   onPressVenue: (venueId: number) => void;
 }
 
+interface VenueListProps {
+  items: Venue[];
+  isLoading: boolean;
+  onPressVenue: (venueId: number) => void;
+  emptyTitle: string;
+  emptyDescription: string;
+}
+
+const VenueList = ({
+  items,
+  isLoading,
+  onPressVenue,
+  emptyTitle,
+  emptyDescription,
+}: VenueListProps) => {
+  if (isLoading) {
+    return (
+      <View style={styles.loaderRow}>
+        <Loader size="small" />
+      </View>
+    );
+  }
+  if (items.length === 0) {
+    return (
+      <EmptyState
+        icon="map-pin"
+        title={emptyTitle}
+        description={emptyDescription}
+      />
+    );
+  }
+  return (
+    <>
+      {items.map((venue, idx) => (
+        <View key={venue.id}>
+          {idx > 0 ? <View style={styles.vSeparator} /> : null}
+          <VenueListItem venue={venue} onPress={onPressVenue} />
+        </View>
+      ))}
+    </>
+  );
+};
+
 export const NearbyVenuesSection = ({
   venues,
   isLoading,
@@ -21,42 +64,39 @@ export const NearbyVenuesSection = ({
 }: NearbyVenuesSectionProps) => {
   const { t } = useTranslation('catalog');
   const { isWeb, isAtLeast } = useBreakpoint();
-  const twoCol = isWeb && isAtLeast('md');
+  const twoCol = isWeb && isAtLeast('lg');
+  const items = (venues ?? []).slice(0, 4);
+
+  const list = (
+    <VenueList
+      items={items}
+      isLoading={isLoading}
+      onPressVenue={onPressVenue}
+      emptyTitle={t('emptyVenues')}
+      emptyDescription={t('emptyVenuesDescription')}
+    />
+  );
 
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{t('sectionNearby')}</Text>
-      <View style={styles.mapWrapper}>
-        <MapPlaceholder />
-      </View>
-      {isLoading ? (
-        <View style={styles.loaderRow}>
-          <Loader size="small" />
-        </View>
-      ) : venues && venues.length > 0 ? (
-        twoCol ? (
-          <View style={styles.surpriseGrid}>
-            {venues.slice(0, 6).map((venue) => (
-              <View key={venue.id} style={styles.surpriseCell2}>
-                <VenueListItem venue={venue} onPress={onPressVenue} />
-              </View>
-            ))}
+      <View style={styles.nearbyCard}>
+        {twoCol ? (
+          <View style={styles.nearbyGridDesktop}>
+            <View style={styles.nearbyMapDesktop}>
+              <MapPlaceholder />
+            </View>
+            <View style={styles.nearbyListDesktop}>{list}</View>
           </View>
         ) : (
-          venues.slice(0, 4).map((venue, idx) => (
-            <View key={venue.id}>
-              {idx > 0 ? <View style={styles.vSeparator} /> : null}
-              <VenueListItem venue={venue} onPress={onPressVenue} />
+          <>
+            <View style={styles.nearbyMapMobile}>
+              <MapPlaceholder />
             </View>
-          ))
-        )
-      ) : (
-        <EmptyState
-          icon="map-pin"
-          title={t('emptyVenues')}
-          description={t('emptyVenuesDescription')}
-        />
-      )}
+            <View style={styles.nearbyListMobile}>{list}</View>
+          </>
+        )}
+      </View>
     </View>
   );
 };

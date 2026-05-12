@@ -6,13 +6,11 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import { useVenueList } from '../../../../entities/venue';
 import { useOfferList } from '../../../../entities/offer';
-import { useCartStore, selectTotalItemCount } from '../../../../entities/order';
-import { AppHeader } from '../../../../widgets/header';
+import { ClientMobileHeader } from '../../../../widgets/client-mobile-header';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
 import { useUserLocation } from '../../../../shared/lib/hooks';
 import { useBreakpoint } from '../../../../shared/lib/responsive';
-import { useTranslation } from 'react-i18next';
 import { NearbyVenuesSection } from './sections/NearbyVenuesSection';
 import { EstablishmentsSection } from './sections/EstablishmentsSection';
 import { SurpriseBoxesSection } from './sections/SurpriseBoxesSection';
@@ -23,12 +21,10 @@ type Nav = NativeStackNavigationProp<ClientStackParamList>;
 export const HomeScreen = () => {
   const navigation = useNavigation<Nav>();
   const queryClient = useQueryClient();
-  const { t: tCommon } = useTranslation('common');
-  const { t: tCatalog } = useTranslation('catalog');
-  const cartCount = useCartStore(selectTotalItemCount);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { isWeb, isAtLeast } = useBreakpoint();
-  const showAppHeader = !(isWeb && isAtLeast('md'));
+  const showMobileHeader = !(isWeb && isAtLeast('md'));
 
   const { coords } = useUserLocation();
   const venuesQuery = useVenueList({
@@ -59,18 +55,14 @@ export const HomeScreen = () => {
   }, [queryClient]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.neutral[9] }} edges={['top', 'left', 'right']}>
-      {showAppHeader ? (
-        <AppHeader
-          title={tCatalog('appTitle')}
-          right={[
-            {
-              icon: 'shopping-bag',
-              onPress: () => navigation.navigate('ClientTabs', { screen: 'Cart' }),
-              badgeCount: cartCount,
-              accessibilityLabel: tCommon('cartA11y'),
-            },
-          ]}
+    <SafeAreaView
+      style={styles.root}
+      edges={['top', 'left', 'right']}
+    >
+      {showMobileHeader ? (
+        <ClientMobileHeader
+          searchValue={searchQuery}
+          onSearchChange={setSearchQuery}
         />
       ) : null}
       <ScrollView

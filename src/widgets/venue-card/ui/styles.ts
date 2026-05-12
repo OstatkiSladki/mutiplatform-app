@@ -4,55 +4,55 @@ import { theme } from '../../../shared/config/theme';
 export const styles = StyleSheet.create({
   card: {
     width: 230,
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.colors.neutral.white,
+    borderRadius: theme.client.radius.lg,
+    backgroundColor: theme.client.colors.card,
+    borderWidth: 1,
+    borderColor: theme.client.colors.border,
     overflow: 'hidden',
-    ...theme.shadows.tight[2],
-  },
-  cardWide: {
-    width: 280,
+    ...theme.client.shadows.card,
   },
   cover: {
     width: '100%',
     height: 128,
-    backgroundColor: theme.colors.primary[20],
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  coverLetter: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[14],
-    color: theme.colors.primary[100],
   },
   body: {
     padding: theme.spacing[3],
-    gap: theme.spacing[2],
+    gap: theme.spacing[1],
   },
   name: {
     fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[5],
-    color: theme.colors.neutral[1],
+    fontWeight: '600',
+    fontSize: 14,
+    color: theme.client.colors.foreground,
   },
-  address: {
+  tags: {
     fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[3],
+    fontSize: 11,
+    color: theme.client.colors.mutedForeground,
   },
-  meta: {
+  metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing[2],
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[1],
+  },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing[1],
   },
   metaText: {
     fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[2],
+    fontSize: 11,
+    color: theme.client.colors.mutedForeground,
   },
-  closedBadge: {
-    position: 'absolute',
-    top: theme.spacing[2],
-    right: theme.spacing[2],
+  metaTextStrong: {
+    fontFamily: theme.typography.fontFamilies.inter,
+    fontSize: 11,
+    fontWeight: '600',
+    color: theme.client.colors.foreground,
+  },
+  metaSpacer: {
+    flex: 1,
   },
 });

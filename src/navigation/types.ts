@@ -9,21 +9,22 @@ export type AuthStackParamList = {
 
 export type ClientTabsParamList = {
   Home: undefined;
+  Nearby: undefined;
+  Catalog: undefined;
   Cart: undefined;
-  Orders: undefined;
-  Profile: undefined;
-};
-
-export type ClientStackParamList = {
-  ClientTabs: NavigatorScreenParams<ClientTabsParamList>;
   Venue: { venueId: number };
-  Booking: { venueId: number };
   ProductDetails: {
     venueId: number;
     venueName: string;
     offer: Offer;
     product?: Product;
   };
+};
+
+export type ClientStackParamList = {
+  ClientTabs: NavigatorScreenParams<ClientTabsParamList>;
+  Venue: { venueId: number };
+  Booking: { venueId: number };
   ProfileEdit: undefined;
   Support: undefined;
   Addresses: undefined;

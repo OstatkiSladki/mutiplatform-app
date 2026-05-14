@@ -10,9 +10,9 @@ export const ruCommon = {
   mapPlaceholder: 'Карта появится позже',
   tabs: {
     home: 'Главная',
+    nearby: 'Рядом',
+    catalog: 'Каталог',
     cart: 'Корзина',
-    orders: 'Заказы',
-    profile: 'Профиль',
     businessDashboard: 'Кабинет',
   },
   profileFallback: 'Профиль',

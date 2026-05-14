@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isInitializing = useAuthStore((s) => s.isInitializing);
   const accessToken = useAuthStore((s) => s.accessToken);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
 
   const [hydrated, setHydrated] = useState(false);
   const prevAuthRef = useRef(isAuthenticated);
@@ -36,20 +37,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [setAccessToken]);
 
-  // Try to fetch the current user only after hydration. If there is no token,
-  // we still attempt — the API may rely on cookies for auth.
-  const { data, isLoading, isError } = useGetMe({ enabled: hydrated });
+  const shouldHydrateUser = hydrated && !!accessToken && !user;
+  const { data, isLoading, isError } = useGetMe({
+    accessToken,
+    enabled: shouldHydrateUser,
+  });
 
   useEffect(() => {
     if (!hydrated) return;
-    if (isLoading) return;
+    if (!accessToken) {
+      setInitializing(false);
+      return;
+    }
+    if (isAuthenticated) {
+      setInitializing(false);
+      return;
+    }
+    if (shouldHydrateUser && isLoading) return;
     if (data) {
       setUser(data, accessToken ?? undefined);
-    } else if (isError) {
+    } else if (shouldHydrateUser && isError) {
       clearAuth();
     }
     setInitializing(false);
-  }, [hydrated, isLoading, isError, data, accessToken, setUser, clearAuth, setInitializing]);
+  }, [
+    hydrated,
+    accessToken,
+    isAuthenticated,
+    shouldHydrateUser,
+    isLoading,
+    isError,
+    data,
+    setUser,
+    clearAuth,
+    setInitializing,
+  ]);
 
   if (isInitializing) return <Loader fullScreen />;
   return <>{children}</>;

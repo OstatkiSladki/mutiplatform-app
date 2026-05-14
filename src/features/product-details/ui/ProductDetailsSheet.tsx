@@ -39,7 +39,10 @@ export const ProductDetailsSheet = forwardRef<ProductDetailsSheetRef, ProductDet
           setActive({ offer, product });
           modalRef.current?.present();
         } else {
-          navigation.navigate('ProductDetails', { venueId, venueName, offer, product });
+          navigation.navigate('ClientTabs', {
+            screen: 'ProductDetails',
+            params: { venueId, venueName, offer, product },
+          });
         }
       },
       dismiss: () => {

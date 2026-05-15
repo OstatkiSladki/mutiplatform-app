@@ -13,6 +13,7 @@ interface VenueProductGridProps {
   isLoading: boolean;
   ListHeaderComponent: React.ReactElement;
   onPressDetails: (offer: Offer, product?: Product) => void;
+  horizontalPadding?: number;
 }
 
 type GridItem = Offer | { id: string; placeholder: true };
@@ -26,9 +27,12 @@ export const VenueProductGrid = ({
   isLoading,
   ListHeaderComponent,
   onPressDetails,
+  horizontalPadding: horizontalPaddingProp,
 }: VenueProductGridProps) => {
   const { width } = useWindowDimensions();
-  const horizontalPadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[4];
+  const horizontalPadding =
+    horizontalPaddingProp ??
+    (width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3]);
   const availableWidth = Math.min(width - horizontalPadding * 2, theme.layout.containerMaxWidth);
   const cardWidth = (availableWidth - theme.spacing[2]) / 2;
 

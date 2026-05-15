@@ -17,12 +17,11 @@ import { useVenueList } from '../../../../entities/venue';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
 import { useUserLocation } from '../../../../shared/lib/hooks';
+import { MobileScreenChrome } from '../../../../shared/ui/mobile';
 import {
   CategoryProductsSection,
-  HomeHeader,
   NearbySection,
   PromoSection,
-  SearchBar,
   UrgentSection,
 } from './components';
 
@@ -61,6 +60,8 @@ export const HomeScreen = () => {
       }),
     [navigation],
   );
+
+  const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
 
   const goToOffer = useCallback(
     (offer: Offer, venueName: string) =>
@@ -110,11 +111,14 @@ export const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <HomeHeader />
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder={t('searchPlaceholder')}
+        <MobileScreenChrome
+          variant="home"
+          omitSafeArea
+          horizontalInset={0}
+          searchValue={searchQuery}
+          searchPlaceholder={t('searchPlaceholder')}
+          onSearchChange={setSearchQuery}
+          onPressProfile={goProfile}
         />
         <PromoSection isTablet={isTablet} />
         <UrgentSection

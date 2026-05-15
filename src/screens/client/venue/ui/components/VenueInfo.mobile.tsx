@@ -1,13 +1,29 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import { useTranslation } from 'react-i18next';
 import type { Venue } from '../../../../../entities/venue';
 import { Icon } from '../../../../../shared/ui/icon';
 import { theme } from '../../../../../shared/config/theme';
 
 interface VenueInfoProps {
   venue: Venue;
+  /** Removes horizontal padding when nested inside another card (e.g. basket venue strip). */
+  contentInset?: 'default' | 'flush';
 }
+
+const formatHours = (
+  workSchedule: Record<string, unknown> | undefined,
+  fallback: string,
+): string => {
+  if (!workSchedule) return fallback;
+  const daily = workSchedule.daily;
+  if (typeof daily === 'string') return daily.replace(/-/g, '–');
+  const mf = workSchedule.mon_fri;
+  if (typeof mf === 'string') return mf.replace(/-/g, '–');
+  const first = Object.values(workSchedule).find((v) => typeof v === 'string');
+  return typeof first === 'string' ? first.replace(/-/g, '–') : fallback;
+};
 
 const logoText = (name: string) =>
   name
@@ -40,11 +56,13 @@ const VenueStars = ({ rating }: { rating: number }) => {
   );
 };
 
-export const VenueInfo = ({ venue }: VenueInfoProps) => {
+export const VenueInfo = ({ venue, contentInset = 'default' }: VenueInfoProps) => {
+  const { t } = useTranslation('catalog');
   const rating = parseFloat(venue.rating) || 0;
+  const hours = formatHours(venue.work_schedule as Record<string, unknown> | undefined, t('hoursDefault'));
 
   return (
-    <View style={styles.wrap}>
+    <View style={[styles.wrap, contentInset === 'flush' && styles.wrapFlush]}>
       <View style={styles.logo}>
         <Text style={styles.logoText}>{logoText(venue.name)}</Text>
       </View>
@@ -59,7 +77,7 @@ export const VenueInfo = ({ venue }: VenueInfoProps) => {
           <VenueStars rating={rating} />
           <View style={styles.hours}>
             <Icon name="clock" size={14} color={theme.client.colors.mutedForeground} />
-            <Text style={styles.hoursText}>07:00–00:00</Text>
+            <Text style={styles.hoursText}>{hours}</Text>
           </View>
         </View>
       </View>
@@ -74,13 +92,18 @@ const styles = StyleSheet.create({
     gap: theme.spacing[3],
     paddingHorizontal: theme.spacing[4],
   },
+  wrapFlush: {
+    paddingHorizontal: 0,
+  },
   logo: {
     width: 52,
     height: 52,
-    borderRadius: theme.client.radius.md,
+    borderRadius: theme.client.radius.sm,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.neutral.black,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.neutral[7],
   },
   logoText: {
     fontFamily: theme.client.typography.fontFamily,
@@ -91,6 +114,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     gap: theme.spacing[1],
+    minWidth: 0,
   },
   name: {
     fontFamily: theme.client.typography.fontFamily,
@@ -113,11 +137,13 @@ const styles = StyleSheet.create({
   stars: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: theme.spacing[1],
   },
   hours: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing[1],
+    flexShrink: 0,
   },
   hoursText: {
     fontFamily: theme.client.typography.fontFamily,

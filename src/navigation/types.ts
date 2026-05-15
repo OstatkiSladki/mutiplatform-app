@@ -23,6 +23,7 @@ export type ClientTabsParamList = {
 
 export type ClientStackParamList = {
   ClientTabs: NavigatorScreenParams<ClientTabsParamList>;
+  Profile: undefined;
   Venue: { venueId: number };
   Booking: { venueId: number };
   ProfileEdit: undefined;

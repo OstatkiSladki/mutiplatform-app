@@ -1,117 +1,279 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useOfferList, type Offer } from '../../../../entities/offer';
-import { useVenueList, type Venue } from '../../../../entities/venue';
+import { useTranslation } from 'react-i18next';
+import { useOfferList } from '../../../../entities/offer';
+import { useVenue } from '../../../../entities/venue';
+import { useCartStore } from '../../../../entities/order';
+import { useSurpriseBoxBuilder } from '../../../../features/surprise-box-builder';
+import {
+  ADDITION_KEYS,
+  FILLING_KEYS,
+  RESTRICTION_KEYS,
+  TIME_SLOTS,
+  type AdditionKey,
+  type FillingKey,
+  type RestrictionKey,
+  type TimeSlot,
+} from '../../../../features/surprise-box-builder/model/constants';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { Loader } from '../../../../shared/ui/loader';
+import { MobileScreenChrome } from '../../../../shared/ui/mobile';
 import { theme } from '../../../../shared/config/theme';
 import type { ClientStackParamList } from '../../../../navigation/types';
-import { CatalogOfferCard } from './CatalogOfferCard.mobile';
+import { formatPrice } from '../../../../shared/lib/format';
+import { venueAvatarLabel } from '../../../../shared/lib/venue-avatar';
+import {
+  SurpriseBoxFooter,
+  SurpriseBoxHero,
+  SurpriseBoxOptionGroup,
+  SurpriseBoxPickupSection,
+  SurpriseBoxSizeSelector,
+  SurpriseBoxVenueRow,
+} from './surprise-box';
 
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
-type GridItem = Offer | { id: string; placeholder: true };
-
-const categories = ['Все', 'Готовая еда', 'Выпечка', 'Здоровая еда', 'Кофе'];
-
-const isPlaceholder = (item: GridItem): item is { id: string; placeholder: true } =>
-  'placeholder' in item;
 
 export const CatalogScreen = () => {
+  const { t } = useTranslation('catalog');
   const navigation = useNavigation<Nav>();
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const { width } = useWindowDimensions();
+  const tabBarHeight = useBottomTabBarHeight();
+  const scrollBottomPad = tabBarHeight + theme.spacing[10];
+  const addItem = useCartStore((s) => s.addItem);
+
+  const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
+  const [searchQuery, setSearchQuery] = useState('');
+
   const offersQuery = useOfferList({ status: 'active', limit: 60 });
-  const venuesQuery = useVenueList({ limit: 100, is_open: true });
-  const offers = offersQuery.data?.items ?? [];
-  const gridData = useMemo<GridItem[]>(() => {
-    if (offers.length % 2 === 0) return offers;
-    return [...offers, { id: 'placeholder', placeholder: true }];
-  }, [offers]);
+  const offer = offersQuery.data?.items?.[0];
+  const venueQuery = useVenue(offer?.venue_id ?? 0);
 
-  const venuesById = useMemo<Record<number, Venue>>(() => {
-    const map: Record<number, Venue> = {};
-    venuesQuery.data?.items.forEach((venue) => {
-      map[venue.id] = venue;
-    });
-    return map;
-  }, [venuesQuery.data]);
+  const basePrice = useMemo(() => {
+    if (!offer) return 1200;
+    const n = parseFloat(offer.current_price);
+    return Number.isFinite(n) && n > 0 ? n : 1200;
+  }, [offer]);
 
-  const goVenue = useCallback(
-    (venueId: number) =>
-      navigation.navigate('ClientTabs', {
-        screen: 'Venue',
-        params: { venueId },
-      }),
+  const builder = useSurpriseBoxBuilder(basePrice);
+
+  const goHomeTab = useCallback(
+    () => navigation.navigate('ClientTabs', { screen: 'Home' }),
     [navigation],
   );
 
+  const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
+
+  const fillingOptions = useMemo(
+    () =>
+      FILLING_KEYS.map((key) => ({
+        key,
+        label: t(`surpriseBox.fillings.${key}` as const),
+      })),
+    [t],
+  );
+
+  const restrictionOptions = useMemo(
+    () =>
+      RESTRICTION_KEYS.map((key) => ({
+        key,
+        label: t(`surpriseBox.restrictions.${key}` as const),
+      })),
+    [t],
+  );
+
+  const additionOptions = useMemo(
+    () =>
+      ADDITION_KEYS.map((key) => ({
+        key,
+        label: t(`surpriseBox.additions.${key}` as const),
+      })),
+    [t],
+  );
+
+  const rotateTimeSlot = useCallback(() => {
+    const slots = TIME_SLOTS as readonly TimeSlot[];
+    const idx = slots.indexOf(builder.config.time);
+    const next = slots[(idx + 1) % slots.length];
+    builder.setTime(next);
+  }, [builder]);
+
+  const onPay = useCallback(() => {
+    if (!offer || !venueQuery.data) return;
+
+    addItem(offer.venue_id, venueQuery.data.name, {
+      productId: `offer-${offer.id}`,
+      offerId: offer.id,
+      name: t('surpriseBox.itemName'),
+      price: builder.finalPrice,
+      maxQuantity: offer.quantity_available,
+      quantity: 1,
+    });
+    navigation.navigate('ClientTabs', { screen: 'Cart' });
+  }, [addItem, builder.finalPrice, navigation, offer, t, venueQuery.data]);
+
+  const heroBrand = venueQuery.data ? venueAvatarLabel(venueQuery.data.name) : 'КЕКС';
+
+  const surpriseBody = useMemo(() => {
+    if (!offer) return null;
+
+    if (venueQuery.isLoading || !venueQuery.data) {
+      return (
+        <View style={styles.loaderSection}>
+          <Loader size="large" />
+        </View>
+      );
+    }
+
+    const venue = venueQuery.data;
+
+    return (
+      <>
+        <SurpriseBoxVenueRow venue={venue} hoursLabel={t('hoursDefault')} />
+        <SurpriseBoxHero />
+        <SurpriseBoxSizeSelector selected={builder.config.size} onSelect={builder.setSize} />
+        <Text style={styles.productTitle}>
+          {t('surpriseBox.heroTitle', { brand: heroBrand })}
+        </Text>
+        <SurpriseBoxOptionGroup
+          title={t('surpriseBox.fillingLabel')}
+          options={fillingOptions}
+          selectedKey={builder.config.filling}
+          onSelect={(key) => builder.setFilling(key as FillingKey)}
+        />
+        <SurpriseBoxOptionGroup
+          title={t('surpriseBox.restrictionLabel')}
+          options={restrictionOptions}
+          selectedKey={builder.config.restriction}
+          onSelect={(key) => builder.setRestriction(key as RestrictionKey)}
+        />
+        <SurpriseBoxOptionGroup
+          title={t('surpriseBox.additionLabel')}
+          options={additionOptions}
+          selectedKey={builder.config.addition}
+          onSelect={(key) => builder.setAddition(key as AdditionKey)}
+        />
+        <SurpriseBoxPickupSection
+          title={t('basket.pickupTimeTitle')}
+          selectedLabel={builder.config.time}
+          onPress={rotateTimeSlot}
+        />
+      </>
+    );
+  }, [
+    additionOptions,
+    builder,
+    fillingOptions,
+    heroBrand,
+    offer,
+    restrictionOptions,
+    rotateTimeSlot,
+    t,
+    venueQuery.data,
+    venueQuery.isLoading,
+  ]);
+
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
-      <FlatList
-        data={gridData}
-        keyExtractor={(item) => String(item.id)}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <Text style={styles.title}>Каталог</Text>
-            <Text style={styles.subtitle}>
-              Сюрприз-боксы и предложения заведений рядом с вами.
-            </Text>
-            <FlatList
-              horizontal
-              data={categories}
-              keyExtractor={(item) => item}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.chips}
-              renderItem={({ item }) => {
-                const active = item === activeCategory;
-                return (
-                  <TouchableOpacity
-                    style={[styles.chip, active && styles.chipActive]}
-                    activeOpacity={0.8}
-                    onPress={() => setActiveCategory(item)}
-                  >
-                    <Text style={[styles.chipText, active && styles.chipTextActive]}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
+      <View style={styles.flex}>
+        {offersQuery.isLoading ? (
+          <ScrollView
+            style={styles.flex}
+            contentContainerStyle={[
+              styles.scrollContent,
+              {
+                paddingHorizontal: pagePadding,
+                paddingBottom: scrollBottomPad,
+              },
+            ]}
+            showsVerticalScrollIndicator={false}
+          >
+            <MobileScreenChrome
+              variant="stack"
+              omitSafeArea
+              horizontalInset={0}
+              searchValue={searchQuery}
+              searchPlaceholder={t('searchPlaceholder')}
+              onSearchChange={setSearchQuery}
+              onBack={goHomeTab}
+              backA11yLabel={t('back')}
+              onPressProfile={goProfile}
+              searchBackButtonVariant="compact"
             />
-          </View>
-        }
-        ListEmptyComponent={
-          offersQuery.isLoading ? (
             <View style={styles.loaderWrap}>
               <Loader size="large" />
             </View>
-          ) : (
+          </ScrollView>
+        ) : !offer ? (
+          <ScrollView
+            style={styles.flex}
+            contentContainerStyle={[
+              styles.scrollContent,
+              {
+                paddingHorizontal: pagePadding,
+                paddingBottom: scrollBottomPad,
+              },
+            ]}
+            showsVerticalScrollIndicator={false}
+          >
+            <MobileScreenChrome
+              variant="stack"
+              omitSafeArea
+              horizontalInset={0}
+              searchValue={searchQuery}
+              searchPlaceholder={t('searchPlaceholder')}
+              onSearchChange={setSearchQuery}
+              onBack={goHomeTab}
+              backA11yLabel={t('back')}
+              onPressProfile={goProfile}
+              searchBackButtonVariant="compact"
+            />
             <EmptyState
               icon="package"
-              title="Каталог пока пуст"
-              description="Новые предложения появятся здесь позже."
+              title={t('emptyOffers')}
+              description={t('emptyOffersDescription')}
             />
-          )
-        }
-        renderItem={({ item }) => {
-          if (isPlaceholder(item)) return <View style={styles.cell} />;
-
-          return (
-            <View style={styles.cell}>
-              <CatalogOfferCard
-                offer={item}
-                venue={venuesById[item.venue_id]}
-                onPress={goVenue}
+          </ScrollView>
+        ) : (
+          <>
+            <ScrollView
+              style={styles.flex}
+              contentContainerStyle={[
+                styles.scrollContent,
+                {
+                  paddingHorizontal: pagePadding,
+                  paddingBottom: scrollBottomPad,
+                },
+              ]}
+              showsVerticalScrollIndicator={false}
+            >
+              <MobileScreenChrome
+                variant="stack"
+                omitSafeArea
+                horizontalInset={0}
+                searchValue={searchQuery}
+                searchPlaceholder={t('searchPlaceholder')}
+                onSearchChange={setSearchQuery}
+                onBack={goHomeTab}
+                backA11yLabel={t('back')}
+                onPressProfile={goProfile}
+                searchBackButtonVariant="compact"
               />
-            </View>
-          );
-        }}
-      />
+              {surpriseBody}
+            </ScrollView>
+            {offer && venueQuery.data ? (
+              <SurpriseBoxFooter
+                priceLabel={formatPrice(builder.finalPrice)}
+                ctaLabel={t('surpriseBox.payCta')}
+                onPay={onPay}
+              />
+            ) : null}
+          </>
+        )}
+      </View>
     </SafeAreaView>
   );
 };
@@ -119,59 +281,32 @@ export const CatalogScreen = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: theme.client.colors.background,
-  },
-  content: {
-    padding: theme.spacing[4],
-    paddingBottom: theme.spacing[10],
-  },
-  header: {
-    gap: theme.spacing[3],
-    marginBottom: theme.spacing[4],
-  },
-  title: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[10],
-    color: theme.client.colors.foreground,
-  },
-  subtitle: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[4],
-    color: theme.client.colors.mutedForeground,
-  },
-  chips: {
-    gap: theme.spacing[2],
-    paddingRight: theme.spacing[4],
-  },
-  chip: {
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2],
-    borderRadius: theme.client.radius.pill,
-    borderWidth: 1,
-    borderColor: theme.client.colors.border,
     backgroundColor: theme.client.colors.card,
   },
-  chipActive: {
-    borderColor: theme.client.colors.primary,
-    backgroundColor: theme.client.colors.primary,
-  },
-  chipText: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[4],
-    color: theme.client.colors.mutedForeground,
-  },
-  chipTextActive: {
-    color: theme.client.colors.primaryForeground,
-  },
-  row: {
-    gap: theme.spacing[3],
-  },
-  cell: {
+  flex: {
     flex: 1,
-    marginBottom: theme.spacing[3],
+  },
+  scrollContent: {
+    gap: theme.spacing[5],
+    paddingTop: theme.spacing[2],
   },
   loaderWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing[10],
+  },
+  loaderSection: {
     paddingVertical: theme.spacing[8],
+    alignItems: 'center',
+  },
+  productTitle: {
+    marginTop: theme.spacing[2],
+    marginBottom: theme.spacing[1],
+    fontFamily: theme.client.typography.fontFamily,
+    fontWeight: '700',
+    fontSize: theme.typography.fontSizes[11],
+    lineHeight: theme.typography.fontSizes[11] * theme.typography.lineHeights.tight,
+    color: theme.client.colors.foreground,
   },
 });

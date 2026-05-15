@@ -7,10 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../../shared/ui/screen';
 import { EmptyState } from '../../../widgets/empty-state';
 import { AuthRequiredScreen } from '../../../widgets/auth-required';
-import {
-  useCartStore,
-  type DraftVenueCart,
-} from '../../../entities/order';
+import { useCartStore, type DraftVenueCart } from '../../../entities/order';
 import { useAuthStore } from '../../../entities/auth/model/store';
 import { formatPrice } from '../../../shared/lib/format';
 import type { ClientStackParamList } from '../../../navigation/types';
@@ -50,10 +47,7 @@ export const CartScreen = () => {
 
   const goToVenue = useCallback(
     (venueId: number) => {
-      navigation.navigate('ClientTabs', {
-        screen: 'Venue',
-        params: { venueId },
-      });
+      navigation.navigate('Venue', { venueId });
     },
     [navigation],
   );

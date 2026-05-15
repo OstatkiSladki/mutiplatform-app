@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { Offer } from '../../../../entities/offer';
@@ -9,12 +10,12 @@ import type { Product } from '../../../../entities/product';
 import { useProductList } from '../../../../entities/product';
 import type { ClientStackParamList, ClientTabsParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
+import { MobileScreenChrome } from '../../../../shared/ui/mobile';
 import { formatPrice } from '../../../../shared/lib/format';
 import { useAddToCart } from '../../../../features/add-to-cart';
 import {
   BottomActionBar,
   NutritionInfo,
-  ProductDetailsHeader,
   ProductHero,
   ProductInfo,
   RelatedProductsSection,
@@ -45,6 +46,9 @@ export const ProductDetailsScreen = () => {
   const { t } = useTranslation('catalog');
   const route = useRoute<R>();
   const navigation = useNavigation<Nav>();
+  const { width } = useWindowDimensions();
+  const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
+  const [searchQuery, setSearchQuery] = useState('');
   const { venueId, venueName, offer, product: routeProduct } = route.params;
 
   const offersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 50 });
@@ -93,6 +97,8 @@ export const ProductDetailsScreen = () => {
     });
   }, [navigation, venueId]);
 
+  const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
+
   const openRelated = useCallback(
     (nextOffer: Offer, nextProduct?: Product) => {
       navigation.navigate('ClientTabs', {
@@ -116,11 +122,20 @@ export const ProductDetailsScreen = () => {
   }, [quantity, setQuantity]);
 
   return (
-    <View style={styles.root}>
-      <ProductDetailsHeader onBack={goBack} />
+    <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+      <MobileScreenChrome
+        variant="stack"
+        omitSafeArea
+        horizontalInset={pagePadding}
+        searchValue={searchQuery}
+        searchPlaceholder={t('searchPlaceholder')}
+        onSearchChange={setSearchQuery}
+        onBack={goBack}
+        onPressProfile={goProfile}
+      />
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingHorizontal: pagePadding }]}
         showsVerticalScrollIndicator={false}
       >
         <ProductHero imageUri={imageUrl} />
@@ -138,7 +153,7 @@ export const ProductDetailsScreen = () => {
         onAddPress={handleAdd}
         disabled={max === 0}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -151,7 +166,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: theme.spacing[4],
     paddingBottom: theme.spacing[5],
     gap: theme.spacing[5],
     maxWidth: theme.layout.containerMaxWidth,

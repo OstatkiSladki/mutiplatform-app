@@ -7,14 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { Avatar } from '../../../shared/ui/avatar';
 import { Button } from '../../../shared/ui/button';
 import { Input } from '../../../shared/ui/input';
-import { Popover } from '../../../shared/ui/popover';
-import { ProfileMenu } from '../../../shared/ui/profile-menu';
 import { theme } from '../../../shared/config/theme';
 import { clientAssets } from '../../../shared/assets/client';
 import { useCartStore, selectTotalItemCount } from '../../../entities/order';
 import { useAuthStore } from '../../../entities/auth';
-import { useLogout } from '../../../entities/auth/model/hooks';
-import { showBusinessToast } from '../../../shared/lib/business-toast';
 import type {
   ClientStackParamList,
   ClientTabsParamList,
@@ -36,7 +32,6 @@ export const ClientMobileHeader = ({
   const navigation = useNavigation<Nav>();
   const cartCount = useCartStore(selectTotalItemCount);
   const user = useAuthStore((s) => s.user);
-  const logoutMutation = useLogout();
 
   const goToTab = (tab: keyof ClientTabsParamList) =>
     navigation.navigate('ClientTabs', { screen: tab });
@@ -77,50 +72,14 @@ export const ClientMobileHeader = ({
             ) : null}
           </View>
 
-          <Popover
-            align="end"
-            width={300}
-            trigger={({ open }) => (
-              <Pressable
-                onPress={open}
-                accessibilityRole="button"
-                accessibilityLabel={t('header.profileA11y')}
-                hitSlop={4}
-              >
-                <Avatar name={user?.email ?? undefined} size="sm" />
-              </Pressable>
-            )}
+          <Pressable
+            onPress={() => navigation.navigate('Profile')}
+            accessibilityRole="button"
+            accessibilityLabel={t('header.profileA11y')}
+            hitSlop={4}
           >
-            {({ close }) => (
-              <ProfileMenu
-                userName={user?.email ?? t('header.profileGuest')}
-                onOrders={() => {
-                  close();
-                  showBusinessToast(t('header.comingSoon'), 'info');
-                }}
-                onSettings={() => {
-                  close();
-                  navigation.navigate('ProfileEdit');
-                }}
-                onSupport={() => {
-                  close();
-                  showBusinessToast(t('header.comingSoon'), 'info');
-                }}
-                onNotifications={() => {
-                  close();
-                  showBusinessToast(t('header.comingSoon'), 'info');
-                }}
-                onAbout={() => {
-                  close();
-                  showBusinessToast(t('header.comingSoon'), 'info');
-                }}
-                onLogout={() => {
-                  close();
-                  logoutMutation.mutate();
-                }}
-              />
-            )}
-          </Popover>
+            <Avatar name={user?.email ?? undefined} size="sm" />
+          </Pressable>
         </View>
       </View>
 

@@ -1,17 +1,19 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { useVenue } from '../../../../entities/venue';
 import { useOfferList, type Offer } from '../../../../entities/offer';
 import { useProductList, type Product } from '../../../../entities/product';
 import { Loader } from '../../../../shared/ui/loader';
+import { MobileScreenChrome } from '../../../../shared/ui/mobile';
 import { theme } from '../../../../shared/config/theme';
 import { CartSummary } from '../../../../widgets/cart-summary';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { ProductDetailsSheet, type ProductDetailsSheetRef } from '../../../../features/product-details';
-import { VenueTopHeader } from './components/VenueTopHeader.mobile';
 import { VenueInfo } from './components/VenueInfo.mobile';
 import { CategoryTabs } from './components/CategoryTabs.mobile';
 import { VenueProductGrid } from './components/VenueProductGrid.mobile';
@@ -24,7 +26,11 @@ const categories = ['Готовая еда', 'Выпечка', 'Здоровая
 export const VenueScreen = () => {
   const route = useRoute<VenueRoute>();
   const navigation = useNavigation<Nav>();
+  const { t } = useTranslation('catalog');
+  const { width } = useWindowDimensions();
+  const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
   const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const [searchQuery, setSearchQuery] = useState('');
   const { venueId } = route.params;
 
   const venueQuery = useVenue(venueId);
@@ -45,16 +51,33 @@ export const VenueScreen = () => {
   }, []);
 
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
+  const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
   const goToBooking = useCallback(
     () => navigation.navigate('Booking', { venueId }),
     [navigation, venueId],
   );
 
+  const chrome = (
+    <MobileScreenChrome
+      variant="stack"
+      omitSafeArea
+      horizontalInset={pagePadding}
+      searchValue={searchQuery}
+      searchPlaceholder={t('searchPlaceholder')}
+      onSearchChange={setSearchQuery}
+      onBack={goBack}
+      onPressProfile={goProfile}
+    />
+  );
+
   if (venueQuery.isLoading || !venueQuery.data) {
     return (
-      <View style={styles.root}>
-        <Loader fullScreen />
-      </View>
+      <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+        {chrome}
+        <View style={styles.loaderWrap}>
+          <Loader fullScreen />
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -62,8 +85,8 @@ export const VenueScreen = () => {
   const offers = offersQuery.data?.items ?? [];
 
   return (
-    <View style={styles.root}>
-      <VenueTopHeader onBack={goBack} />
+    <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+      {chrome}
       {offersQuery.isError ? (
         <View style={styles.errorWrap}>
           <EmptyState
@@ -75,6 +98,7 @@ export const VenueScreen = () => {
         </View>
       ) : (
         <VenueProductGrid
+          horizontalPadding={pagePadding}
           offers={offers}
           productsById={productsById}
           isLoading={offersQuery.isLoading}
@@ -96,7 +120,7 @@ export const VenueScreen = () => {
       </View>
 
       <ProductDetailsSheet ref={sheetRef} venueId={venueId} venueName={venue.name} />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -104,6 +128,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: theme.client.colors.background,
+  },
+  loaderWrap: {
+    flex: 1,
   },
   header: {
     gap: theme.spacing[4],

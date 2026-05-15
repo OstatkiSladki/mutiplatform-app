@@ -23,6 +23,13 @@ export const ruCatalog = {
   open: 'Открыто',
   loadError: 'Не удалось загрузить данные',
   retry: 'Повторить',
+  basket: {
+    tabBasket: 'Корзина',
+    tabOrders: 'Заказы',
+    pickupTimeTitle: 'Выберите время получения',
+    clearCartA11y: 'Очистить корзину',
+    multiVenueHint: 'Показана корзина первого заведения',
+  },
   cart: {
     title: 'Корзина',
     emptyTitle: 'В вашей корзине\nпока пусто',
@@ -77,9 +84,9 @@ export const ruCatalog = {
     title: 'Сюрприз бокс',
     sizeLabel: 'Размер',
     sizeHint: {
-      S: 'S — 2–3 порции',
-      M: 'M — 4–5 порций',
-      L: 'L — 6+ порций',
+      S: 'S — 2–3 позиции',
+      M: 'M — 4–5 позиций',
+      L: 'L — 6+ позиций',
     },
     fillingLabel: 'Настройки',
     fillings: {
@@ -100,6 +107,8 @@ export const ruCatalog = {
       dessert: 'десертный бокс',
     },
     timeLabel: 'Выберите время',
+    payCta: 'Оплатить',
+    heroTitle: 'Сюрприз бокс «{{brand}}»',
     bookCta: 'Забронировать за {{price}}',
     itemName: 'Сюрприз бокс',
     available: 'Доступно: {{count}} шт.',

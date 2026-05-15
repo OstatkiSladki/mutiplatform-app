@@ -9,7 +9,7 @@ import { ProfileLanding } from './ui/ProfileLanding';
 import { ProfileEditScreen } from '../profile-edit';
 import { styles } from './ui/styles';
 
-export const ProfileScreen = () => {
+export const ProfileScreenWeb = () => {
   const { isAtLeast, isWeb } = useBreakpoint();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const split = isWeb && isAtLeast('md');

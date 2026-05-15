@@ -1,8 +1,7 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Icon, type IconName } from '../../../../shared/ui/icon';
 import { theme } from '../../../../shared/config/theme';
-import { styles } from './styles';
 
 export interface ProfileMenuItemProps {
   icon: IconName;
@@ -29,3 +28,19 @@ export const ProfileMenuItem = ({ icon, label, onPress, destructive }: ProfileMe
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  menuRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing[3],
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[2],
+  },
+  menuLabel: {
+    flex: 1,
+    fontFamily: theme.typography.fontFamilies.inter,
+    fontSize: theme.typography.fontSizes[5],
+    color: theme.colors.neutral[1],
+  },
+});

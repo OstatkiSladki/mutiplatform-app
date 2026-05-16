@@ -10,8 +10,6 @@ import { HomeScreen } from '../screens/client/home';
 import { NearbyScreen } from '../screens/client/nearby/index';
 import { CatalogScreen } from '../screens/client/catalog/index';
 import { CartScreen } from '../screens/client/cart';
-import { VenueScreen } from '../screens/client/venue';
-import { ProductDetailsScreen } from '../screens/client/product-details';
 import { Icon, IconName } from '../shared/ui/icon';
 import { theme } from '../shared/config/theme';
 import { useBreakpoint } from '../shared/lib/responsive';
@@ -19,16 +17,16 @@ import { WebHeader } from '../widgets/web-header';
 import { MobileTabRouteIcon } from '../widgets/mobile-tab-route-icon';
 
 const Tab = createBottomTabNavigator<ClientTabsParamList>();
-type VisibleClientTabName = Exclude<keyof ClientTabsParamList, 'Venue' | 'ProductDetails'>;
+type TabName = keyof ClientTabsParamList;
 
-const webTabIcons: Record<VisibleClientTabName, IconName> = {
+const webTabIcons: Record<TabName, IconName> = {
   Home: 'home',
   Nearby: 'map-pin',
   Catalog: 'package',
   Cart: 'shopping-bag',
 };
 
-const tabLabelKeys: Record<VisibleClientTabName, string> = {
+const tabLabelKeys: Record<TabName, string> = {
   Home: 'tabs.home',
   Nearby: 'tabs.nearby',
   Catalog: 'tabs.catalog',
@@ -53,10 +51,9 @@ export const ClientTabs = () => {
         tabBarPosition: useWebHeader ? 'top' : 'bottom',
         tabBarActiveTintColor: theme.colors.primary[100],
         tabBarInactiveTintColor: theme.colors.neutral[7],
-        tabBarLabel:
-          route.name === 'Venue' || route.name === 'ProductDetails' ? '' : t(tabLabelKeys[route.name]),
+        tabBarLabel: t(tabLabelKeys[route.name]),
         tabBarIcon: ({ focused }) =>
-          route.name === 'Venue' || route.name === 'ProductDetails' ? null : useWebHeader ? (
+          useWebHeader ? (
             <Icon name={webTabIcons[route.name]} size={22} color={focused ? theme.colors.primary[100] : theme.colors.neutral[7]} />
           ) : (
             <MobileTabRouteIcon
@@ -94,22 +91,6 @@ export const ClientTabs = () => {
       <Tab.Screen name="Nearby" component={NearbyScreen} />
       <Tab.Screen name="Catalog" component={CatalogScreen} />
       <Tab.Screen name="Cart" component={CartScreen} />
-      <Tab.Screen
-        name="Venue"
-        component={VenueScreen}
-        options={{
-          tabBarButton: () => null,
-          tabBarItemStyle: { display: 'none' },
-        }}
-      />
-      <Tab.Screen
-        name="ProductDetails"
-        component={ProductDetailsScreen}
-        options={{
-          tabBarButton: () => null,
-          tabBarItemStyle: { display: 'none' },
-        }}
-      />
     </Tab.Navigator>
   );
 };

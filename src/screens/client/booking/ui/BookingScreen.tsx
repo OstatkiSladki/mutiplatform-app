@@ -133,18 +133,20 @@ const BookingScreenContent = () => {
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
       {isDesktop ? <ClientDesktopHeader activeTab="Cart" /> : null}
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={goBack}
-          accessibilityRole="button"
-          accessibilityLabel="Назад"
-          activeOpacity={0.7}
-        >
-          <Icon name="chevron-left" size={20} color={theme.colors.neutral[1]} />
-        </TouchableOpacity>
-        <Text style={styles.topTitle}>{t('title')}</Text>
-      </View>
+      {!isDesktop ? (
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={goBack}
+            accessibilityRole="button"
+            accessibilityLabel="Назад"
+            activeOpacity={0.7}
+          >
+            <Icon name="chevron-left" size={20} color={theme.colors.neutral[1]} />
+          </TouchableOpacity>
+          <Text style={styles.topTitle}>{t('title')}</Text>
+        </View>
+      ) : null}
 
       <View style={styles.bodyWrap}>
         <ScrollView

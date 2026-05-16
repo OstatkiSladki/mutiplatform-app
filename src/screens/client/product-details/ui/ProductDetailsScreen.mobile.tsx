@@ -8,7 +8,7 @@ import type { Offer } from '../../../../entities/offer';
 import { useOfferList } from '../../../../entities/offer';
 import type { Product } from '../../../../entities/product';
 import { useProductList } from '../../../../entities/product';
-import type { ClientStackParamList, ClientTabsParamList } from '../../../../navigation/types';
+import type { ClientStackParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
 import { MobileScreenChrome } from '../../../../shared/ui/mobile';
 import { formatPrice } from '../../../../shared/lib/format';
@@ -22,7 +22,7 @@ import {
   nutritionFromProduct,
 } from './components';
 
-type R = RouteProp<ClientTabsParamList, 'ProductDetails'>;
+type R = RouteProp<ClientStackParamList, 'ProductDetails'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
 const resolveWeight = (product?: Product): string | null => {
@@ -91,24 +91,18 @@ export const ProductDetailsScreen = () => {
   }, [offersQuery.data?.items, offer.id]);
 
   const goBack = useCallback(() => {
-    navigation.navigate('ClientTabs', {
-      screen: 'Venue',
-      params: { venueId },
-    });
+    navigation.navigate('Venue', { venueId });
   }, [navigation, venueId]);
 
   const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
 
   const openRelated = useCallback(
     (nextOffer: Offer, nextProduct?: Product) => {
-      navigation.navigate('ClientTabs', {
-        screen: 'ProductDetails',
-        params: {
-          venueId,
-          venueName,
-          offer: nextOffer,
-          product: nextProduct,
-        },
+      navigation.navigate('ProductDetails', {
+        venueId,
+        venueName,
+        offer: nextOffer,
+        product: nextProduct,
       });
     },
     [navigation, venueId, venueName],

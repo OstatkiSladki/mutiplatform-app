@@ -24,3 +24,6 @@ export type { CartSummaryProps } from './cart-summary';
 
 export { AuthRequiredScreen } from './auth-required';
 export type { AuthRequiredScreenProps } from './auth-required';
+
+export { MapWidget } from './map-widget';
+export type { MapWidgetProps } from './map-widget/types';

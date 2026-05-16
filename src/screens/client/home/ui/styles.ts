@@ -36,6 +36,7 @@ export const styles = StyleSheet.create({
     borderColor: theme.client.colors.border,
     padding: theme.spacing[4],
     gap: theme.spacing[3],
+    overflow: 'hidden',
     ...theme.client.shadows.card,
   },
   nearbyGridDesktop: {
@@ -44,19 +45,20 @@ export const styles = StyleSheet.create({
   },
   nearbyMapDesktop: {
     flex: 1,
-    minHeight: 280,
+    minHeight: 350,
   },
   nearbyMapMobile: {
-    height: 200,
+    height: 250,
     borderRadius: theme.client.radius.lg,
     overflow: 'hidden',
   },
   nearbyListDesktop: {
     flex: 1,
-    maxHeight: 280,
+    maxHeight: 350,
   },
   nearbyListMobile: {
     gap: theme.spacing[1],
+    maxHeight: 260,
   },
   carouselWrap: {
     position: 'relative',
@@ -88,6 +90,21 @@ export const styles = StyleSheet.create({
     flexGrow: 0,
     flexShrink: 1,
     minWidth: 0,
+  },
+  carouselPrev: {
+    position: 'absolute',
+    left: theme.spacing[2],
+    top: '50%',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: theme.client.colors.card,
+    borderWidth: 1,
+    borderColor: theme.client.colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    transform: [{ translateY: -18 }],
+    ...theme.client.shadows.card,
   },
   carouselNext: {
     position: 'absolute',

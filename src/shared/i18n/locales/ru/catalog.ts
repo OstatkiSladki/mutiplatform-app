@@ -9,6 +9,7 @@ export const ruCatalog = {
   venueTagsDefault: 'Burger · Chiken · Biche · Wings',
   hoursDefault: '07:00–22:00',
   distanceDefault: '600 м',
+  carouselPrevA11y: 'Предыдущий слайд',
   carouselNextA11y: 'Следующее заведение',
   emptyVenues: 'Заведения скоро появятся',
   emptyVenuesDescription: 'Мы добавляем партнёров рядом с вами.',

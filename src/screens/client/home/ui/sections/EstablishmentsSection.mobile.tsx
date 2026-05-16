@@ -44,7 +44,9 @@ export const EstablishmentsSection = ({
               <VenueCard venue={item} onPress={onPressVenue} />
             )}
             ItemSeparatorComponent={Separator}
-            showsHorizontalScrollIndicator={false}
+            showsHorizontalScrollIndicator={true}
+            indicatorStyle="black"
+            nestedScrollEnabled={true}
             contentContainerStyle={styles.horizontalList}
           />
           {showNextButton ? (

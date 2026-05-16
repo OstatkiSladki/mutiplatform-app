@@ -79,7 +79,8 @@ export const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   imageWrapWide: {
-    flex: 1,
+    width: 130,
+    height: 130,
   },
   image: {
     width: '100%',

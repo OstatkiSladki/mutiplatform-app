@@ -1,66 +1,89 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Input } from '../../../../shared/ui/input';
-import { MapPlaceholder } from '../../../../shared/ui/map-placeholder';
 import { Button } from '../../../../shared/ui/button';
 import { Icon } from '../../../../shared/ui/icon';
 import { theme } from '../../../../shared/config/theme';
+import { useUserLocation } from '../../../../shared/lib/hooks/use-user-location';
+import { useVenueList } from '../../../../entities/venue';
+import type { ClientStackParamList } from '../../../../navigation/types';
+import type { Venue } from '../../../../entities/venue';
+import { MapWidget } from '../../../../widgets/map-widget';
 
-export const NearbyScreen = () => (
-  <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
-    <ScrollView
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.header}>
-        <Text style={styles.eyebrow}>Адрес</Text>
-        <Text style={styles.title}>Где искать еду?</Text>
-        <Text style={styles.subtitle}>
-          Укажите адрес или используйте текущую геопозицию, чтобы найти
-          заведения рядом.
-        </Text>
-      </View>
+type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
-      <Input
-        variant="pill"
-        leadingIcon="search"
-        placeholder="Введите адрес или район"
-        autoCapitalize="none"
-      />
+export const NearbyScreen = () => {
+  const navigation = useNavigation<Nav>();
+  const { coords } = useUserLocation();
+  const venueListQuery = useVenueList(
+    coords ? { lat: coords.lat, lon: coords.lon, radius: 5000 } : undefined,
+  );
+  const venues = venueListQuery.data?.items ?? [];
 
-      <TouchableOpacity style={styles.locationCard} activeOpacity={0.8}>
-        <View style={styles.locationIcon}>
-          <Icon name="navigation" size={18} color={theme.colors.primary[100]} />
+  const handleVenuePress = (venue: Venue) => {
+    navigation.navigate('Venue', { venueId: venue.id });
+  };
+
+  return (
+    <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Text style={styles.eyebrow}>Адрес</Text>
+          <Text style={styles.title}>Где искать еду?</Text>
+          <Text style={styles.subtitle}>
+            Укажите адрес или используйте текущую геопозицию, чтобы найти
+            заведения рядом.
+          </Text>
         </View>
-        <View style={styles.locationText}>
-          <Text style={styles.locationTitle}>Использовать текущее местоположение</Text>
-          <Text style={styles.locationSubtitle}>Запрос геолокации появится позже</Text>
+
+        <Input
+          variant="pill"
+          leadingIcon="search"
+          placeholder="Введите адрес или район"
+          autoCapitalize="none"
+        />
+
+        <TouchableOpacity style={styles.locationCard} activeOpacity={0.8}>
+          <View style={styles.locationIcon}>
+            <Icon name="navigation" size={18} color={theme.colors.primary[100]} />
+          </View>
+          <View style={styles.locationText}>
+            <Text style={styles.locationTitle}>Использовать текущее местоположение</Text>
+            <Text style={styles.locationSubtitle}>Запрос геолокации появится позже</Text>
+          </View>
+        </TouchableOpacity>
+
+        <MapWidget
+          venues={venues}
+          initialCenter={coords ?? undefined}
+          onVenuePress={handleVenuePress}
+          style={styles.map}
+        />
+
+        <View style={styles.savedBlock}>
+          <Text style={styles.sectionTitle}>Популярные адреса</Text>
+          {['проспект Ленина, 107/1', 'ул. Текучева, 140', 'парк Горького'].map(
+            (address) => (
+              <TouchableOpacity key={address} style={styles.addressRow} activeOpacity={0.75}>
+                <Icon name="map-pin" size={16} color={theme.client.colors.mutedForeground} />
+                <Text style={styles.addressText}>{address}</Text>
+              </TouchableOpacity>
+            ),
+          )}
         </View>
-      </TouchableOpacity>
 
-      <MapPlaceholder
-        label="Здесь будет карта с заведениями рядом"
-        style={styles.map}
-      />
-
-      <View style={styles.savedBlock}>
-        <Text style={styles.sectionTitle}>Популярные адреса</Text>
-        {['проспект Ленина, 107/1', 'ул. Текучева, 140', 'парк Горького'].map(
-          (address) => (
-            <TouchableOpacity key={address} style={styles.addressRow} activeOpacity={0.75}>
-              <Icon name="map-pin" size={16} color={theme.client.colors.mutedForeground} />
-              <Text style={styles.addressText}>{address}</Text>
-            </TouchableOpacity>
-          ),
-        )}
-      </View>
-
-      <Button title="Показать рядом" size="large" />
-    </ScrollView>
-  </SafeAreaView>
-);
+        <Button title="Показать рядом" size="large" />
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   root: {

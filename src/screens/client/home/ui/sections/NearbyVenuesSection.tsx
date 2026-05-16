@@ -1,7 +1,7 @@
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Venue } from '../../../../../entities/venue';
-import { MapPlaceholder } from '../../../../../shared/ui/map-placeholder';
+import { MapWidget } from '../../../../../widgets/map-widget';
 import { Loader } from '../../../../../shared/ui/loader';
 import { useBreakpoint } from '../../../../../shared/lib/responsive';
 import { EmptyState } from '../../../../../widgets/empty-state';
@@ -84,16 +84,28 @@ export const NearbyVenuesSection = ({
         {twoCol ? (
           <View style={styles.nearbyGridDesktop}>
             <View style={styles.nearbyMapDesktop}>
-              <MapPlaceholder />
+              <MapWidget
+                venues={items}
+                onVenuePress={(v) => onPressVenue(v.id)}
+                style={{ flex: 1, minHeight: 350 }}
+              />
             </View>
-            <View style={styles.nearbyListDesktop}>{list}</View>
+            <ScrollView style={styles.nearbyListDesktop} showsVerticalScrollIndicator={false}>
+              {list}
+            </ScrollView>
           </View>
         ) : (
           <>
             <View style={styles.nearbyMapMobile}>
-              <MapPlaceholder />
+              <MapWidget
+                venues={items}
+                onVenuePress={(v) => onPressVenue(v.id)}
+                style={{ flex: 1, minHeight: 250 }}
+              />
             </View>
-            <View style={styles.nearbyListMobile}>{list}</View>
+            <ScrollView style={styles.nearbyListMobile} showsVerticalScrollIndicator={false} nestedScrollEnabled>
+              {list}
+            </ScrollView>
           </>
         )}
       </View>

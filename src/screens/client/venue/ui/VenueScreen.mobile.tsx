@@ -17,6 +17,7 @@ import { ProductDetailsSheet, type ProductDetailsSheetRef } from '../../../../fe
 import { VenueInfo } from './components/VenueInfo.mobile';
 import { CategoryTabs } from './components/CategoryTabs.mobile';
 import { VenueProductGrid } from './components/VenueProductGrid.mobile';
+import { MapWidget } from '../../../../widgets/map-widget';
 
 type VenueRoute = RouteProp<ClientStackParamList, 'Venue'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
@@ -106,6 +107,16 @@ export const VenueScreen = () => {
           ListHeaderComponent={
             <View style={styles.header}>
               <VenueInfo venue={venue} />
+              {venue.latitude && venue.longitude && (
+                <MapWidget
+                  venues={[venue]}
+                  initialCenter={{
+                    lat: parseFloat(venue.latitude),
+                    lon: parseFloat(venue.longitude),
+                  }}
+                  style={styles.miniMap}
+                />
+              )}
               <CategoryTabs
                 categories={categories}
                 activeCategory={activeCategory}
@@ -135,6 +146,10 @@ const styles = StyleSheet.create({
   header: {
     gap: theme.spacing[4],
     paddingBottom: theme.spacing[4],
+  },
+  miniMap: {
+    height: 180,
+    borderRadius: theme.client.radius.card,
   },
   errorWrap: {
     flex: 1,

@@ -1,5 +1,13 @@
+export { BookingCtaButton, BOOKING_CTA_HEIGHT } from './booking-cta-button';
+export type { BookingCtaButtonProps } from './booking-cta-button';
+
+export {
+  MobilePriceCtaBar,
+  MOBILE_PRICE_CTA_SCROLL_PADDING,
+} from './mobile-price-cta-bar';
+export type { MobilePriceCtaBarProps } from './mobile-price-cta-bar';
+
 export { Button } from './button';
-export type { ButtonProps, ButtonVariant, ButtonSize, ButtonDensity } from './button';
 
 export { Input } from './input';
 export type { InputProps, InputVariant } from './input';

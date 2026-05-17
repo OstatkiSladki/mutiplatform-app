@@ -9,6 +9,7 @@ import {
   type DraftCartItem,
 } from '../../../entities/order';
 import { formatPrice } from '../../../shared/lib/format';
+import { BookingCtaButton } from '../../../shared/ui/booking-cta-button';
 import { EmptyCart } from './EmptyCart';
 import { styles } from './styles';
 
@@ -62,15 +63,12 @@ export const CartSidebar = ({ venueId, onPressCheckout, onPressBackToVenues }: C
             <Text style={styles.totalLabel}>{t('cart.total')}</Text>
             <Text style={styles.totalValue}>{formatPrice(total)}</Text>
           </View>
-          <TouchableOpacity
-            style={styles.ctaPrimary}
+          <BookingCtaButton
+            title={t('bookCta')}
             onPress={onPressCheckout}
-            activeOpacity={0.85}
-            accessibilityRole="button"
             accessibilityLabel={t('bookCta')}
-          >
-            <Text style={styles.ctaPrimaryText}>{t('bookCta')}</Text>
-          </TouchableOpacity>
+            style={{ alignSelf: 'stretch' }}
+          />
         </>
       )}
       {onPressBackToVenues ? (

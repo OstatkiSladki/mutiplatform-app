@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import type { Offer } from '../../../entities/offer';
@@ -10,6 +10,7 @@ import { useCartStore } from '../../../entities/order';
 import { useSurpriseBoxBuilder, SurpriseBoxBuilder } from '../../../features/surprise-box-builder';
 import { formatPrice } from '../../../shared/lib/format';
 import { theme } from '../../../shared/config/theme';
+import { BookingCtaButton } from '../../../shared/ui/booking-cta-button';
 import { useBreakpoint } from '../../../shared/lib/responsive';
 import { clientAssets } from '../../../shared/assets/client';
 import {
@@ -104,26 +105,16 @@ export const SurpriseBoxCard = ({
         </View>
       </View>
 
-      <TouchableOpacity
-        style={styles.cta}
-        activeOpacity={0.85}
+      <BookingCtaButton
+        title={t('surpriseBox.bookCta', {
+          price: formatPrice(builder.finalPrice),
+        })}
         onPress={onBook}
-        accessibilityRole="button"
         accessibilityLabel={t('surpriseBox.bookCta', {
           price: formatPrice(builder.finalPrice),
         })}
-      >
-        <Text style={styles.ctaText}>
-          {t('surpriseBox.bookCta', {
-            price: formatPrice(builder.finalPrice),
-          })}
-        </Text>
-        <Icon
-          name="arrow-right"
-          size={16}
-          color={theme.client.colors.primaryForeground}
-        />
-      </TouchableOpacity>
+        style={{ alignSelf: 'stretch', marginTop: theme.spacing[1] }}
+      />
     </View>
   );
 };

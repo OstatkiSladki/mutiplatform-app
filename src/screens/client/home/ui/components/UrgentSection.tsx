@@ -82,14 +82,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[7],
+    fontSize: theme.typography.fontSizes[9],
     fontWeight: '700',
-    color: theme.client.colors.foreground,
+    lineHeight: theme.typography.fontSizes[9] * theme.typography.lineHeights.normal,
+    color: theme.colors.neutral[1],
   },
   list: {
     alignItems: 'stretch',
-    paddingVertical: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
     paddingRight: theme.spacing[3],
+    overflow: 'visible',
   },
   separator: {
     width: theme.spacing[3],

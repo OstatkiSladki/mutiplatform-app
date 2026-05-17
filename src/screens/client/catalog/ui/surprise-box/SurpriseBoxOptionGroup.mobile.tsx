@@ -57,21 +57,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing[4],
     paddingVertical: theme.spacing[2],
     borderRadius: theme.client.radius.pill,
-    backgroundColor: theme.colors.neutral[9],
+    backgroundColor: theme.colors.neutral[8],
     minHeight: theme.spacing[7],
     justifyContent: 'center',
   },
   pillActive: {
-    backgroundColor: theme.client.colors.primary,
+    backgroundColor: theme.colors.primary[100],
   },
   pillLabel: {
     fontFamily: theme.client.typography.fontFamily,
     fontWeight: '400',
     fontSize: theme.typography.fontSizes[5],
     lineHeight: theme.typography.fontSizes[5] * theme.typography.lineHeights.normal,
-    color: theme.client.colors.foreground,
+    color: theme.colors.neutral[1],
   },
   pillLabelActive: {
-    color: theme.client.colors.primaryForeground,
+    color: theme.colors.neutral.white,
+    fontWeight: '600',
   },
 });

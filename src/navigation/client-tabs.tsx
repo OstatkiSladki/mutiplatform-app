@@ -81,8 +81,9 @@ export const ClientTabs = () => {
               paddingBottom: insets.bottom,
               borderTopWidth: 0,
               backgroundColor: theme.client.colors.card,
-              shadowOpacity: 1,
-              ...theme.shadows.tight[9],
+              borderTopLeftRadius: theme.client.radius.md,
+              borderTopRightRadius: theme.client.radius.md,
+              ...theme.client.shadows.tabBar,
             },
         tabBarLabelStyle: {
           fontFamily: theme.typography.fontFamilies.inter,

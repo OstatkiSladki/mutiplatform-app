@@ -17,9 +17,10 @@ const styles = StyleSheet.create({
     borderRadius: theme.client.radius.md,
     overflow: 'hidden',
     backgroundColor: theme.colors.neutral[9],
+    aspectRatio: 358 / 214,
   },
   image: {
     width: '100%',
-    aspectRatio: 1,
+    height: '100%',
   },
 });

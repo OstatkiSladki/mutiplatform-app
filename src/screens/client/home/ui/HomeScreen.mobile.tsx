@@ -112,7 +112,6 @@ export const HomeScreen = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <MobileScreenChrome
-          variant="home"
           omitSafeArea
           horizontalInset={0}
           searchValue={searchQuery}

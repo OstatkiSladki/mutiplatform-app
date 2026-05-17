@@ -9,28 +9,10 @@ import { Icon } from '../../../shared/ui/icon';
 
 const productImage = require('../../../../assets/surbricebox.png');
 
-const minutesLeft = (expiresAt: string) => {
-  const expires = new Date(expiresAt).getTime();
-  const diff = Number.isFinite(expires) ? Math.max(0, expires - Date.now()) : 0;
-  return Math.max(1, Math.ceil(diff / 60000));
-};
-
-const pickupWindow = (expiresAt: string) => {
-  const totalMinutes = minutesLeft(expiresAt);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (hours <= 0) return `${minutes}м`;
-  if (minutes <= 0) return `${hours}ч`;
-  return `${hours}ч ${minutes}м`;
-};
-
 export interface CategoryProductCardProps {
   offer: Offer;
   title: string;
   width: DimensionValue;
-  aspectRatio?: number;
-  subtitle?: string;
   weight?: string;
   onPress: () => void;
 }
@@ -39,8 +21,6 @@ export const CategoryProductCard = ({
   offer,
   title,
   width,
-  aspectRatio = 138 / 230,
-  subtitle,
   weight = '130г',
   onPress,
 }: CategoryProductCardProps) => {
@@ -48,31 +28,28 @@ export const CategoryProductCard = ({
   const originalPrice = parseFloat(offer.original_price) || 0;
 
   return (
-    <Pressable
-      style={[styles.shadow, { width, aspectRatio }]}
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={`${title}, ${formatPrice(price)}`}
-    >
-      <View style={styles.surface}>
-        <View style={styles.imageFrame}>
-          <Image source={productImage} style={styles.image} contentFit="contain" />
-        </View>
-        <View style={styles.body}>
-          <View style={styles.priceRow}>
-            <Text style={styles.price}>{formatPrice(price)}</Text>
-            {originalPrice > price ? (
-              <Text style={styles.oldPrice}>{formatPrice(originalPrice)}</Text>
-            ) : null}
+    <View style={[styles.shadowHost, { width }]}>
+      <Pressable
+        style={styles.pressable}
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={`${title}, ${formatPrice(price)}, ${weight}`}
+      >
+        <View style={styles.inner}>
+          <View style={styles.imageFrame}>
+            <Image source={productImage} style={styles.image} contentFit="cover" />
           </View>
-          <Text style={styles.title} numberOfLines={2}>
-            {title}
-          </Text>
-          <Text style={styles.subtitle} numberOfLines={1}>
-            {subtitle ?? pickupWindow(offer.expires_at)}
-          </Text>
-          <View style={styles.footer}>
-            <Text style={styles.weight}>{weight}</Text>
+          <View style={styles.priceRow}>
+            <View style={styles.priceBlock}>
+              <Text style={styles.price} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
+                {formatPrice(price)}
+              </Text>
+              {originalPrice > price ? (
+                <Text style={styles.oldPrice} numberOfLines={1}>
+                  {formatPrice(originalPrice)}
+                </Text>
+              ) : null}
+            </View>
             <View style={styles.cta}>
               <Icon
                 name="arrow-up-right"
@@ -81,80 +58,86 @@ export const CategoryProductCard = ({
               />
             </View>
           </View>
+          <Text style={styles.productTitle} numberOfLines={2}>
+            {title}
+          </Text>
+          <Text style={styles.weight}>{weight}</Text>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  shadow: {
+  shadowHost: {
+    alignSelf: 'flex-start',
     borderRadius: theme.client.radius.card,
     backgroundColor: theme.client.colors.card,
-    ...theme.client.shadows.card,
+    ...theme.client.shadows.productCard,
   },
-  surface: {
-    flex: 1,
+  pressable: {
     borderRadius: theme.client.radius.card,
-    backgroundColor: theme.client.colors.card,
     overflow: 'hidden',
+  },
+  inner: {
     padding: theme.spacing[2],
+    backgroundColor: theme.client.colors.card,
   },
   imageFrame: {
-    flex: 1,
-    minHeight: 96,
+    width: '100%',
+    aspectRatio: 1,
     borderRadius: theme.client.radius.md,
     backgroundColor: theme.client.colors.secondaryMuted,
-    alignItems: 'center',
-    justifyContent: 'center',
+    overflow: 'hidden',
     marginBottom: theme.spacing[2],
   },
   image: {
     width: '100%',
     height: '100%',
   },
-  body: {
-    gap: theme.spacing[1],
-  },
   priceRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: theme.spacing[2],
-    flexWrap: 'wrap',
-  },
-  price: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[11],
-    lineHeight: theme.typography.fontSizes[11] * theme.typography.lineHeights.tight,
-    fontWeight: '700',
-    color: theme.client.colors.foreground,
-  },
-  oldPrice: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.client.colors.mutedForeground,
-    textDecorationLine: 'line-through',
-  },
-  title: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[5],
-    fontWeight: '600',
-    color: theme.client.colors.foreground,
-    lineHeight: theme.typography.fontSizes[5] * theme.typography.lineHeights.normal,
-  },
-  subtitle: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.client.colors.mutedForeground,
-  },
-  footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[1],
   },
-  weight: {
+  priceBlock: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    flexWrap: 'nowrap',
+    gap: theme.spacing[2],
+    minWidth: 0,
+  },
+  price: {
+    fontFamily: theme.client.typography.fontFamily,
+    fontSize: theme.typography.fontSizes[7],
+    lineHeight: theme.typography.fontSizes[7] * theme.typography.lineHeights.tight,
+    fontWeight: '700',
+    color: theme.client.colors.foreground,
+    flexShrink: 1,
+  },
+  oldPrice: {
     fontFamily: theme.client.typography.fontFamily,
     fontSize: theme.typography.fontSizes[2],
+    lineHeight: theme.typography.fontSizes[2] * theme.typography.lineHeights.normal,
+    color: theme.colors.neutral[5],
+    textDecorationLine: 'line-through',
+    flexShrink: 0,
+  },
+  productTitle: {
+    fontFamily: theme.client.typography.fontFamily,
+    fontSize: theme.typography.fontSizes[5],
+    fontWeight: '700',
+    color: theme.colors.neutral[5],
+    lineHeight: theme.typography.fontSizes[5] * theme.typography.lineHeights.normal,
+  },
+  weight: {
+    marginTop: 2,
+    fontFamily: theme.client.typography.fontFamily,
+    fontSize: theme.typography.fontSizes[3],
+    lineHeight: theme.typography.fontSizes[3] * theme.typography.lineHeights.normal,
     color: theme.client.colors.mutedForeground,
   },
   cta: {
@@ -164,5 +147,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.client.colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
 });

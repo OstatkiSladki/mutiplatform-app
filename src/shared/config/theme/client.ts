@@ -64,6 +64,22 @@ export const clientTokens = {
       shadowRadius: 12,
       elevation: 2,
     },
+    /** Product tiles (Home / Venue / SurpriseBox grids) — soft Apple-like float; barely visible. */
+    productCard: {
+      shadowColor: '#1A1512',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.03,
+      shadowRadius: 16,
+      elevation: 4,
+    },
+    /** Bottom tab bar — minimal separation from content (as light as practical). */
+    tabBar: {
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 0.03,
+      shadowRadius: 10,
+      elevation: 2,
+    },
   },
   radius: {
     // --radius: 0.875rem (14px)
@@ -72,6 +88,8 @@ export const clientTokens = {
     md: 12,
     lg: 14,
     pill: 9999,
+    /** Primary CTA in booking bars (e.g. cart footer). */
+    bookingCta: 40,
   },
   typography: {
     fontFamily: 'Inter',

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { ImageSource } from 'expo-image';
+import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { theme } from '../../../../../shared/config/theme';
 
 const promoAssets = {
@@ -20,11 +21,10 @@ export const PromoSection = ({ isTablet }: PromoSectionProps) => (
       title="Сюрприз бокс"
       image={promoAssets.surprise}
       size={isTablet ? 'largeTablet' : 'largePhone'}
-      tone="primary"
     />
     <View style={[styles.column, isTablet ? styles.columnTablet : styles.columnPhone]}>
-      <PromoCard title="Рядом" image={promoAssets.nearby} size="compact" tone="soft" />
-      <PromoCard title="Акции" image={promoAssets.stock} size="compact" tone="primary" />
+      <PromoCard title="Рядом" image={promoAssets.nearby} size="compact" />
+      <PromoCard title="Акции" image={promoAssets.stock} size="compact" />
     </View>
   </View>
 );
@@ -35,30 +35,43 @@ interface PromoCardProps {
   title: string;
   image: ImageSource;
   size: PromoCardSize;
-  tone: 'primary' | 'soft';
 }
 
-const PromoCard = ({ title, image, size, tone }: PromoCardProps) => {
+/** Lets radial gradient read through — same treatment for every promo tile. */
+const PROMO_IMAGE_OVERLAY_OPACITY = 0.88;
+
+const PromoRadialBg = ({ gradientId }: { gradientId: string }) => (
+  <Svg style={StyleSheet.absoluteFillObject} pointerEvents="none">
+    <Defs>
+      <RadialGradient id={gradientId} cx="50%" cy="50%" r="55%" gradientUnits="objectBoundingBox">
+        <Stop offset="0" stopColor="#FFB066" />
+        <Stop offset="0.5" stopColor="#FA7201" />
+        <Stop offset="1" stopColor="#FA7201" />
+      </RadialGradient>
+    </Defs>
+    <Rect width="100%" height="100%" fill={`url(#${gradientId})`} />
+  </Svg>
+);
+
+const PromoCard = ({ title, image, size }: PromoCardProps) => {
   const compact = size === 'compact';
+  const reactId = useId().replace(/:/g, '');
+  const gradientId = `promo-radial-${reactId}`;
 
   return (
     <View
       style={[
         styles.card,
-        tone === 'soft' ? styles.cardSoft : styles.cardPrimary,
         compact ? styles.cardCompact : null,
         size === 'largePhone' ? styles.cardLargePhone : null,
         size === 'largeTablet' ? styles.cardLargeTablet : null,
       ]}
     >
-      <View style={styles.copy}>
-        <Text style={styles.title}>{title}</Text>
+      <PromoRadialBg gradientId={gradientId} />
+      <Image source={image} style={styles.imageFill} contentFit="cover" />
+      <View style={styles.titleOverlay} pointerEvents="none">
+        <Text style={[styles.title, styles.titleOnPromo]}>{title}</Text>
       </View>
-      <Image
-        source={image}
-        style={compact ? styles.imageCompact : styles.image}
-        contentFit="contain"
-      />
     </View>
   );
 };
@@ -85,15 +98,7 @@ const styles = StyleSheet.create({
     minWidth: 150,
     borderRadius: theme.client.radius.card,
     overflow: 'hidden',
-    padding: theme.spacing[3],
-    justifyContent: 'space-between',
     ...theme.client.shadows.card,
-  },
-  cardPrimary: {
-    backgroundColor: theme.colors.primary[100],
-  },
-  cardSoft: {
-    backgroundColor: theme.colors.primary[80],
   },
   cardLargePhone: {
     flexBasis: '48%',
@@ -105,26 +110,26 @@ const styles = StyleSheet.create({
   },
   cardCompact: {
     aspectRatio: 2.2,
-    flexDirection: 'row',
-    alignItems: 'center',
   },
-  copy: {
-    flexShrink: 0,
-    paddingRight: theme.spacing[2],
+  imageFill: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
+    opacity: PROMO_IMAGE_OVERLAY_OPACITY,
+  },
+  titleOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-start',
+    padding: theme.spacing[3],
   },
   title: {
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[4],
+    fontSize: theme.typography.fontSizes[5],
     fontWeight: '700',
-    color: theme.client.colors.primaryForeground,
+    lineHeight: theme.typography.fontSizes[5] * theme.typography.lineHeights.normal,
   },
-  image: {
-    width: '100%',
-    flex: 1,
-    marginTop: theme.spacing[2],
-  },
-  imageCompact: {
-    width: '56%',
-    aspectRatio: 1.35,
+  /** Promo overlays images / gradients — always light text (never inherited dark body color). */
+  titleOnPromo: {
+    color: theme.colors.neutral.white,
   },
 });

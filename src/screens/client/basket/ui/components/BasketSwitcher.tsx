@@ -66,16 +66,16 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[4],
-    lineHeight: theme.typography.fontSizes[4] * theme.typography.lineHeights.normal,
+    fontSize: theme.typography.fontSizes[9],
+    lineHeight: theme.typography.fontSizes[9] * theme.typography.lineHeights.normal,
+    fontWeight: '700',
     paddingBottom: theme.spacing[2],
   },
   tabActive: {
-    fontWeight: '700',
-    color: theme.colors.neutral.black,
+    color: theme.colors.neutral[1],
   },
   tabInactive: {
-    fontWeight: '400',
+    fontWeight: '700',
     color: theme.colors.neutral[7],
   },
   underline: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.sm,
   },
   underlineOn: {
-    backgroundColor: theme.colors.neutral.black,
+    backgroundColor: theme.colors.neutral[1],
   },
   underlineOff: {
     backgroundColor: 'transparent',

@@ -24,7 +24,6 @@ const primaryProductId = (offer: Offer) => offer.items[0]?.product_id;
 export const RelatedProductsSection = ({
   offers,
   productsById,
-  excludeOfferId,
   onSelectOffer,
 }: RelatedProductsSectionProps) => {
   const { t } = useTranslation('catalog');
@@ -77,7 +76,8 @@ const styles = StyleSheet.create({
     color: theme.client.colors.foreground,
   },
   listContent: {
-    paddingVertical: theme.spacing[1],
+    paddingVertical: theme.spacing[3],
+    overflow: 'visible',
   },
   gap: {
     width: theme.spacing[3],

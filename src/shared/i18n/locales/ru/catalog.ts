@@ -107,7 +107,7 @@ export const ruCatalog = {
       dessert: 'десертный бокс',
     },
     timeLabel: 'Выберите время',
-    payCta: 'Оплатить',
+    payCta: 'Забронировать',
     heroTitle: 'Сюрприз бокс «{{brand}}»',
     bookCta: 'Забронировать за {{price}}',
     itemName: 'Сюрприз бокс',

@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { Offer } from '../../../../../entities/offer';
 import { theme } from '../../../../../shared/config/theme';
 import { EmptyState } from '../../../../../widgets/empty-state';
@@ -32,6 +33,7 @@ export const CategoryProductsSection = ({
   resolveVenueName,
   onPressOffer,
 }: CategoryProductsSectionProps) => {
+  const { t } = useTranslation('catalog');
   const { width } = useWindowDimensions();
   const horizontalPadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
   const availableWidth = Math.min(width - horizontalPadding * 2, theme.layout.containerMaxWidth);
@@ -46,7 +48,7 @@ export const CategoryProductsSection = ({
           offer={item}
           venueName={venueName}
           width="100%"
-          aspectRatio={175 / 220}
+          weight="130г"
           onPress={() => onPressOffer(item, venueName)}
         />
       </View>
@@ -55,6 +57,7 @@ export const CategoryProductsSection = ({
 
   return (
     <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{t('productsAvailable')}</Text>
       <CategoryChips />
       {isLoading ? (
         <View style={styles.loader}>
@@ -84,19 +87,30 @@ export const CategoryProductsSection = ({
 
 const styles = StyleSheet.create({
   section: {
-    gap: theme.spacing[3],
+    gap: theme.spacing[2],
+  },
+  sectionTitle: {
+    fontFamily: theme.client.typography.fontFamily,
+    fontSize: theme.typography.fontSizes[9],
+    fontWeight: '700',
+    lineHeight: theme.typography.fontSizes[9] * theme.typography.lineHeights.normal,
+    color: theme.colors.neutral[1],
   },
   list: {
-    paddingVertical: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
     gap: theme.spacing[2],
   },
   row: {
     gap: theme.spacing[2],
+    overflow: 'visible',
   },
   gridCell: {
     flexGrow: 0,
     flexShrink: 0,
     alignItems: 'flex-start',
+    paddingHorizontal: theme.spacing[1],
+    paddingVertical: theme.spacing[2],
+    overflow: 'visible',
   },
   loader: {
     paddingVertical: theme.spacing[6],

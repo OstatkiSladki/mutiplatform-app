@@ -3,21 +3,20 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import type { DraftCartItem, DraftVenueCart } from '../../../../../entities/order';
 import type { Venue } from '../../../../../entities/venue';
 import { theme } from '../../../../../shared/config/theme';
-import { BasketFooter } from './BasketFooter';
+import { BasketFooter, BOOKING_STICKY_SCROLL_PADDING } from './BasketFooter';
 import { BasketItemCard } from './BasketItemCard';
 import { BasketPickupSection } from './BasketPickupSection';
 import { BasketVenueCard } from './BasketVenueCard';
 
 export interface BasketBasketBodyProps {
-  headerSlot: React.ReactNode;
   pagePadding: number;
   carts: DraftVenueCart[];
   primaryCart: DraftVenueCart;
   venue?: Venue;
   venueLoading: boolean;
   totalLabel: string;
-  slotLabel: string;
-  onRotateSlot: () => void;
+  pickupSlotLabel: string;
+  onOpenPickupSheet: () => void;
   onClearCart: () => void;
   pickupTitle: string;
   clearA11yLabel: string;
@@ -29,15 +28,14 @@ export interface BasketBasketBodyProps {
 }
 
 export const BasketBasketBody = ({
-  headerSlot,
   pagePadding,
   carts,
   primaryCart,
   venue,
   venueLoading,
   totalLabel,
-  slotLabel,
-  onRotateSlot,
+  pickupSlotLabel,
+  onOpenPickupSheet,
   onClearCart,
   pickupTitle,
   clearA11yLabel,
@@ -52,7 +50,7 @@ export const BasketBasketBody = ({
       <BasketItemCard
         item={item}
         maxQuantity={item.maxQuantity ?? 99}
-        weightLabel={undefined}
+        weightLabel="130г"
         onQuantityChange={(next) => setQuantity(primaryCart.venueId, item.productId, next)}
       />
     ),
@@ -71,33 +69,30 @@ export const BasketBasketBody = ({
         ItemSeparatorComponent={() => <View style={styles.sep} />}
         ListHeaderComponent={
           <View style={styles.headerBlock}>
-            {headerSlot}
             {carts.length > 1 ? <Text style={styles.hint}>{multiVenueHint}</Text> : null}
             <BasketVenueCard venue={venue} isLoading={venueLoading} />
           </View>
         }
         ListFooterComponent={
-          <View style={styles.footerBlock}>
-            <BasketPickupSection
-              title={pickupTitle}
-              value={slotLabel}
-              onPress={onRotateSlot}
-              onClearCart={onClearCart}
-              clearA11yLabel={clearA11yLabel}
-            />
-            <View style={styles.divider} />
-          </View>
+          <BasketPickupSection
+            title={pickupTitle}
+            value={pickupSlotLabel}
+            onPress={onOpenPickupSheet}
+            onClearCart={onClearCart}
+            clearA11yLabel={clearA11yLabel}
+          />
         }
         contentContainerStyle={[
           styles.listContent,
           {
             paddingHorizontal: pagePadding,
+            paddingBottom: BOOKING_STICKY_SCROLL_PADDING,
           },
         ]}
         showsVerticalScrollIndicator={false}
       />
       <BasketFooter
-        horizontalPadding={pagePadding}
+        horizontalPadding={theme.spacing[6]}
         totalLabel={totalLabel}
         ctaTitle={checkoutTitle}
         onCheckout={onCheckout}
@@ -117,17 +112,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.client.colors.card,
   },
   listContent: {
-    flexGrow: 1,
-    paddingTop: theme.spacing[4],
-    paddingBottom: theme.spacing[8],
+    paddingTop: theme.spacing[2],
   },
   headerBlock: {
     gap: theme.spacing[5],
     paddingBottom: theme.spacing[3],
-  },
-  footerBlock: {
-    paddingTop: theme.spacing[4],
-    gap: theme.spacing[3],
   },
   sep: {
     height: theme.spacing[3],
@@ -137,10 +126,5 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes[3],
     color: theme.client.colors.mutedForeground,
     textAlign: 'center',
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    width: '100%',
-    backgroundColor: theme.colors.neutral[8],
   },
 });

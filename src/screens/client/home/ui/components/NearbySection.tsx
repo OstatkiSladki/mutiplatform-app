@@ -11,7 +11,7 @@ import type { Venue } from '../../../../../entities/venue';
 import { theme } from '../../../../../shared/config/theme';
 import { pickVenueCover } from '../../../../../shared/assets/client';
 import { Icon } from '../../../../../shared/ui/icon';
-import { Stars } from '../../../../../shared/ui/stars';
+import { IconStarAsset } from '../../../../../shared/ui/mobile/icon-star';
 import { EmptyState } from '../../../../../widgets/empty-state';
 
 export interface NearbySectionProps {
@@ -39,7 +39,7 @@ export const NearbySection = ({
 
   return (
     <View style={styles.section}>
-      <Text style={styles.title}>Рядом с вами</Text>
+      <Text style={[styles.title, styles.titleColor]}>Рядом с вами</Text>
       {isLoading ? (
         <ActivityIndicator color={theme.client.colors.primary} />
       ) : items.length > 0 ? (
@@ -81,7 +81,8 @@ const NearbyVenueCard = ({
   hoursText,
   onPress,
 }: NearbyVenueCardProps) => {
-  const rating = parseFloat(venue.rating) || 5;
+  const rating = parseFloat(venue.rating);
+  const ratingLabel = Number.isFinite(rating) ? rating.toFixed(1) : '—';
 
   return (
     <Pressable
@@ -104,25 +105,25 @@ const NearbyVenueCard = ({
         </Text>
         <View style={styles.metaRow}>
           <View style={styles.metaItem}>
-            <Stars rating={rating} size={12} color={theme.client.colors.star} />
-            <Text style={styles.metaStrong}>{rating.toFixed(0)}</Text>
+            <IconStarAsset size={22} color={theme.colors.primary[100]} />
+            <Text style={styles.metaRating}>{ratingLabel}</Text>
           </View>
           <View style={styles.metaItem}>
             <Icon
               name="map-pin"
-              size={12}
+              size={theme.typography.fontSizes[6]}
               color={theme.client.colors.mutedForeground}
             />
-            <Text style={styles.metaText}>{distanceText}</Text>
+            <Text style={styles.metaMeta}>{distanceText}</Text>
           </View>
           <View style={styles.metaSpacer} />
           <View style={styles.metaItem}>
             <Icon
               name="clock"
-              size={12}
+              size={theme.typography.fontSizes[6]}
               color={theme.client.colors.mutedForeground}
             />
-            <Text style={styles.metaText}>{hoursText}</Text>
+            <Text style={styles.metaMeta}>{hoursText}</Text>
           </View>
         </View>
       </View>
@@ -136,9 +137,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[7],
+    fontSize: theme.typography.fontSizes[9],
     fontWeight: '700',
-    color: theme.client.colors.foreground,
+    lineHeight: theme.typography.fontSizes[9] * theme.typography.lineHeights.normal,
+  },
+  titleColor: {
+    color: theme.colors.neutral[1],
   },
   list: {
     gap: theme.spacing[3],
@@ -161,9 +165,10 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[4],
+    fontSize: theme.typography.fontSizes[6],
     fontWeight: '700',
-    color: theme.client.colors.foreground,
+    lineHeight: theme.typography.fontSizes[6] * theme.typography.lineHeights.normal,
+    color: theme.colors.neutral[1],
   },
   tags: {
     fontFamily: theme.client.typography.fontFamily,
@@ -182,16 +187,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: theme.spacing[1],
   },
-  metaStrong: {
+  metaRating: {
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[3],
-    fontWeight: '700',
-    color: theme.client.colors.foreground,
+    fontSize: theme.typography.fontSizes[6],
+    fontWeight: '400',
+    lineHeight: theme.typography.fontSizes[6] * theme.typography.lineHeights.normal,
+    color: theme.colors.neutral[1],
   },
-  metaText: {
+  metaMeta: {
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.client.colors.mutedForeground,
+    fontSize: theme.typography.fontSizes[6],
+    fontWeight: '400',
+    lineHeight: theme.typography.fontSizes[6] * theme.typography.lineHeights.normal,
+    color: theme.colors.neutral[1],
   },
   metaSpacer: {
     flexGrow: 1,

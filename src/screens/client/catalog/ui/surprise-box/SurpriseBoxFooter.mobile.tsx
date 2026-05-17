@@ -1,27 +1,35 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '../../../../../shared/ui/button';
 import { theme } from '../../../../../shared/config/theme';
+import { PickupTimeSelector } from '../../../../../shared/ui/mobile/pickup-time-selector';
 
 export interface SurpriseBoxFooterProps {
+  pickupTitle: string;
+  pickupLabel: string;
+  onPickupPress: () => void;
   priceLabel: string;
   ctaLabel: string;
   onPay: () => void;
 }
 
-export const SurpriseBoxFooter = ({ priceLabel, ctaLabel, onPay }: SurpriseBoxFooterProps) => {
+export const SurpriseBoxFooter = ({
+  pickupTitle,
+  pickupLabel,
+  onPickupPress,
+  priceLabel,
+  ctaLabel,
+  onPay,
+}: SurpriseBoxFooterProps) => {
   const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
+  const bottomPad = Math.max(tabBarHeight, insets.bottom + theme.spacing[2]);
 
   return (
-    <View
-      style={[
-        styles.wrap,
-        {
-          paddingBottom: Math.max(insets.bottom, theme.spacing[3]),
-        },
-      ]}
-    >
+    <View style={[styles.wrap, { paddingBottom: bottomPad }]}>
+      <PickupTimeSelector title={pickupTitle} value={pickupLabel} onPress={onPickupPress} />
       <View style={styles.row}>
         <Text style={styles.price}>{priceLabel}</Text>
         <Button
@@ -38,12 +46,13 @@ export const SurpriseBoxFooter = ({ priceLabel, ctaLabel, onPay }: SurpriseBoxFo
 
 const styles = StyleSheet.create({
   wrap: {
-    paddingTop: theme.spacing[4],
+    gap: theme.spacing[3],
+    paddingTop: theme.spacing[3],
     paddingHorizontal: theme.spacing[4],
-    borderTopWidth: 1,
-    borderTopColor: theme.client.colors.border,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: theme.colors.neutral[8],
     backgroundColor: theme.client.colors.card,
-    ...theme.shadows.tight[3],
+    marginBottom: 0,
   },
   row: {
     flexDirection: 'row',

@@ -54,7 +54,10 @@ export const VenueProductGrid = ({
       columnWrapperStyle={styles.row}
       contentContainerStyle={[
         styles.content,
-        { paddingHorizontal: horizontalPadding },
+        {
+          paddingHorizontal: horizontalPadding,
+          paddingVertical: theme.spacing[2],
+        },
       ]}
       ListHeaderComponent={ListHeaderComponent}
       ListEmptyComponent={
@@ -83,8 +86,6 @@ export const VenueProductGrid = ({
               offer={item}
               title={product?.name ?? `Сюрприз бокс №${item.id}`}
               width="100%"
-              aspectRatio={175 / 220}
-              subtitle={product?.description ?? undefined}
               weight="130г"
               onPress={() => onPressDetails(item, product)}
             />
@@ -101,12 +102,16 @@ const styles = StyleSheet.create({
   },
   row: {
     gap: theme.spacing[2],
+    overflow: 'visible',
   },
   cell: {
     flexGrow: 0,
     flexShrink: 0,
     alignItems: 'flex-start',
-    marginBottom: theme.spacing[3],
+    paddingHorizontal: theme.spacing[1],
+    paddingBottom: theme.spacing[2],
+    paddingTop: theme.spacing[1],
+    overflow: 'visible',
   },
   loaderWrap: {
     flex: 1,

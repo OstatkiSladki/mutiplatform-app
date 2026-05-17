@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,7 @@ import { useAuthStore } from '../../../../entities/auth/model/store';
 import { theme } from '../../../../shared/config/theme';
 import { formatPrice } from '../../../../shared/lib/format';
 import { AuthRequiredScreen } from '../../../../widgets/auth-required';
-import { MobileScreenChrome } from '../../../../shared/ui/mobile';
+import { MobileScreenChrome, TimeSlotPickerSheet } from '../../../../shared/ui/mobile';
 import {
   BasketBasketBody,
   BasketMainTab,
@@ -41,10 +41,11 @@ const BasketScreenContent = () => {
   const { t } = useTranslation('catalog');
   const navigation = useNavigation<Nav>();
   const { width } = useWindowDimensions();
-  const tabBarHeight = useBottomTabBarHeight();
   const [searchQuery, setSearchQuery] = useState('');
   const [mainTab, setMainTab] = useState<BasketMainTab>('basket');
-  const [slotIx, setSlotIx] = useState(0);
+  const [pickupSlot, setPickupSlot] = useState<string>(TIME_SLOTS[0]);
+  const timeSheetRef = useRef<BottomSheetModal>(null);
+  const openPickupSheet = useCallback(() => timeSheetRef.current?.present(), []);
 
   const carts = useCartStore(useShallow((s) => Object.values(s.carts)));
   const setQuantity = useCartStore((s) => s.setQuantity);
@@ -70,18 +71,13 @@ const BasketScreenContent = () => {
     );
   }, [ordersQuery.data?.items]);
 
-  const slotLabel = TIME_SLOTS[slotIx % TIME_SLOTS.length];
-  const rotateSlot = useCallback(() => {
-    setSlotIx((i) => (i + 1) % TIME_SLOTS.length);
-  }, []);
-
   const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
   const basketTotal = primaryCart ? cartTotal(primaryCart) : 0;
 
   const latestOrder = sortedOrders[0];
   const ordersFooterTotal = latestOrder ? latestOrder.final_amount : 0;
 
-  const listBottomPad = tabBarHeight + theme.spacing[10] + theme.spacing[6];
+  const listBottomPad = theme.spacing[10] + theme.spacing[6];
 
   const goHome = useCallback(() => {
     navigation.navigate('ClientTabs', { screen: 'Home' });
@@ -94,16 +90,14 @@ const BasketScreenContent = () => {
 
   const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
 
-  const headerInner = (
-    <View style={styles.headerStack}>
+  const fixedHeader = (
+    <View style={[styles.fixedChrome, { paddingHorizontal: pagePadding }]}>
       <MobileScreenChrome
-        variant="stack"
         omitSafeArea
         horizontalInset={0}
         searchValue={searchQuery}
         searchPlaceholder={t('searchPlaceholder')}
         onSearchChange={setSearchQuery}
-        onBack={goHome}
         onPressProfile={goProfile}
       />
       <BasketSwitcher
@@ -117,65 +111,74 @@ const BasketScreenContent = () => {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      {mainTab === 'basket' ? (
-        primaryCart ? (
-          <BasketBasketBody
-            headerSlot={headerInner}
-            pagePadding={pagePadding}
-            carts={carts}
-            primaryCart={primaryCart}
-            venue={venueQuery.data}
-            venueLoading={venueQuery.isLoading}
-            totalLabel={formatPrice(basketTotal)}
-            slotLabel={slotLabel}
-            onRotateSlot={rotateSlot}
-            onClearCart={() => clearVenueCart(primaryCart.venueId)}
-            pickupTitle={t('basket.pickupTimeTitle')}
-            clearA11yLabel={t('basket.clearCartA11y')}
-            checkoutTitle={t('bookCta')}
-            onCheckout={goBooking}
-            checkoutDisabled={primaryCart.items.length === 0 || basketTotal <= 0}
-            multiVenueHint={t('basket.multiVenueHint')}
-            setQuantity={setQuantity}
-          />
+      <View style={styles.flexFill}>
+        {fixedHeader}
+        {mainTab === 'basket' ? (
+          primaryCart ? (
+            <View style={styles.basketBody}>
+              <BasketBasketBody
+                pagePadding={pagePadding}
+                carts={carts}
+                primaryCart={primaryCart}
+                venue={venueQuery.data}
+                venueLoading={venueQuery.isLoading}
+                totalLabel={formatPrice(basketTotal)}
+                pickupSlotLabel={pickupSlot}
+                onOpenPickupSheet={openPickupSheet}
+                onClearCart={() => clearVenueCart(primaryCart.venueId)}
+                pickupTitle={t('basket.pickupTimeTitle')}
+                clearA11yLabel={t('basket.clearCartA11y')}
+                checkoutTitle={t('bookCta')}
+                onCheckout={goBooking}
+                checkoutDisabled={primaryCart.items.length === 0 || basketTotal <= 0}
+                multiVenueHint={t('basket.multiVenueHint')}
+                setQuantity={setQuantity}
+              />
+            </View>
+          ) : (
+            <ScrollView
+              style={styles.scrollFill}
+              contentContainerStyle={[
+                styles.emptyContent,
+                {
+                  paddingHorizontal: pagePadding,
+                  paddingBottom: theme.spacing[6],
+                },
+              ]}
+              showsVerticalScrollIndicator={false}
+            >
+              <EmptyBasket
+                title={t('cart.emptyTitle')}
+                description={t('cart.emptyDescription')}
+                actionLabel={t('cart.emptyCta')}
+                onAction={goHome}
+              />
+            </ScrollView>
+          )
         ) : (
-          <ScrollView
-            style={styles.scrollFill}
-            contentContainerStyle={[
-              styles.emptyContent,
-              {
-                paddingHorizontal: pagePadding,
-                paddingBottom: tabBarHeight + theme.spacing[5],
-              },
-            ]}
-            showsVerticalScrollIndicator={false}
-          >
-            {headerInner}
-            <EmptyBasket
-              title={t('cart.emptyTitle')}
-              description={t('cart.emptyDescription')}
-              actionLabel={t('cart.emptyCta')}
-              onAction={goHome}
-            />
-          </ScrollView>
-        )
-      ) : (
-        <BasketOrdersBody
-          headerSlot={headerInner}
-          pagePadding={pagePadding}
-          listBottomPad={listBottomPad}
-          orders={sortedOrders}
-          venuesById={venuesById}
-          ordersFetching={ordersQuery.isFetching}
-          emptyTitle={t('orders.emptyTitle')}
-          emptyDescription={t('orders.emptyDescription')}
-          emptyCta={t('orders.emptyCta')}
-          onGoHome={goHome}
-          footerTotalLabel={formatPrice(ordersFooterTotal)}
-          slotLabel={slotLabel}
-          onRotateSlot={rotateSlot}
-        />
-      )}
+          <BasketOrdersBody
+            pagePadding={pagePadding}
+            listBottomPad={listBottomPad}
+            orders={sortedOrders}
+            venuesById={venuesById}
+            ordersFetching={ordersQuery.isFetching}
+            emptyTitle={t('orders.emptyTitle')}
+            emptyDescription={t('orders.emptyDescription')}
+            emptyCta={t('orders.emptyCta')}
+            onGoHome={goHome}
+            footerTotalLabel={formatPrice(ordersFooterTotal)}
+            pickupSlotLabel={pickupSlot}
+            onOpenPickupSheet={openPickupSheet}
+          />
+        )}
+      </View>
+      <TimeSlotPickerSheet
+        ref={timeSheetRef}
+        title={t('basket.pickupTimeTitle')}
+        slots={TIME_SLOTS}
+        selected={pickupSlot}
+        onSelect={setPickupSlot}
+      />
     </SafeAreaView>
   );
 };
@@ -185,8 +188,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.client.colors.card,
   },
-  headerStack: {
+  flexFill: {
+    flex: 1,
+    minHeight: 0,
+  },
+  basketBody: {
+    flex: 1,
+    minHeight: 0,
+  },
+  fixedChrome: {
     gap: theme.spacing[5],
+    paddingBottom: theme.spacing[2],
+    backgroundColor: theme.client.colors.card,
   },
   scrollFill: {
     flex: 1,

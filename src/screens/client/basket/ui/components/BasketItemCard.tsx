@@ -20,6 +20,8 @@ export const BasketItemCard = ({
   weightLabel,
   onQuantityChange,
 }: BasketItemCardProps) => {
+  const displayWeight = weightLabel ?? '130г';
+
   return (
     <View style={styles.card}>
       <View style={styles.thumb}>
@@ -37,7 +39,7 @@ export const BasketItemCard = ({
         </Text>
         <View style={styles.priceRow}>
           <Text style={styles.price}>{formatPrice(item.price)}</Text>
-          {weightLabel ? <Text style={styles.weight}>{weightLabel}</Text> : null}
+          {displayWeight ? <Text style={styles.weight}>{displayWeight}</Text> : null}
         </View>
       </View>
       <Stepper
@@ -57,10 +59,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: theme.spacing[2],
     padding: theme.spacing[2],
-    borderRadius: theme.spacing[5],
+    borderRadius: theme.client.radius.card,
+    backgroundColor: theme.client.colors.card,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: theme.colors.neutral[8],
-    backgroundColor: theme.client.colors.card,
   },
   thumb: {
     width: 61,
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     minWidth: 0,
-    gap: theme.spacing[2],
+    gap: theme.spacing[1],
     justifyContent: 'center',
   },
   title: {
@@ -93,9 +95,9 @@ const styles = StyleSheet.create({
   },
   priceRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     alignItems: 'baseline',
-    gap: theme.spacing[2],
+    gap: theme.spacing[1],
   },
   price: {
     fontFamily: theme.client.typography.fontFamily,
@@ -103,6 +105,7 @@ const styles = StyleSheet.create({
     lineHeight: theme.typography.fontSizes[6] * theme.typography.lineHeights.tight,
     fontWeight: '700',
     color: theme.client.colors.foreground,
+    flexShrink: 0,
   },
   weight: {
     fontFamily: theme.client.typography.fontFamily,
@@ -110,5 +113,6 @@ const styles = StyleSheet.create({
     lineHeight: theme.typography.fontSizes[3] * theme.typography.lineHeights.normal,
     fontWeight: '400',
     color: theme.client.colors.mutedForeground,
+    flexShrink: 1,
   },
 });

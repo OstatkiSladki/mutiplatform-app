@@ -1,6 +1,5 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '../../../../../shared/ui/icon';
 import { theme } from '../../../../../shared/config/theme';
 
@@ -10,15 +9,14 @@ export interface OrdersPickupFooterProps {
   onPressPickup: () => void;
 }
 
+/** Completed orders: neutral styling (no primary/orange purchase chrome). */
 export const OrdersPickupFooter = ({
   totalLabel,
   pickupLabel,
   onPressPickup,
 }: OrdersPickupFooterProps) => {
-  const insets = useSafeAreaInsets();
-
   return (
-    <View style={[styles.wrap, { paddingBottom: Math.max(insets.bottom, theme.spacing[2]) }]}>
+    <View style={styles.wrap}>
       <View style={styles.row}>
         <Text style={styles.total} numberOfLines={1}>
           {totalLabel}
@@ -29,8 +27,10 @@ export const OrdersPickupFooter = ({
           accessibilityRole="button"
           accessibilityLabel={pickupLabel}
         >
-          <Text style={styles.slotText}>{pickupLabel}</Text>
-          <Icon name="chevron-down" size={18} color={theme.client.colors.primaryForeground} />
+          <Text style={styles.slotText} numberOfLines={1}>
+            {pickupLabel}
+          </Text>
+          <Icon name="chevron-down" size={18} color={theme.colors.neutral[5]} />
         </Pressable>
       </View>
     </View>
@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
     borderTopColor: theme.colors.neutral[8],
     backgroundColor: theme.client.colors.card,
     paddingHorizontal: theme.spacing[4],
-    paddingTop: theme.spacing[3],
-    ...theme.shadows.tight[9],
-    shadowOpacity: 0.12,
+    paddingTop: theme.spacing[2],
+    paddingBottom: theme.spacing[3],
+    marginBottom: 0,
   },
   row: {
     flexDirection: 'row',
@@ -56,25 +56,29 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[13],
-    lineHeight: theme.typography.fontSizes[13] * theme.typography.lineHeights.tight,
-    fontWeight: '700',
-    color: theme.client.colors.foreground,
+    fontSize: theme.typography.fontSizes[10],
+    lineHeight: theme.typography.fontSizes[10] * theme.typography.lineHeights.tight,
+    fontWeight: '600',
+    color: theme.colors.neutral[5],
   },
   slot: {
     flexShrink: 0,
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing[2],
-    paddingHorizontal: theme.spacing[5],
-    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
     borderRadius: theme.client.radius.pill,
-    backgroundColor: theme.client.colors.primary,
+    backgroundColor: theme.colors.neutral[9],
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.neutral[8],
+    maxWidth: '52%',
   },
   slotText: {
+    flexShrink: 1,
     fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[5],
-    fontWeight: '600',
-    color: theme.client.colors.primaryForeground,
+    fontSize: theme.typography.fontSizes[4],
+    fontWeight: '400',
+    color: theme.colors.neutral[5],
   },
 });

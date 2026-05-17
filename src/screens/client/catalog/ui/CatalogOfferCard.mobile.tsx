@@ -55,10 +55,8 @@ const styles = StyleSheet.create({
     minWidth: 0,
     borderRadius: theme.client.radius.card,
     backgroundColor: theme.client.colors.card,
-    borderWidth: 1,
-    borderColor: theme.client.colors.border,
     overflow: 'hidden',
-    ...theme.client.shadows.card,
+    ...theme.client.shadows.productCard,
   },
   image: {
     width: '100%',
@@ -66,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.client.colors.secondaryMuted,
   },
   body: {
-    padding: theme.spacing[3],
+    padding: theme.spacing[2],
     gap: theme.spacing[1],
   },
   title: {

@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
   },
   sizeLetter: {
     fontFamily: theme.client.typography.fontFamily,
-    fontWeight: '600',
-    fontSize: theme.typography.fontSizes[10],
-    lineHeight: theme.typography.fontSizes[10] * theme.typography.lineHeights.tight,
+    fontWeight: '700',
+    fontSize: theme.typography.fontSizes[5],
+    lineHeight: theme.typography.fontSizes[5] * theme.typography.lineHeights.normal,
     color: theme.client.colors.foreground,
   },
   sizeLetterActive: {

@@ -10,6 +10,7 @@ import type { Product } from '../../../../entities/product';
 import { useProductList } from '../../../../entities/product';
 import type { ClientStackParamList, ClientTabsParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
+import { MOBILE_PRICE_CTA_SCROLL_PADDING } from '../../../../shared/ui/mobile-price-cta-bar';
 import { MobileScreenChrome } from '../../../../shared/ui/mobile';
 import { formatPrice } from '../../../../shared/lib/format';
 import { useAddToCart } from '../../../../features/add-to-cart';
@@ -90,14 +91,11 @@ export const ProductDetailsScreen = () => {
     return items.filter((o) => o.id !== offer.id).slice(0, 16);
   }, [offersQuery.data?.items, offer.id]);
 
-  const goBack = useCallback(() => {
-    navigation.navigate('ClientTabs', {
-      screen: 'Venue',
-      params: { venueId },
-    });
-  }, [navigation, venueId]);
-
   const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
+
+  const goCart = useCallback(() => {
+    navigation.navigate('ClientTabs', { screen: 'Cart' });
+  }, [navigation]);
 
   const openRelated = useCallback(
     (nextOffer: Offer, nextProduct?: Product) => {
@@ -118,26 +116,29 @@ export const ProductDetailsScreen = () => {
     quantity > 0 ? t('productDetails.inCart', { count: quantity }) : t('productDetails.addShort');
 
   const handleAdd = useCallback(() => {
+    if (quantity > 0) {
+      navigation.navigate('ClientTabs', { screen: 'Cart' });
+      return;
+    }
     setQuantity(Math.max(1, quantity));
-  }, [quantity, setQuantity]);
+  }, [quantity, setQuantity, navigation]);
 
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
-      <MobileScreenChrome
-        variant="stack"
-        omitSafeArea
-        horizontalInset={pagePadding}
-        searchValue={searchQuery}
-        searchPlaceholder={t('searchPlaceholder')}
-        onSearchChange={setSearchQuery}
-        onBack={goBack}
-        onPressProfile={goProfile}
-      />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={[styles.scrollContent, { paddingHorizontal: pagePadding }]}
         showsVerticalScrollIndicator={false}
       >
+        <MobileScreenChrome
+          omitSafeArea
+          horizontalInset={0}
+          searchValue={searchQuery}
+          searchPlaceholder={t('searchPlaceholder')}
+          onSearchChange={setSearchQuery}
+          onPressProfile={goProfile}
+          onPressCart={goCart}
+        />
         <ProductHero imageUri={imageUrl} />
         <ProductInfo title={displayName} weightLabel={weightLabel} description={description} />
         <NutritionInfo values={nutritionValues} />
@@ -160,13 +161,14 @@ export const ProductDetailsScreen = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: theme.client.colors.background,
+    backgroundColor: theme.client.colors.card,
   },
   scroll: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: theme.spacing[5],
+    paddingTop: theme.spacing[4],
+    paddingBottom: MOBILE_PRICE_CTA_SCROLL_PADDING + theme.spacing[4],
     gap: theme.spacing[5],
     maxWidth: theme.layout.containerMaxWidth,
     width: '100%',

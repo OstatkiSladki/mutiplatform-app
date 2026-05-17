@@ -8,7 +8,6 @@ import { OrdersCard } from './OrdersCard';
 import { OrdersPickupFooter } from './OrdersPickupFooter';
 
 export interface BasketOrdersBodyProps {
-  headerSlot: React.ReactNode;
   pagePadding: number;
   listBottomPad: number;
   orders: Order[];
@@ -19,12 +18,11 @@ export interface BasketOrdersBodyProps {
   emptyCta: string;
   onGoHome: () => void;
   footerTotalLabel: string;
-  slotLabel: string;
-  onRotateSlot: () => void;
+  pickupSlotLabel: string;
+  onOpenPickupSheet: () => void;
 }
 
 export const BasketOrdersBody = ({
-  headerSlot,
   pagePadding,
   listBottomPad,
   orders,
@@ -35,8 +33,8 @@ export const BasketOrdersBody = ({
   emptyCta,
   onGoHome,
   footerTotalLabel,
-  slotLabel,
-  onRotateSlot,
+  pickupSlotLabel,
+  onOpenPickupSheet,
 }: BasketOrdersBodyProps) => {
   const renderOrder = useCallback(
     ({ item }: { item: Order }) => (
@@ -55,11 +53,6 @@ export const BasketOrdersBody = ({
         keyExtractor={keyExtractor}
         renderItem={renderOrder}
         ItemSeparatorComponent={() => <View style={styles.sep} />}
-        ListHeaderComponent={
-          <View style={styles.headerShell}>
-            {headerSlot}
-          </View>
-        }
         ListEmptyComponent={
           ordersFetching ? null : (
             <View style={styles.emptyOrders}>
@@ -75,6 +68,7 @@ export const BasketOrdersBody = ({
         }
         contentContainerStyle={{
           paddingHorizontal: pagePadding,
+          paddingTop: theme.spacing[2],
           paddingBottom: listBottomPad,
           flexGrow: 1,
         }}
@@ -83,8 +77,8 @@ export const BasketOrdersBody = ({
       {orders.length > 0 ? (
         <OrdersPickupFooter
           totalLabel={footerTotalLabel}
-          pickupLabel={slotLabel}
-          onPressPickup={onRotateSlot}
+          pickupLabel={pickupSlotLabel}
+          onPressPickup={onOpenPickupSheet}
         />
       ) : null}
     </View>
@@ -98,11 +92,6 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
-  },
-  headerShell: {
-    gap: theme.spacing[5],
-    paddingTop: theme.spacing[4],
-    paddingBottom: theme.spacing[2],
   },
   sep: {
     height: theme.spacing[3],

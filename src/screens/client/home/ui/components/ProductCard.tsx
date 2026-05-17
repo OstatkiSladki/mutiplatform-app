@@ -7,7 +7,7 @@ export interface ProductCardProps {
   offer: Offer;
   venueName: string;
   width: DimensionValue;
-  aspectRatio?: number;
+  weight?: string;
   onPress: () => void;
 }
 
@@ -15,7 +15,7 @@ export const ProductCard = ({
   offer,
   venueName,
   width,
-  aspectRatio = 138 / 230,
+  weight = '130г',
   onPress,
 }: ProductCardProps) => {
   return (
@@ -23,7 +23,7 @@ export const ProductCard = ({
       offer={offer}
       title={venueName}
       width={width}
-      aspectRatio={aspectRatio}
+      weight={weight}
       onPress={onPress}
     />
   );

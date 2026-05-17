@@ -1,154 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import { useTranslation } from 'react-i18next';
 import type { Venue } from '../../../../../entities/venue';
-import { Icon } from '../../../../../shared/ui/icon';
-import { theme } from '../../../../../shared/config/theme';
+import { ClientVenueSummaryCard } from '../../../../../widgets/mobile-venue-summary';
 
 interface VenueInfoProps {
   venue: Venue;
-  /** Removes horizontal padding when nested inside another card (e.g. basket venue strip). */
   contentInset?: 'default' | 'flush';
 }
 
-const formatHours = (
-  workSchedule: Record<string, unknown> | undefined,
-  fallback: string,
-): string => {
-  if (!workSchedule) return fallback;
-  const daily = workSchedule.daily;
-  if (typeof daily === 'string') return daily.replace(/-/g, '–');
-  const mf = workSchedule.mon_fri;
-  if (typeof mf === 'string') return mf.replace(/-/g, '–');
-  const first = Object.values(workSchedule).find((v) => typeof v === 'string');
-  return typeof first === 'string' ? first.replace(/-/g, '–') : fallback;
-};
-
-const logoText = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('') || '?';
-
-const VenueStar = ({ active }: { active: boolean }) => {
-  const fill = active ? theme.colors.status.warning : theme.colors.neutral[7];
-  return (
-    <Svg width={14} height={14} viewBox="0 0 16 16" fill="none">
-      <Path d="M10.2596 3.47287L11.1996 5.35287C11.3263 5.61287 11.6663 5.85953 11.953 5.91287L13.653 6.19287C14.7396 6.37287 14.993 7.15953 14.213 7.9462L12.8863 9.27287C12.6663 9.49287 12.5396 9.9262 12.613 10.2395L12.993 11.8795C13.293 13.1729 12.5996 13.6795 11.4596 12.9995L9.8663 12.0529C9.57964 11.8795 9.09964 11.8795 8.81297 12.0529L7.21964 12.9995C6.07964 13.6729 5.3863 13.1729 5.6863 11.8795L6.0663 10.2395C6.1263 9.91953 5.99964 9.4862 5.77964 9.2662L4.45297 7.93953C3.67297 7.15953 3.9263 6.37287 5.01297 6.1862L6.71297 5.9062C6.99964 5.85953 7.33964 5.6062 7.4663 5.3462L8.4063 3.4662C8.91964 2.45287 9.7463 2.45287 10.2596 3.47287Z" fill={fill} />
-      <Path d="M5.33398 3.83398H1.33398C1.06065 3.83398 0.833984 3.60732 0.833984 3.33398C0.833984 3.06065 1.06065 2.83398 1.33398 2.83398H5.33398C5.60732 2.83398 5.83398 3.06065 5.83398 3.33398C5.83398 3.60732 5.60732 3.83398 5.33398 3.83398Z" fill={fill} />
-      <Path d="M3.33398 13.166H1.33398C1.06065 13.166 0.833984 12.9393 0.833984 12.666C0.833984 12.3927 1.06065 12.166 1.33398 12.166H3.33398C3.60732 12.166 3.83398 12.3927 3.83398 12.666C3.83398 12.9393 3.60732 13.166 3.33398 13.166Z" fill={fill} />
-      <Path d="M2.00065 8.5H1.33398C1.06065 8.5 0.833984 8.27333 0.833984 8C0.833984 7.72667 1.06065 7.5 1.33398 7.5H2.00065C2.27398 7.5 2.50065 7.72667 2.50065 8C2.50065 8.27333 2.27398 8.5 2.00065 8.5Z" fill={fill} />
-    </Svg>
-  );
-};
-
-const VenueStars = ({ rating }: { rating: number }) => {
-  const rounded = Math.round(rating);
-  return (
-    <View style={styles.stars}>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <VenueStar key={index} active={index < rounded} />
-      ))}
-    </View>
-  );
-};
-
-export const VenueInfo = ({ venue, contentInset = 'default' }: VenueInfoProps) => {
-  const { t } = useTranslation('catalog');
-  const rating = parseFloat(venue.rating) || 0;
-  const hours = formatHours(venue.work_schedule as Record<string, unknown> | undefined, t('hoursDefault'));
-
-  return (
-    <View style={[styles.wrap, contentInset === 'flush' && styles.wrapFlush]}>
-      <View style={styles.logo}>
-        <Text style={styles.logoText}>{logoText(venue.name)}</Text>
-      </View>
-      <View style={styles.body}>
-        <Text style={styles.name} numberOfLines={2}>
-          {venue.name}
-        </Text>
-        <Text style={styles.address} numberOfLines={1}>
-          {venue.address}
-        </Text>
-        <View style={styles.metaRow}>
-          <VenueStars rating={rating} />
-          <View style={styles.hours}>
-            <Icon name="clock" size={14} color={theme.client.colors.mutedForeground} />
-            <Text style={styles.hoursText}>{hours}</Text>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing[3],
-    paddingHorizontal: theme.spacing[4],
-  },
-  wrapFlush: {
-    paddingHorizontal: 0,
-  },
-  logo: {
-    width: 52,
-    height: 52,
-    borderRadius: theme.client.radius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.colors.neutral.black,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.neutral[7],
-  },
-  logoText: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[4],
-    color: theme.colors.neutral.white,
-  },
-  body: {
-    flex: 1,
-    gap: theme.spacing[1],
-    minWidth: 0,
-  },
-  name: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[5],
-    lineHeight: theme.typography.fontSizes[5] * theme.typography.lineHeights.normal,
-    color: theme.client.colors.foreground,
-  },
-  address: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.client.colors.mutedForeground,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: theme.spacing[2],
-  },
-  stars: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing[1],
-  },
-  hours: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing[1],
-    flexShrink: 0,
-  },
-  hoursText: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontSize: theme.typography.fontSizes[6],
-    lineHeight: theme.typography.fontSizes[6] * theme.typography.lineHeights.normal,
-    color: theme.client.colors.mutedForeground,
-  },
-});
+/** Venue header — uses shared `ClientVenueSummaryCard` (same as Cart / Surprise Box). */
+export const VenueInfo = ({ venue, contentInset = 'default' }: VenueInfoProps) => (
+  <ClientVenueSummaryCard
+    venue={venue}
+    horizontalInset={contentInset === 'flush' ? 'flush' : 'page'}
+    elevatedSurface={false}
+  />
+);

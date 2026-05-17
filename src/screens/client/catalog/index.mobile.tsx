@@ -1,1 +1,1 @@
-export { CatalogScreen } from './ui/CatalogScreen.mobile';
+export { SurpriseBoxScreen, SurpriseBoxScreen as CatalogScreen } from './ui/CatalogScreen.mobile';

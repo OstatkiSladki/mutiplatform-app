@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
   lineTitle: {
     fontFamily: theme.client.typography.fontFamily,
     fontSize: theme.typography.fontSizes[4],
-    fontWeight: '700',
-    color: theme.client.colors.foreground,
+    fontWeight: '600',
+    color: theme.colors.neutral[5],
   },
   lineMeta: {
     flexDirection: 'row',
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   linePrice: {
     fontFamily: theme.client.typography.fontFamily,
     fontSize: theme.typography.fontSizes[4],
-    fontWeight: '700',
-    color: theme.client.colors.foreground,
+    fontWeight: '500',
+    color: theme.colors.neutral[5],
   },
   qty: {
     fontFamily: theme.client.typography.fontFamily,

@@ -15,13 +15,11 @@ import { CartSummary } from '../../../../widgets/cart-summary';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { ProductDetailsSheet, type ProductDetailsSheetRef } from '../../../../features/product-details';
 import { VenueInfo } from './components/VenueInfo.mobile';
-import { CategoryTabs } from './components/CategoryTabs.mobile';
 import { VenueProductGrid } from './components/VenueProductGrid.mobile';
+import { CategoryChips, DEFAULT_MOBILE_CATEGORY_LABELS } from '../../../../widgets/category-chips';
 
 type VenueRoute = RouteProp<ClientStackParamList, 'Venue'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
-
-const categories = ['Готовая еда', 'Выпечка', 'Здоровая еда', 'Круассаны'];
 
 export const VenueScreen = () => {
   const route = useRoute<VenueRoute>();
@@ -29,7 +27,7 @@ export const VenueScreen = () => {
   const { t } = useTranslation('catalog');
   const { width } = useWindowDimensions();
   const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const [activeCategory, setActiveCategory] = useState<string>(DEFAULT_MOBILE_CATEGORY_LABELS[0]);
   const [searchQuery, setSearchQuery] = useState('');
   const { venueId } = route.params;
 
@@ -50,30 +48,29 @@ export const VenueScreen = () => {
     sheetRef.current?.present({ offer, product });
   }, []);
 
-  const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
   const goToBooking = useCallback(
     () => navigation.navigate('Booking', { venueId }),
     [navigation, venueId],
   );
 
-  const chrome = (
-    <MobileScreenChrome
-      variant="stack"
-      omitSafeArea
-      horizontalInset={pagePadding}
-      searchValue={searchQuery}
-      searchPlaceholder={t('searchPlaceholder')}
-      onSearchChange={setSearchQuery}
-      onBack={goBack}
-      onPressProfile={goProfile}
-    />
+  const headerChrome = (
+    <View style={{ paddingHorizontal: pagePadding }}>
+      <MobileScreenChrome
+        omitSafeArea
+        horizontalInset={0}
+        searchValue={searchQuery}
+        searchPlaceholder={t('searchPlaceholder')}
+        onSearchChange={setSearchQuery}
+        onPressProfile={goProfile}
+      />
+    </View>
   );
 
   if (venueQuery.isLoading || !venueQuery.data) {
     return (
       <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
-        {chrome}
+        {headerChrome}
         <View style={styles.loaderWrap}>
           <Loader fullScreen />
         </View>
@@ -86,7 +83,7 @@ export const VenueScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
-      {chrome}
+      {headerChrome}
       {offersQuery.isError ? (
         <View style={styles.errorWrap}>
           <EmptyState
@@ -105,11 +102,12 @@ export const VenueScreen = () => {
           onPressDetails={openDetails}
           ListHeaderComponent={
             <View style={styles.header}>
-              <VenueInfo venue={venue} />
-              <CategoryTabs
-                categories={categories}
-                activeCategory={activeCategory}
-                onChange={setActiveCategory}
+              <VenueInfo venue={venue} contentInset="flush" />
+              <CategoryChips
+                categories={DEFAULT_MOBILE_CATEGORY_LABELS}
+                selectedCategory={activeCategory}
+                onSelectCategory={setActiveCategory}
+                density="compact"
               />
             </View>
           }
@@ -127,14 +125,14 @@ export const VenueScreen = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: theme.client.colors.background,
+    backgroundColor: theme.client.colors.card,
   },
   loaderWrap: {
     flex: 1,
   },
   header: {
-    gap: theme.spacing[4],
-    paddingBottom: theme.spacing[4],
+    gap: theme.spacing[7],
+    paddingBottom: 0,
   },
   errorWrap: {
     flex: 1,

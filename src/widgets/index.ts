@@ -16,8 +16,20 @@ export type { VenueListItemProps } from './venue-list-item';
 export { SurpriseBoxCard } from './surprise-box-card';
 export type { SurpriseBoxCardProps } from './surprise-box-card';
 
+export { MobileVenueSummaryRow } from './mobile-venue-summary';
+export type { MobileVenueSummaryRowProps } from './mobile-venue-summary';
+
 export { ProductGrid, OfferCard } from './product-grid';
 export type { ProductGridProps, OfferCardProps } from './product-grid';
+export { HomeProductGrid, HomeProductCard } from './product-grid';
+export type {
+  HomeProductGridProps,
+  HomeProductCardData,
+  HomeProductCardProps,
+} from './product-grid';
+
+export { BottomTabBar } from './bottom-tab-bar';
+export type { BottomTabBarIconMap, BottomTabBarWidgetProps } from './bottom-tab-bar';
 
 export { CartSummary } from './cart-summary';
 export type { CartSummaryProps } from './cart-summary';

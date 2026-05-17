@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
@@ -21,13 +22,13 @@ import {
 } from '../../../../features/surprise-box-builder/model/constants';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { Loader } from '../../../../shared/ui/loader';
-import { MobileScreenChrome } from '../../../../shared/ui/mobile';
+import { MobileScreenChrome, TimeSlotPickerSheet } from '../../../../shared/ui/mobile';
 import { theme } from '../../../../shared/config/theme';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { formatPrice } from '../../../../shared/lib/format';
 import { venueAvatarLabel } from '../../../../shared/lib/venue-avatar';
 import {
-  SurpriseBoxFooter,
+  SurpriseBoxCheckoutBar,
   SurpriseBoxHero,
   SurpriseBoxOptionGroup,
   SurpriseBoxPickupSection,
@@ -37,16 +38,20 @@ import {
 
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
-export const CatalogScreen = () => {
+export const SurpriseBoxScreen = () => {
   const { t } = useTranslation('catalog');
   const navigation = useNavigation<Nav>();
   const { width } = useWindowDimensions();
   const tabBarHeight = useBottomTabBarHeight();
-  const scrollBottomPad = tabBarHeight + theme.spacing[10];
+  /** Tab clearance only — pickup + checkout scroll inside content */
+  const scrollBottomPadOffer = tabBarHeight + theme.spacing[6];
+  const scrollBottomPadEmpty = theme.spacing[10];
   const addItem = useCartStore((s) => s.addItem);
 
   const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
   const [searchQuery, setSearchQuery] = useState('');
+  const timeSheetRef = useRef<BottomSheetModal>(null);
+  const openTimeSheet = useCallback(() => timeSheetRef.current?.present(), []);
 
   const offersQuery = useOfferList({ status: 'active', limit: 60 });
   const offer = offersQuery.data?.items?.[0];
@@ -59,11 +64,6 @@ export const CatalogScreen = () => {
   }, [offer]);
 
   const builder = useSurpriseBoxBuilder(basePrice);
-
-  const goHomeTab = useCallback(
-    () => navigation.navigate('ClientTabs', { screen: 'Home' }),
-    [navigation],
-  );
 
   const goProfile = useCallback(() => navigation.navigate('Profile'), [navigation]);
 
@@ -93,13 +93,6 @@ export const CatalogScreen = () => {
       })),
     [t],
   );
-
-  const rotateTimeSlot = useCallback(() => {
-    const slots = TIME_SLOTS as readonly TimeSlot[];
-    const idx = slots.indexOf(builder.config.time);
-    const next = slots[(idx + 1) % slots.length];
-    builder.setTime(next);
-  }, [builder]);
 
   const onPay = useCallback(() => {
     if (!offer || !venueQuery.data) return;
@@ -156,11 +149,6 @@ export const CatalogScreen = () => {
           selectedKey={builder.config.addition}
           onSelect={(key) => builder.setAddition(key as AdditionKey)}
         />
-        <SurpriseBoxPickupSection
-          title={t('basket.pickupTimeTitle')}
-          selectedLabel={builder.config.time}
-          onPress={rotateTimeSlot}
-        />
       </>
     );
   }, [
@@ -170,11 +158,21 @@ export const CatalogScreen = () => {
     heroBrand,
     offer,
     restrictionOptions,
-    rotateTimeSlot,
     t,
     venueQuery.data,
     venueQuery.isLoading,
   ]);
+
+  const chrome = (
+    <MobileScreenChrome
+      omitSafeArea
+      horizontalInset={0}
+      searchValue={searchQuery}
+      searchPlaceholder={t('searchPlaceholder')}
+      onSearchChange={setSearchQuery}
+      onPressProfile={goProfile}
+    />
+  );
 
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
@@ -186,23 +184,12 @@ export const CatalogScreen = () => {
               styles.scrollContent,
               {
                 paddingHorizontal: pagePadding,
-                paddingBottom: scrollBottomPad,
+                paddingBottom: scrollBottomPadEmpty,
               },
             ]}
             showsVerticalScrollIndicator={false}
           >
-            <MobileScreenChrome
-              variant="stack"
-              omitSafeArea
-              horizontalInset={0}
-              searchValue={searchQuery}
-              searchPlaceholder={t('searchPlaceholder')}
-              onSearchChange={setSearchQuery}
-              onBack={goHomeTab}
-              backA11yLabel={t('back')}
-              onPressProfile={goProfile}
-              searchBackButtonVariant="compact"
-            />
+            {chrome}
             <View style={styles.loaderWrap}>
               <Loader size="large" />
             </View>
@@ -214,23 +201,12 @@ export const CatalogScreen = () => {
               styles.scrollContent,
               {
                 paddingHorizontal: pagePadding,
-                paddingBottom: scrollBottomPad,
+                paddingBottom: scrollBottomPadEmpty,
               },
             ]}
             showsVerticalScrollIndicator={false}
           >
-            <MobileScreenChrome
-              variant="stack"
-              omitSafeArea
-              horizontalInset={0}
-              searchValue={searchQuery}
-              searchPlaceholder={t('searchPlaceholder')}
-              onSearchChange={setSearchQuery}
-              onBack={goHomeTab}
-              backA11yLabel={t('back')}
-              onPressProfile={goProfile}
-              searchBackButtonVariant="compact"
-            />
+            {chrome}
             <EmptyState
               icon="package"
               title={t('emptyOffers')}
@@ -238,42 +214,43 @@ export const CatalogScreen = () => {
             />
           </ScrollView>
         ) : (
-          <>
-            <ScrollView
-              style={styles.flex}
-              contentContainerStyle={[
-                styles.scrollContent,
-                {
-                  paddingHorizontal: pagePadding,
-                  paddingBottom: scrollBottomPad,
-                },
-              ]}
-              showsVerticalScrollIndicator={false}
-            >
-              <MobileScreenChrome
-                variant="stack"
-                omitSafeArea
-                horizontalInset={0}
-                searchValue={searchQuery}
-                searchPlaceholder={t('searchPlaceholder')}
-                onSearchChange={setSearchQuery}
-                onBack={goHomeTab}
-                backA11yLabel={t('back')}
-                onPressProfile={goProfile}
-                searchBackButtonVariant="compact"
-              />
-              {surpriseBody}
-            </ScrollView>
+          <ScrollView
+            style={styles.flex}
+            contentContainerStyle={[
+              styles.scrollContent,
+              {
+                paddingHorizontal: pagePadding,
+                paddingBottom: scrollBottomPadOffer,
+              },
+            ]}
+            showsVerticalScrollIndicator={false}
+          >
+            {chrome}
+            {surpriseBody}
             {offer && venueQuery.data ? (
-              <SurpriseBoxFooter
-                priceLabel={formatPrice(builder.finalPrice)}
-                ctaLabel={t('surpriseBox.payCta')}
-                onPay={onPay}
-              />
+              <>
+                <SurpriseBoxPickupSection
+                  title={t('basket.pickupTimeTitle')}
+                  selectedLabel={builder.config.time}
+                  onPress={openTimeSheet}
+                />
+                <SurpriseBoxCheckoutBar
+                  priceLabel={formatPrice(builder.finalPrice)}
+                  ctaLabel={t('surpriseBox.payCta')}
+                  onPay={onPay}
+                />
+              </>
             ) : null}
-          </>
+          </ScrollView>
         )}
       </View>
+      <TimeSlotPickerSheet
+        ref={timeSheetRef}
+        title={t('basket.pickupTimeTitle')}
+        slots={TIME_SLOTS}
+        selected={builder.config.time}
+        onSelect={(slot) => builder.setTime(slot as TimeSlot)}
+      />
     </SafeAreaView>
   );
 };
@@ -287,7 +264,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    gap: theme.spacing[5],
+    gap: theme.spacing[4],
     paddingTop: theme.spacing[2],
   },
   loaderWrap: {

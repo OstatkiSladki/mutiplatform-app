@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../../../shared/ui/button';
+import { BookingCtaButton } from '../../../../shared/ui/booking-cta-button';
 import { Divider } from '../../../../shared/ui/divider';
 import { theme } from '../../../../shared/config/theme';
 import { formatPrice } from '../../../../shared/lib/format';
@@ -29,11 +29,11 @@ export const CheckoutSummary = ({
 }: CheckoutSummaryProps) => {
   const { t } = useTranslation('checkout');
   const cta = (
-    <Button
+    <BookingCtaButton
       title={t('payCtaWithAmount', { amount: formatPrice(total) })}
       onPress={onPay}
       disabled={disabled || total === 0}
-      density="comfortable"
+      style={mode === 'mobile-bar' ? styles.barCtaInner : styles.desktopCtaFill}
     />
   );
 
@@ -110,6 +110,12 @@ const styles = StyleSheet.create({
   barCta: {
     flexShrink: 0,
     minWidth: 160,
+  },
+  barCtaInner: {
+    width: '100%',
+  },
+  desktopCtaFill: {
+    alignSelf: 'stretch',
   },
   desktopCard: {
     backgroundColor: theme.colors.neutral.white,

@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
-  View,
-  TextInput,
-  TextInputProps,
+  Animated,
+  Easing,
   StyleSheet,
   Text,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
   StyleProp,
   ViewStyle,
-  TouchableOpacity,
 } from 'react-native';
 import { theme } from '../../config/theme';
 import { Icon, IconName } from '../icon';
@@ -21,7 +23,11 @@ export interface InputProps extends TextInputProps {
   variant?: InputVariant;
   leadingIcon?: IconName;
   onClear?: () => void;
+  /** Иконка показа пароля (Feather eye / eye-off) для полей с `secureTextEntry`. */
+  showPasswordToggle?: boolean;
 }
+
+const INPUT_RADIUS = theme.client.radius.sm;
 
 export const Input = ({
   label,
@@ -32,11 +38,61 @@ export const Input = ({
   leadingIcon,
   onClear,
   value,
+  showPasswordToggle,
+  secureTextEntry,
+  onFocus,
+  onBlur,
   ...props
 }: InputProps) => {
   const isPill = variant === 'pill';
   const hasValue = typeof value === 'string' && value.length > 0;
   const showClear = isPill && onClear && hasValue;
+
+  const [hidden, setHidden] = useState(true);
+  const focusAnim = useRef(new Animated.Value(0)).current;
+
+  const showPwToggle = !!secureTextEntry && !!showPasswordToggle;
+  const effectiveSecure = showPwToggle ? hidden : secureTextEntry;
+
+  const animateFocus = useCallback(
+    (to: number) => {
+      Animated.timing(focusAnim, {
+        toValue,
+        duration: 200,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: false,
+      }).start();
+    },
+    [focusAnim],
+  );
+
+  const handleFocus = useCallback(
+    (e: Parameters<NonNullable<TextInputProps['onFocus']>>[0]) => {
+      animateFocus(1);
+      onFocus?.(e);
+    },
+    [animateFocus, onFocus],
+  );
+
+  const handleBlur = useCallback(
+    (e: Parameters<NonNullable<TextInputProps['onBlur']>>[0]) => {
+      animateFocus(0);
+      onBlur?.(e);
+    },
+    [animateFocus, onBlur],
+  );
+
+  const borderColor = focusAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [theme.colors.neutral[8], theme.colors.primary[100]],
+  });
+
+  const defaultWrapAnimatedStyle = useMemo(
+    () => ({
+      borderColor,
+    }),
+    [borderColor],
+  );
 
   if (isPill) {
     return (
@@ -75,12 +131,53 @@ export const Input = ({
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput
-        style={[styles.input, error ? styles.inputError : null, style]}
-        placeholderTextColor={theme.colors.neutral[6]}
-        value={value}
-        {...props}
-      />
+      {error ? (
+        <View style={[styles.fieldShell, styles.fieldShellErrorFixed]}>
+          <TextInput
+            {...props}
+            style={[styles.fieldInput, style]}
+            placeholderTextColor={theme.colors.neutral[5]}
+            value={value}
+            secureTextEntry={effectiveSecure}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+          {showPwToggle ? (
+            <TouchableOpacity
+              onPress={() => setHidden((h) => !h)}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel={hidden ? 'Показать пароль' : 'Скрыть пароль'}
+              style={styles.toggleHit}
+            >
+              <Icon name={hidden ? 'eye' : 'eye-off'} size={20} color={theme.colors.neutral[5]} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
+      ) : (
+        <Animated.View style={[styles.fieldShell, defaultWrapAnimatedStyle]}>
+          <TextInput
+            {...props}
+            style={[styles.fieldInput, style]}
+            placeholderTextColor={theme.colors.neutral[5]}
+            value={value}
+            secureTextEntry={effectiveSecure}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+          {showPwToggle ? (
+            <TouchableOpacity
+              onPress={() => setHidden((h) => !h)}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel={hidden ? 'Показать пароль' : 'Скрыть пароль'}
+              style={styles.toggleHit}
+            >
+              <Icon name={hidden ? 'eye' : 'eye-off'} size={20} color={theme.colors.neutral[5]} />
+            </TouchableOpacity>
+          ) : null}
+        </Animated.View>
+      )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
@@ -89,28 +186,37 @@ export const Input = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: theme.spacing[3],
+    marginBottom: theme.spacing[4],
   },
   label: {
     fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[4],
+    fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
     marginBottom: theme.spacing[1],
-    fontWeight: '500',
+    fontWeight: '400',
   },
-  input: {
+  fieldShell: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: INPUT_RADIUS,
+    backgroundColor: theme.colors.neutral.white,
+    paddingHorizontal: theme.spacing[4],
+    minHeight: 48,
+  },
+  fieldShellErrorFixed: {
+    borderColor: theme.colors.status.error,
+  },
+  fieldInput: {
+    flex: 1,
     fontFamily: theme.typography.fontFamilies.inter,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
-    backgroundColor: theme.colors.neutral.white,
-    borderWidth: 1,
-    borderColor: theme.colors.neutral[7],
-    borderRadius: theme.radius.md,
-    paddingHorizontal: theme.spacing[3],
     paddingVertical: theme.spacing[3],
+    paddingRight: theme.spacing[2],
   },
-  inputError: {
-    borderColor: theme.colors.status.error,
+  toggleHit: {
+    padding: theme.spacing[1],
   },
   errorText: {
     fontFamily: theme.typography.fontFamilies.inter,

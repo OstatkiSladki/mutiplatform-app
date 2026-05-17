@@ -80,6 +80,14 @@ export const clientTokens = {
       shadowRadius: 10,
       elevation: 2,
     },
+    /** Login / auth card — 0 8px 24px rgba(26, 21, 18, 0.06). */
+    authLoginCard: {
+      shadowColor: '#1a1512',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.06,
+      shadowRadius: 24,
+      elevation: 3,
+    },
   },
   radius: {
     // --radius: 0.875rem (14px)

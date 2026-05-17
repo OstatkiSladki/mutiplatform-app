@@ -1,6 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { theme } from '../../../../shared/config/theme';
 
+export const AUTH_CARD_MAX_WIDTH = 460;
+
+/** Общие значения заголовка — mobile переопределяет размеры через локальные стили при необходимости */
+export const authTitleTypography = {
+  fontFamily: theme.typography.fontFamilies.inter,
+  fontWeight: '700' as const,
+  color: theme.colors.neutral[1],
+};
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -23,10 +32,8 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[1],
   },
   title: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    ...authTitleTypography,
     fontSize: theme.typography.fontSizes[12],
-    fontWeight: '700',
-    color: theme.colors.neutral[1],
   },
   subtitle: {
     fontFamily: theme.typography.fontFamilies.inter,
@@ -55,5 +62,3 @@ export const styles = StyleSheet.create({
     color: theme.colors.primary[100],
   },
 });
-
-export const AUTH_CARD_MAX_WIDTH = 460;

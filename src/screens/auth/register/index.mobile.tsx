@@ -1,11 +1,13 @@
 import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../../shared/ui/button';
+import { PrimaryButton } from '../../../shared/ui';
 import {
   AuthLayout,
   ControlledInput,
@@ -13,16 +15,19 @@ import {
   FormError,
   registerSchema,
   RegisterFormValues,
+  authFormSheetStyles,
   mapAuthError,
 } from '../../../features/auth';
 import { useRegister } from '../../../entities/auth/model/hooks';
 import type { AuthStackParamList } from '../../../navigation/types';
+import { theme } from '../../../shared/config/theme';
 import { styles } from './styles';
 
 type Navigation = NativeStackNavigationProp<AuthStackParamList, 'Register'>;
 
 export const RegisterScreen = () => {
   const { t } = useTranslation('auth');
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
   const {
     control,
@@ -65,68 +70,77 @@ export const RegisterScreen = () => {
   });
 
   return (
-    <AuthLayout
-      title={t('register.title')}
-      subtitle={t('register.subtitle')}
-      footer={{
-        text: t('register.haveAccount'),
-        linkLabel: t('register.loginLink'),
-        onLinkPress: () => navigation.navigate('Login'),
-      }}
-    >
-      <ControlledInput
-        control={control}
-        name="first_name"
-        label={t('register.firstName')}
-        autoCapitalize="words"
-        textContentType="givenName"
-      />
-      <ControlledInput
-        control={control}
-        name="last_name"
-        label={t('register.lastName')}
-        autoCapitalize="words"
-        textContentType="familyName"
-      />
-      <ControlledInput
-        control={control}
-        name="email"
-        label={t('register.email')}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoComplete="email"
-        textContentType="emailAddress"
-      />
-      <ControlledInput
-        control={control}
-        name="phone"
-        label={t('register.phone')}
-        keyboardType="phone-pad"
-        autoComplete="tel"
-        textContentType="telephoneNumber"
-      />
-      <ControlledInput
-        control={control}
-        name="password"
-        label={t('register.password')}
-        secureTextEntry
-        autoCapitalize="none"
-        autoComplete="password-new"
-        textContentType="newPassword"
-      />
-      <ControlledCheckbox
-        control={control}
-        name="privacy_policy_accepted"
-        label={t('register.privacyPolicy')}
-      />
-      <FormError message={errors.root?.message} />
-      <Button
-        title={t('register.submit')}
-        onPress={onSubmit}
-        isLoading={isPending}
-        disabled={isPending}
-        style={styles.submit}
-      />
+    <AuthLayout title={t('register.title')} subtitle={t('register.subtitle')}>
+      <View
+        style={[
+          authFormSheetStyles.sheet,
+          { paddingBottom: theme.spacing[8] + insets.bottom },
+        ]}
+      >
+        <ControlledInput
+          control={control}
+          name="first_name"
+          label={t('register.firstName')}
+          autoCapitalize="words"
+          textContentType="givenName"
+        />
+        <ControlledInput
+          control={control}
+          name="last_name"
+          label={t('register.lastName')}
+          autoCapitalize="words"
+          textContentType="familyName"
+        />
+        <ControlledInput
+          control={control}
+          name="email"
+          label={t('register.email')}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoComplete="email"
+          textContentType="emailAddress"
+        />
+        <ControlledInput
+          control={control}
+          name="phone"
+          label={t('register.phone')}
+          keyboardType="phone-pad"
+          autoComplete="tel"
+          textContentType="telephoneNumber"
+        />
+        <ControlledInput
+          control={control}
+          name="password"
+          label={t('register.password')}
+          secureTextEntry
+          autoCapitalize="none"
+          autoComplete="password-new"
+          textContentType="newPassword"
+        />
+        <ControlledCheckbox
+          control={control}
+          name="privacy_policy_accepted"
+          label={t('register.privacyPolicy')}
+        />
+        <FormError message={errors.root?.message} />
+        <PrimaryButton
+          title={t('register.submit')}
+          onPress={onSubmit}
+          isLoading={isPending}
+          disabled={isPending}
+          size="comfortable"
+          style={styles.submit}
+        />
+
+        <View style={styles.footerRow}>
+          <Text style={styles.footerPrompt} numberOfLines={1}>
+            {t('register.haveAccount')}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')} activeOpacity={0.75}>
+            <Text style={styles.footerLink}>{t('register.loginLink')}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </AuthLayout>
   );
 };

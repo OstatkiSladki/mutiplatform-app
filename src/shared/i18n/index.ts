@@ -8,12 +8,13 @@ import { ruCheckout } from './locales/ru/checkout';
 import { ruPayment } from './locales/ru/payment';
 import { ruProfile } from './locales/ru/profile';
 import { ruBusiness } from './locales/ru/business';
+import { ruOnboarding } from './locales/ru/onboarding';
 
 i18n.use(initReactI18next).init({
   lng: 'ru',
   fallbackLng: 'ru',
   defaultNS: 'common',
-  ns: ['common', 'errors', 'auth', 'catalog', 'checkout', 'payment', 'profile', 'business'],
+  ns: ['common', 'errors', 'auth', 'catalog', 'checkout', 'payment', 'profile', 'business', 'onboarding'],
   resources: {
     ru: {
       errors: ruErrors,
@@ -24,6 +25,7 @@ i18n.use(initReactI18next).init({
       payment: ruPayment,
       profile: ruProfile,
       business: ruBusiness,
+      onboarding: ruOnboarding,
     },
   },
   interpolation: {
@@ -40,3 +42,4 @@ export { ruCheckout } from './locales/ru/checkout';
 export { ruPayment } from './locales/ru/payment';
 export { ruProfile } from './locales/ru/profile';
 export { ruBusiness } from './locales/ru/business';
+export { ruOnboarding } from './locales/ru/onboarding';

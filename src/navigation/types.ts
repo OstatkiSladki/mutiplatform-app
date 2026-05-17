@@ -41,6 +41,8 @@ export type BusinessStackParamList = {
 };
 
 export type RootStackParamList = {
+  Splash: undefined;
+  Onboarding: undefined;
   Auth: NavigatorScreenParams<AuthStackParamList>;
   Client: NavigatorScreenParams<ClientStackParamList>;
   Business: NavigatorScreenParams<BusinessStackParamList>;

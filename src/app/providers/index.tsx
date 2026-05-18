@@ -5,6 +5,9 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryProvider } from './query-provider';
 import { ThemeProvider } from './theme-provider';
 import { AuthProvider } from './auth-provider';
+import { initMaps } from './init-maps';
+
+initMaps();
 
 interface AppProviderProps {
   children: ReactNode;

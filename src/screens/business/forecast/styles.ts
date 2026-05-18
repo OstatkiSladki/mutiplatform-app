@@ -24,9 +24,9 @@ export const styles = StyleSheet.create({
     columnGap: 12,
   },
   headerText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   headerActionCol: {

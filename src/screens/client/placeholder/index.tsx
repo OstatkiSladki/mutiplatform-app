@@ -32,13 +32,13 @@ export const PlaceholderScreen = () => {
         >
           <Icon name="chevron-left" size={20} color={theme.colors.neutral[1]} />
         </TouchableOpacity>
-        <Text style={{ flex: 1, textAlign: 'center', fontFamily: theme.typography.fontFamilies.inter, fontWeight: '700', fontSize: theme.typography.fontSizes[7], color: theme.colors.neutral[1] }}>
+        <Text style={{ flex: 1, textAlign: 'center', fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400', fontSize: theme.typography.fontSizes[7], color: theme.colors.neutral[1] }}>
           {t(titleKey)}
         </Text>
         <View style={{ width: 40 }} />
       </View>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: theme.spacing[5] }}>
-        <Text style={{ fontFamily: theme.typography.fontFamilies.inter, fontSize: theme.typography.fontSizes[5], color: theme.colors.neutral[3] }}>
+        <Text style={{ fontFamily: theme.typography.fontFamilies.sourceSansProRegular, fontSize: theme.typography.fontSizes[5], color: theme.colors.neutral[3] }}>
           {t('profile.placeholder')}
         </Text>
       </View>

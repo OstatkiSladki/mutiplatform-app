@@ -72,9 +72,9 @@ const styles = StyleSheet.create({
   colStatus: { width: 140 },
   colAction: { width: 200, flexDirection: 'row', justifyContent: 'flex-end' },
   bold: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   text: {
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     ...b.shadows.glow,
   },
   advanceText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primaryForeground,
   },
 });

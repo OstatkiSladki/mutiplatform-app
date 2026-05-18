@@ -49,8 +49,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing[4],
   },
   sectionTitle: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[7],
     color: theme.colors.neutral[1],
   },
@@ -58,12 +57,12 @@ const styles = StyleSheet.create({
     gap: theme.spacing[2],
   },
   fieldLabel: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[3],
   },
   address: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
   },

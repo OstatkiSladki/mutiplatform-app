@@ -59,7 +59,7 @@ export const SurpriseBoxCard = ({
         <View
           style={[
             styles.logo,
-            { backgroundColor: palette.bg, borderColor: theme.client.colors.border },
+            { backgroundColor: palette.bg, borderColor: theme.colors.neutral[8] },
           ]}
         >
           <Text style={[styles.logoText, { color: palette.fg }]} numberOfLines={1}>
@@ -87,8 +87,8 @@ export const SurpriseBoxCard = ({
       <View style={styles.metaRow}>
         <Stars rating={5} size={13} color={theme.client.colors.star} />
         <View style={styles.tags}>
-          <Chip label={t('venueTagBakery')} variant="accent" />
-          <Chip label={t('venueTagSandwiches')} variant="accent" />
+          <Chip label={t('venueTagBakery')} />
+          <Chip label={t('venueTagSandwiches')} />
         </View>
       </View>
 
@@ -113,7 +113,7 @@ export const SurpriseBoxCard = ({
         accessibilityLabel={t('surpriseBox.bookCta', {
           price: formatPrice(builder.finalPrice),
         })}
-        style={{ alignSelf: 'stretch', marginTop: theme.spacing[1] }}
+        style={{ alignSelf: 'stretch', marginTop: theme.spacing[2] }}
       />
     </View>
   );

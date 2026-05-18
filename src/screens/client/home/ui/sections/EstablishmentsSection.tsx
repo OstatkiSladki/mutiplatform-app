@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import React from 'react';
+import { FlatList, Platform, Pressable, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Venue } from '../../../../../entities/venue';
 import { Loader } from '../../../../../shared/ui/loader';
@@ -16,80 +16,75 @@ export interface EstablishmentsSectionProps {
   onPressVenue: (venueId: number) => void;
 }
 
-const Separator = () => <View style={styles.separator} />;
-
 export const EstablishmentsSection = ({
   venues,
   isLoading,
   onPressVenue,
 }: EstablishmentsSectionProps) => {
   const { t } = useTranslation('catalog');
-  const { isAtLeast } = useBreakpoint();
-  const showNextButton = isAtLeast('md') && (venues?.length ?? 0) > 3;
-  const listRef = useRef<FlatList>(null);
-  const offsetRef = useRef(0);
+  const { isWeb, isAtLeast } = useBreakpoint();
+  const desktop = isWeb && isAtLeast('md');
+  const sectionTitleStyle =
+    isWeb && isAtLeast('md') ? styles.sectionTitleWeb : styles.sectionTitle;
+  const list = venues ?? [];
+  const count = list.length;
+  const useFluidRow = desktop && count >= 1 && count <= 4;
+  const showNextButton = desktop && count > 3;
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{t('sectionEstablishments')}</Text>
-      {isLoading ? (
+      <Text style={sectionTitleStyle}>{t('sectionEstablishments')}</Text>
+      {venues === undefined || isLoading ? (
         <View style={styles.loaderRow}>
           <Loader size="small" />
         </View>
-      ) : venues && venues.length > 0 ? (
-        <View style={styles.carouselWrap}>
-          <FlatList
-            ref={listRef}
-            data={venues}
-            horizontal
-            keyExtractor={(v) => String(v.id)}
-            renderItem={({ item }) => (
-              <VenueCard venue={item} onPress={onPressVenue} />
-            )}
-            ItemSeparatorComponent={Separator}
-            showsHorizontalScrollIndicator={false}
-            nestedScrollEnabled={true}
-            contentContainerStyle={styles.horizontalList}
-            snapToInterval={246}
-            decelerationRate="fast"
-            onScroll={(e) => { offsetRef.current = e.nativeEvent.contentOffset.x; }}
-            scrollEventThrottle={16}
-          />
-          {showNextButton ? (
-            <>
-              <Pressable
-                style={styles.carouselPrev}
-                accessibilityRole="button"
-                accessibilityLabel={t('carouselPrevA11y')}
-                onPress={() => {
-                  const next = Math.max(0, offsetRef.current - 246);
-                  listRef.current?.scrollToOffset({ offset: next, animated: true });
-                }}
-              >
-                <Icon
-                  name="chevron-left"
-                  size={18}
-                  color={theme.client.colors.foreground}
+      ) : list.length > 0 ? (
+        useFluidRow ? (
+          <View style={styles.establishmentsRow}>
+            {list.map((item) => (
+              <VenueCard
+                key={item.id}
+                venue={item}
+                onPress={onPressVenue}
+                webCardLayout="rowFluid"
+                style={styles.establishmentsRowCell}
+              />
+            ))}
+          </View>
+        ) : (
+          <View style={styles.carouselWrap}>
+            <FlatList
+              data={list}
+              horizontal
+              keyExtractor={(v) => String(v.id)}
+              renderItem={({ item }) => (
+                <VenueCard
+                  venue={item}
+                  onPress={onPressVenue}
+                  webCardLayout="carousel"
                 />
-              </Pressable>
+              )}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalList}
+            />
+            {showNextButton ? (
               <Pressable
-                style={styles.carouselNext}
+                style={({ hovered }) => [
+                  styles.carouselNext,
+                  Platform.OS === 'web' && hovered ? { opacity: 0.92 } : null,
+                ]}
                 accessibilityRole="button"
                 accessibilityLabel={t('carouselNextA11y')}
-                onPress={() => {
-                  const next = offsetRef.current + 246;
-                  listRef.current?.scrollToOffset({ offset: next, animated: true });
-                }}
               >
                 <Icon
                   name="chevron-right"
                   size={18}
-                  color={theme.client.colors.foreground}
+                  color={theme.colors.neutral[1]}
                 />
               </Pressable>
-            </>
-          ) : null}
-        </View>
+            ) : null}
+          </View>
+        )
       ) : (
         <EmptyState
           icon="coffee"

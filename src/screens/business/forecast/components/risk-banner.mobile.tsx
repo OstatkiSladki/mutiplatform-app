@@ -68,9 +68,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   description: {
@@ -91,9 +91,9 @@ const styles = StyleSheet.create({
     ...b.shadows.glow,
   },
   ctaLabel: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primaryForeground,
   },
 });

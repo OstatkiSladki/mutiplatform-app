@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cellHeader: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '400',
     color: b.colors.mutedForeground,
     textTransform: 'uppercase',
     letterSpacing: 0.4,

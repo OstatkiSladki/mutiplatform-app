@@ -49,9 +49,9 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   label: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
     lineHeight: 20,
   },
 });

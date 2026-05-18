@@ -1,3 +1,4 @@
+import type { StyleProp, TextStyle } from 'react-native';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
@@ -9,9 +10,17 @@ export interface ChipProps {
   active?: boolean;
   variant?: ChipVariant;
   onPress?: () => void;
+  /** Merged after variant styles (e.g. web-wide Action Button Small). */
+  labelStyle?: StyleProp<TextStyle>;
 }
 
-export const Chip = ({ label, active = false, variant = 'default', onPress }: ChipProps) => {
+export const Chip = ({
+  label,
+  active = false,
+  variant = 'default',
+  onPress,
+  labelStyle,
+}: ChipProps) => {
   const containerStyle = [
     styles.chip,
     variant === 'accent' && styles.chipAccent,
@@ -24,6 +33,7 @@ export const Chip = ({ label, active = false, variant = 'default', onPress }: Ch
     variant === 'accent' && styles.textAccent,
     variant === 'success' && styles.textSuccess,
     active && styles.textActive,
+    labelStyle,
   ];
 
   const content = <Text style={textStyle}>{label}</Text>;

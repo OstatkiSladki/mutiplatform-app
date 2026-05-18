@@ -11,9 +11,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   initials: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
     fontSize: theme.typography.fontSizes[4],
-    fontWeight: '600',
+    fontWeight: '400',
     color: theme.client.colors.foreground,
     letterSpacing: theme.typography.letterSpacing[0],
   },

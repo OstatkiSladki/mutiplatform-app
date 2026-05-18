@@ -1,17 +1,21 @@
 import { StyleSheet } from 'react-native';
 import { theme } from '../../../shared/config/theme';
+import {
+  clientTextF6Heavy,
+  clientTextParagraphBase,
+} from '../../../shared/config/theme/client-text-styles';
 
 export const styles = StyleSheet.create({
   card: {
     flex: 1,
     minWidth: 0,
-    borderRadius: theme.client.radius.lg,
-    backgroundColor: theme.client.colors.card,
+    borderRadius: theme.radius.xl,
+    backgroundColor: theme.colors.neutral.white,
     borderWidth: 1,
-    borderColor: theme.client.colors.border,
-    padding: theme.spacing[4],
-    gap: theme.spacing[3],
-    ...theme.client.shadows.card,
+    borderColor: theme.colors.neutral[8],
+    padding: theme.spacing[6],
+    gap: theme.spacing[4],
+    ...theme.client.shadows.sectionSoft,
   },
   header: {
     flexDirection: 'row',
@@ -27,24 +31,19 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logoText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
-    fontSize: 10,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
+    fontSize: theme.typography.fontSizes[1],
   },
   titleBlock: {
     flex: 1,
     minWidth: 0,
   },
   title: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
-    fontSize: 15,
-    color: theme.client.colors.foreground,
+    ...clientTextF6Heavy,
   },
   subtitle: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: 12,
-    color: theme.client.colors.mutedForeground,
+    ...clientTextParagraphBase,
+    marginTop: theme.spacing[1],
   },
   hours: {
     flexDirection: 'row',
@@ -52,9 +51,7 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[1],
   },
   hoursText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: 12,
-    color: theme.client.colors.mutedForeground,
+    ...clientTextParagraphBase,
   },
   metaRow: {
     flexDirection: 'row',
@@ -64,10 +61,11 @@ export const styles = StyleSheet.create({
   },
   tags: {
     flexDirection: 'row',
-    gap: theme.spacing[1],
+    gap: theme.spacing[2],
+    flexWrap: 'wrap',
   },
   body: {
-    gap: theme.spacing[3],
+    gap: theme.spacing[4],
   },
   bodyWide: {
     flexDirection: 'row',
@@ -75,7 +73,7 @@ export const styles = StyleSheet.create({
   imageWrap: {
     borderRadius: theme.client.radius.md,
     overflow: 'hidden',
-    backgroundColor: theme.client.colors.secondary,
+    backgroundColor: theme.colors.neutral[9],
     aspectRatio: 1,
   },
   imageWrapWide: {
@@ -87,25 +85,9 @@ export const styles = StyleSheet.create({
     height: '100%',
   },
   form: {
-    gap: theme.spacing[3],
+    gap: theme.spacing[4],
   },
   formWide: {
     flex: 1,
-  },
-  cta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: theme.spacing[2],
-    marginTop: theme.spacing[1],
-    height: 44,
-    borderRadius: theme.client.radius.md,
-    backgroundColor: theme.client.colors.primary,
-  },
-  ctaText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
-    fontSize: 14,
-    color: theme.client.colors.primaryForeground,
   },
 });

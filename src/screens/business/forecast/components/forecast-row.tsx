@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   name: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   sku: {
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
     color: b.colors.foreground,
   },
   cellBold: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   surplus: {
@@ -141,9 +141,9 @@ const styles = StyleSheet.create({
     backgroundColor: b.colors.surface,
   },
   actionText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
 });

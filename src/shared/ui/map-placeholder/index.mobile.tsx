@@ -9,14 +9,34 @@ import { styles } from './styles';
 export interface MapPlaceholderProps {
   label?: string;
   style?: ViewStyle;
+  fillParent?: boolean;
 }
 
-export const MapPlaceholder = ({ label, style }: MapPlaceholderProps) => {
+const PIN_COLOR = theme.colors.primary[100];
+
+export const MapPlaceholder = ({
+  label,
+  style,
+  fillParent = false,
+}: MapPlaceholderProps) => {
   const { t } = useTranslation('common');
   return (
-    <View style={[styles.container, style]}>
-      <Icon name="map" size={36} color={theme.colors.secondary[100]} />
-      <Text style={styles.label}>{label ?? t('mapPlaceholder')}</Text>
+    <View style={[fillParent ? styles.containerFill : styles.container, style]}>
+      <View style={styles.markersLayer}>
+        <View style={[styles.pin, styles.pin1]}>
+          <Icon name="map-pin" size={22} color={PIN_COLOR} />
+        </View>
+        <View style={[styles.pin, styles.pin2]}>
+          <Icon name="map-pin" size={20} color={PIN_COLOR} />
+        </View>
+        <View style={[styles.pin, styles.pin3]}>
+          <Icon name="map-pin" size={18} color={PIN_COLOR} />
+        </View>
+      </View>
+      <View style={styles.centerBlock}>
+        <Icon name="map" size={36} color={theme.colors.neutral[6]} />
+        <Text style={styles.label}>{label ?? t('mapPlaceholder')}</Text>
+      </View>
     </View>
   );
 };

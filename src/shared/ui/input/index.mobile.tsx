@@ -21,6 +21,8 @@ export interface InputProps extends TextInputProps {
   error?: string;
   containerStyle?: StyleProp<ViewStyle>;
   variant?: InputVariant;
+  /** Pill search в шапке веб-клиента: r20, Neutral 9. */
+  pillTone?: 'default' | 'headerSearch';
   leadingIcon?: IconName;
   onClear?: () => void;
   /** Иконка показа пароля (Feather eye / eye-off) для полей с `secureTextEntry`. */
@@ -42,6 +44,7 @@ export const Input = ({
   secureTextEntry,
   onFocus,
   onBlur,
+  pillTone = 'default',
   ...props
 }: InputProps) => {
   const isPill = variant === 'pill';
@@ -57,7 +60,7 @@ export const Input = ({
   const animateFocus = useCallback(
     (to: number) => {
       Animated.timing(focusAnim, {
-        toValue,
+        toValue: to,
         duration: 200,
         easing: Easing.out(Easing.ease),
         useNativeDriver: false,
@@ -98,7 +101,13 @@ export const Input = ({
     return (
       <View style={[styles.container, containerStyle]}>
         {label && <Text style={styles.label}>{label}</Text>}
-        <View style={[styles.pillWrap, error ? styles.pillWrapError : null]}>
+        <View
+          style={[
+            styles.pillWrap,
+            pillTone === 'headerSearch' && styles.pillWrapHeaderSearch,
+            error ? styles.pillWrapError : null,
+          ]}
+        >
           {leadingIcon && (
             <Icon
               name={leadingIcon}
@@ -189,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing[4],
   },
   label: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
     marginBottom: theme.spacing[1],
@@ -209,7 +218,7 @@ const styles = StyleSheet.create({
   },
   fieldInput: {
     flex: 1,
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
     paddingVertical: theme.spacing[3],
@@ -219,7 +228,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing[1],
   },
   errorText: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.status.error,
     marginTop: theme.spacing[1],
@@ -235,12 +244,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
   },
+  pillWrapHeaderSearch: {
+    height: theme.client.chrome.headerBarHeight,
+    borderRadius: theme.spacing[5],
+    backgroundColor: theme.colors.neutral[9],
+    borderColor: theme.colors.neutral[8],
+  },
   pillWrapError: {
     borderColor: theme.colors.status.error,
   },
   pillInput: {
     flex: 1,
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.client.colors.foreground,
     paddingVertical: 0,

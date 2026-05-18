@@ -57,9 +57,9 @@ const styles = StyleSheet.create({
     color: b.colors.mutedForeground,
   },
   value: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 30,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
     marginTop: 4,
     letterSpacing: -0.5,
@@ -72,9 +72,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   deltaText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '400',
     flexShrink: 1,
   },
 });

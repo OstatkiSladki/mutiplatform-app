@@ -152,9 +152,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   nameInput: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
     paddingVertical: 4,
   },
@@ -164,9 +164,9 @@ const styles = StyleSheet.create({
     columnGap: 8,
   },
   headText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   colName: {
@@ -198,9 +198,9 @@ const styles = StyleSheet.create({
     columnGap: 8,
   },
   itemName: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   itemSku: {
@@ -214,9 +214,9 @@ const styles = StyleSheet.create({
     color: b.colors.mutedForeground,
   },
   itemBold: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   removeBtn: {
@@ -252,9 +252,9 @@ const styles = StyleSheet.create({
     backgroundColor: b.colors.surface,
   },
   outlineBtnText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   gradientBtn: {
@@ -265,9 +265,9 @@ const styles = StyleSheet.create({
     ...b.shadows.glow,
   },
   gradientBtnText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primaryForeground,
   },
   metaGrid: {
@@ -282,9 +282,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   metaLabel: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
     marginBottom: 6,
   },
@@ -307,9 +307,9 @@ const styles = StyleSheet.create({
     backgroundColor: b.colors.muted,
   },
   sizeBtnText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   sizeHint: {
@@ -319,15 +319,15 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   metaValuePrimary: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.primary,
   },
   metaValue: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   metaHint: {
@@ -343,9 +343,9 @@ const styles = StyleSheet.create({
     columnGap: 16,
   },
   windowLabel: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
     marginBottom: 6,
   },
@@ -365,9 +365,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   priceTotalValue: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   publishBtn: {
@@ -382,9 +382,9 @@ const styles = StyleSheet.create({
     ...b.shadows.glow,
   },
   publishBtnText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primaryForeground,
   },
 });

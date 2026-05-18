@@ -2,16 +2,11 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
-import type { Venue } from '../../../entities/venue';
 import { Icon } from '../../../shared/ui/icon';
 import { theme } from '../../../shared/config/theme';
 import { pickVenueCover } from '../../../shared/assets/client';
+import type { VenueCardProps } from './venue-card-props';
 import { styles } from './styles';
-
-export interface VenueCardProps {
-  venue: Venue;
-  onPress: (venueId: number) => void;
-}
 
 export const VenueCard = ({ venue, onPress }: VenueCardProps) => {
   const { t } = useTranslation('catalog');
@@ -20,13 +15,13 @@ export const VenueCard = ({ venue, onPress }: VenueCardProps) => {
 
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={[styles.cardBase, styles.cardMobile]}
       onPress={() => onPress(venue.id)}
       activeOpacity={0.85}
       accessibilityRole="button"
       accessibilityLabel={venue.name}
     >
-      <Image source={cover} style={styles.cover} contentFit="cover" />
+      <Image source={cover} style={styles.coverMobile} contentFit="cover" />
       <View style={styles.body}>
         <Text style={styles.name} numberOfLines={1}>
           {venue.name}

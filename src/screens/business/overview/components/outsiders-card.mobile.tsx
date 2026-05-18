@@ -72,9 +72,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   subtitle: {
@@ -84,9 +84,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   cta: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primary,
   },
   tableHead: {
@@ -125,9 +125,9 @@ const styles = StyleSheet.create({
     color: b.colors.mutedForeground,
   },
   rowName: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   rowSold: {
@@ -137,9 +137,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   rowAction: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primary,
   },
 });

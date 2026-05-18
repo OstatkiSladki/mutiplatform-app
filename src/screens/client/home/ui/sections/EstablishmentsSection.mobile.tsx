@@ -16,8 +16,6 @@ export interface EstablishmentsSectionProps {
   onPressVenue: (venueId: number) => void;
 }
 
-const Separator = () => <View style={styles.separator} />;
-
 export const EstablishmentsSection = ({
   venues,
   isLoading,
@@ -30,11 +28,11 @@ export const EstablishmentsSection = ({
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{t('sectionEstablishments')}</Text>
-      {isLoading ? (
+      {venues === undefined || isLoading ? (
         <View style={styles.loaderRow}>
           <Loader size="small" />
         </View>
-      ) : venues && venues.length > 0 ? (
+      ) : venues.length > 0 ? (
         <View style={styles.carouselWrap}>
           <FlatList
             data={venues}
@@ -43,7 +41,6 @@ export const EstablishmentsSection = ({
             renderItem={({ item }) => (
               <VenueCard venue={item} onPress={onPressVenue} />
             )}
-            ItemSeparatorComponent={Separator}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
           />

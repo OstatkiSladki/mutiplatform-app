@@ -44,13 +44,13 @@ const styles = StyleSheet.create({
     gap: theme.spacing[1],
   },
   label: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[3],
     fontWeight: '500',
   },
   input: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
     backgroundColor: theme.colors.neutral.white,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.status.error,
   },
   error: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[2],
     color: theme.colors.status.error,
   },

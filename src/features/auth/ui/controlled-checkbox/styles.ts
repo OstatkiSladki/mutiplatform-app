@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[2],
     lineHeight: theme.typography.fontSizes[5] * theme.typography.lineHeights.loose,
@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     lineHeight: theme.typography.fontSizes[5] * 1.4,
   },
   errorText: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.status.error,
     marginTop: theme.spacing[1],

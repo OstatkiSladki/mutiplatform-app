@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
     backgroundColor: b.colors.foreground,
   },
   labelLarge: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
   },
   labelCompact: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
   },
   labelActive: {
     color: b.colors.background,

@@ -14,13 +14,13 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   headerName: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '400',
     color: theme.client.colors.foreground,
   },
   headerLink: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: 12,
     color: theme.client.colors.mutedForeground,
   },
@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.client.colors.secondary,
   },
   itemLabel: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: 14,
     color: theme.client.colors.foreground,
   },

@@ -5,8 +5,7 @@ export const AUTH_CARD_MAX_WIDTH = 460;
 
 /** Общие значения заголовка — mobile переопределяет размеры через локальные стили при необходимости */
 export const authTitleTypography = {
-  fontFamily: theme.typography.fontFamilies.inter,
-  fontWeight: '700' as const,
+  fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400' as const,
   color: theme.colors.neutral[1],
 };
 
@@ -36,7 +35,7 @@ export const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes[12],
   },
   subtitle: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[3],
   },
@@ -51,14 +50,14 @@ export const styles = StyleSheet.create({
     marginTop: theme.spacing[3],
   },
   footerText: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[3],
   },
   footerLink: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: theme.typography.fontSizes[4],
-    fontWeight: '700',
+    fontWeight: '400',
     color: theme.colors.primary[100],
   },
 });

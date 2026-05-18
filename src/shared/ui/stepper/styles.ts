@@ -51,9 +51,9 @@ export const styles = StyleSheet.create({
   value: {
     minWidth: 24,
     textAlign: 'center',
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
     fontSize: theme.typography.fontSizes[5],
-    fontWeight: '600',
+    fontWeight: '400',
     color: theme.colors.neutral[1],
   },
   valueSm: {

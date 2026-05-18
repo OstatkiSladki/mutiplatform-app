@@ -19,14 +19,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: theme.typography.fontSizes[7],
-    fontWeight: '700',
+    fontWeight: '400',
     color: theme.colors.neutral[1],
     textAlign: 'center',
   },
   description: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[3],
     textAlign: 'center',

@@ -227,13 +227,13 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   text: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
     fontSize: theme.typography.fontSizes[4],
   },
   textSmall: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
     fontSize: theme.typography.fontSizes[3],
   },
   row: {
@@ -246,18 +246,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.client.radius.pill,
-    backgroundColor: theme.client.colors.secondary,
+    backgroundColor: theme.colors.neutral[9],
+    borderWidth: 1,
+    borderColor: theme.colors.neutral[8],
     paddingHorizontal: theme.spacing[4],
   },
   pillMobile: {
     height: 44,
   },
   pillWeb: {
-    height: 48,
+    height: theme.spacing[9],
   },
   pillText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
     fontSize: theme.typography.fontSizes[4],
   },
   ghost: {
@@ -268,10 +270,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   iconCircle: {
-    width: 44,
-    height: 44,
+    width: theme.spacing[9],
+    height: theme.spacing[9],
     borderRadius: theme.client.radius.pill,
-    backgroundColor: theme.client.colors.secondary,
+    backgroundColor: theme.colors.neutral[9],
+    borderWidth: 1,
+    borderColor: theme.colors.neutral[8],
     alignItems: 'center',
     justifyContent: 'center',
   },

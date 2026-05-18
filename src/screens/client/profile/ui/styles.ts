@@ -40,8 +40,7 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[1],
   },
   name: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[8],
     color: theme.colors.neutral[1],
   },
@@ -51,7 +50,7 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[1],
   },
   settingsText: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[3],
   },
@@ -67,7 +66,7 @@ export const styles = StyleSheet.create({
   },
   menuLabel: {
     flex: 1,
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
   },
@@ -92,13 +91,12 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[1],
   },
   ecoTitle: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[5],
     color: theme.colors.neutral[1],
   },
   ecoLine: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[2],
   },

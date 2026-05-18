@@ -27,9 +27,9 @@ export const styles = StyleSheet.create({
     height: 32,
   },
   brandText: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '400',
     color: theme.client.colors.foreground,
     flexShrink: 1,
   },
@@ -52,9 +52,9 @@ export const styles = StyleSheet.create({
   },
   cartBadgeText: {
     color: theme.client.colors.primaryForeground,
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '400',
   },
   searchRow: {
     flexDirection: 'row',

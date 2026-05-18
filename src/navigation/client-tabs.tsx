@@ -83,7 +83,7 @@ export const ClientTabs = () => {
               ...theme.client.shadows.tabBar,
             },
         tabBarLabelStyle: {
-          fontFamily: theme.typography.fontFamilies.inter,
+          fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
           fontSize: theme.typography.fontSizes[2],
         },
       })}

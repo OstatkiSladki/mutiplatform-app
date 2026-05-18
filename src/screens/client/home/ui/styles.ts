@@ -1,21 +1,36 @@
 import { StyleSheet } from 'react-native';
 import { theme } from '../../../../shared/config/theme';
+import {
+  clientTextF4Heavy,
+  clientTextHomeSectionTitle,
+} from '../../../../shared/config/theme/client-text-styles';
 
 export const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: theme.client.colors.background,
   },
-  scrollContent: {
-    paddingBottom: theme.spacing[8],
-    paddingTop: theme.spacing[6],
+  scrollOuter: {
     width: '100%',
-    maxWidth: 1280,
+    maxWidth: theme.layout.clientShellMaxWidth,
     alignSelf: 'center',
-    gap: theme.spacing[8],
+  },
+  scrollContent: {
+    paddingTop: theme.spacing[5],
+    paddingBottom: theme.spacing[8],
+    gap: theme.spacing[7],
+  },
+  shellInner: {
+    width: '100%',
+    maxWidth: theme.layout.clientColumnMaxWidth,
+    alignSelf: 'center',
+    gap: theme.spacing[7],
+  },
+  /** Рядом → Заведения → Сюрприз-бокс — шаг 56px по макету. */
+  homeMajorSectionsStack: {
+    gap: theme.layout.clientHomeMajorSectionsGap,
   },
   section: {
-    paddingHorizontal: theme.spacing[6],
     gap: theme.spacing[4],
   },
   sectionHeader: {
@@ -24,44 +39,101 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   sectionTitle: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
-    fontSize: 20,
-    color: theme.client.colors.foreground,
+    ...clientTextF4Heavy,
   },
-  nearbyCard: {
-    backgroundColor: theme.client.colors.card,
-    borderRadius: theme.client.radius.lg,
-    borderWidth: 1,
-    borderColor: theme.client.colors.border,
-    padding: theme.spacing[4],
-    gap: theme.spacing[3],
-    overflow: 'hidden',
-    ...theme.client.shadows.card,
+  /** Web — 32px SemiBold, line-height 120%. */
+  sectionTitleWeb: {
+    ...clientTextHomeSectionTitle,
+  },
+  sectionTitleWebWide: {
+    ...clientTextHomeSectionTitle,
+  },
+  /** Обёртка «Рядом» — без padding, две панели 50/50 с gap. */
+  nearbySectionSurface: {
+    width: '100%',
+    gap: theme.spacing[4],
   },
   nearbyGridDesktop: {
     flexDirection: 'row',
+    alignItems: 'stretch',
+    width: '100%',
     gap: theme.spacing[4],
+    minHeight: theme.layout.nearbyDesktopPanelHeight,
+  },
+  nearbyMapShell: {
+    flex: 1,
+    flexBasis: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    minWidth: 0,
+    height: theme.layout.nearbyDesktopPanelHeight,
+    borderRadius: theme.spacing[5],
+    borderWidth: 1,
+    borderColor: theme.colors.neutral[8],
+    overflow: 'hidden',
+    backgroundColor: theme.colors.neutral[9],
   },
   nearbyMapDesktop: {
     flex: 1,
-    minHeight: 350,
+    width: '100%',
+    height: '100%',
+    minHeight: theme.layout.nearbyDesktopPanelHeight,
+  },
+  nearbyListSurface: {
+    flex: 1,
+    flexBasis: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    minWidth: 0,
+    height: theme.layout.nearbyDesktopPanelHeight,
+    borderRadius: theme.spacing[5],
+    borderWidth: 1,
+    borderColor: theme.colors.neutral[8],
+    backgroundColor: theme.colors.neutral.white,
+    overflow: 'hidden',
+    ...theme.client.shadows.sectionSoft,
   },
   nearbyMapMobile: {
-    height: 250,
-    borderRadius: theme.client.radius.lg,
+    width: '100%',
+    height: 200,
+    borderRadius: theme.spacing[5],
+    borderWidth: 1,
+    borderColor: theme.colors.neutral[8],
     overflow: 'hidden',
+    backgroundColor: theme.colors.neutral[9],
+  },
+  nearbyListSurfaceMobile: {
+    width: '100%',
+    borderRadius: theme.spacing[5],
+    borderWidth: 1,
+    borderColor: theme.colors.neutral[8],
+    backgroundColor: theme.colors.neutral.white,
+    overflow: 'hidden',
+    ...theme.client.shadows.sectionSoft,
   },
   nearbyListDesktop: {
     flex: 1,
-    maxHeight: 350,
+    width: '100%',
+  },
+  nearbyListDesktopContent: {
+    gap: theme.spacing[2],
+    padding: theme.spacing[4],
   },
   nearbyListMobile: {
-    gap: theme.spacing[1],
-    maxHeight: 260,
+    gap: theme.spacing[2],
+    padding: theme.spacing[4],
   },
   carouselWrap: {
     position: 'relative',
+  },
+  establishmentsRow: {
+    flexDirection: 'row',
+    gap: theme.spacing[4],
+    width: '100%',
+  },
+  establishmentsRowCell: {
+    flex: 1,
+    minWidth: 0,
   },
   horizontalList: {
     paddingRight: theme.spacing[4],
@@ -70,17 +142,23 @@ export const styles = StyleSheet.create({
   separator: {
     width: theme.spacing[4],
   },
-  vSeparator: {
-    height: theme.spacing[2],
+  listHairline: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: theme.colors.neutral[8],
+    marginVertical: theme.spacing[2],
   },
   loaderRow: {
-    paddingVertical: theme.spacing[5],
+    paddingVertical: theme.spacing[6],
     alignItems: 'center',
   },
   surpriseGrid: {
+    width: '100%',
+  },
+  /** Native flex-сетка (веб использует CSS grid в SurpriseBoxesSection). */
+  surpriseGridNativeGap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing[4],
+    gap: theme.spacing[6],
   },
   surpriseCell1: {
     width: '100%',
@@ -91,34 +169,26 @@ export const styles = StyleSheet.create({
     flexShrink: 1,
     minWidth: 0,
   },
-  carouselPrev: {
-    position: 'absolute',
-    left: theme.spacing[2],
-    top: '50%',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: theme.client.colors.card,
-    borderWidth: 1,
-    borderColor: theme.client.colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-    transform: [{ translateY: -18 }],
-    ...theme.client.shadows.card,
+  surpriseCellWeb: {
+    minWidth: 0,
+    width: '100%',
   },
   carouselNext: {
     position: 'absolute',
     right: theme.spacing[2],
     top: '50%',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: theme.client.colors.card,
+    width: theme.spacing[9],
+    height: theme.spacing[9],
+    borderRadius: theme.client.radius.pill,
+    backgroundColor: theme.colors.neutral.white,
     borderWidth: 1,
-    borderColor: theme.client.colors.border,
+    borderColor: theme.colors.neutral[8],
     alignItems: 'center',
     justifyContent: 'center',
-    transform: [{ translateY: -18 }],
-    ...theme.client.shadows.card,
+    transform: [{ translateY: -(theme.spacing[9] / 2) }],
+    ...theme.client.shadows.sectionSoft,
+  },
+  scrollBottomSpacer: {
+    height: theme.spacing[5],
   },
 });

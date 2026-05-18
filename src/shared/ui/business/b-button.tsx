@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
     columnGap: 8,
   },
   label: {
-    fontFamily: b.typography.fontFamily,
+    fontSize: b.typography.button.fontSize,
+    fontFamily: b.typography.button.fontFamily,
     fontWeight: b.typography.button.fontWeight,
   },
   disabled: {

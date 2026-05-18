@@ -1,5 +1,5 @@
-import { Platform } from 'react-native';
+import { withMobileLayout } from '../../../shared/lib/responsive';
 import { CartScreen as CartScreenWeb } from './CartScreen.web';
 import { BasketScreen } from '../basket/ui/BasketScreen.mobile';
 
-export const CartScreen = Platform.OS === 'web' ? CartScreenWeb : BasketScreen;
+export const CartScreen = withMobileLayout(BasketScreen, CartScreenWeb);

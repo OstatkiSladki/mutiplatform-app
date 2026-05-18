@@ -1,6 +1,5 @@
-import { Platform } from 'react-native';
+import { withMobileLayout } from '../../../shared/lib/responsive';
 import { VenueScreen as WebVenueScreen } from './ui/VenueScreen';
 import { VenueScreen as MobileVenueScreen } from './ui/VenueScreen.mobile';
 
-export const VenueScreen =
-  Platform.OS === 'web' ? WebVenueScreen : MobileVenueScreen;
+export const VenueScreen = withMobileLayout(MobileVenueScreen, WebVenueScreen);

@@ -3,14 +3,14 @@ import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { ClientStackParamList, ClientTabsParamList } from '../../../../navigation/types';
+import type { ClientStackParamList } from '../../../../navigation/types';
 import { Icon } from '../../../../shared/ui/icon';
 import { Text } from '../../../../shared/ui/text';
 import { theme } from '../../../../shared/config/theme';
 import { ProductDetailsBody } from '../../../../features/product-details';
 import { styles } from '../styles';
 
-type R = RouteProp<ClientTabsParamList, 'ProductDetails'>;
+type R = RouteProp<ClientStackParamList, 'ProductDetails'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
 export const ProductDetailsScreen = () => {
@@ -19,10 +19,7 @@ export const ProductDetailsScreen = () => {
   const { venueId, venueName, offer, product } = route.params;
 
   const goBack = useCallback(() => {
-    navigation.navigate('ClientTabs', {
-      screen: 'Venue',
-      params: { venueId },
-    });
+    navigation.navigate('Venue', { venueId });
   }, [navigation, venueId]);
 
   return (

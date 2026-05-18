@@ -12,13 +12,6 @@ export type ClientTabsParamList = {
   Nearby: undefined;
   Catalog: undefined;
   Cart: undefined;
-  Venue: { venueId: number };
-  ProductDetails: {
-    venueId: number;
-    venueName: string;
-    offer: Offer;
-    product?: Product;
-  };
 };
 
 export type ClientStackParamList = {
@@ -31,6 +24,12 @@ export type ClientStackParamList = {
   Addresses: undefined;
   NotificationsSettings: undefined;
   About: undefined;
+  ProductDetails: {
+    venueId: number;
+    venueName: string;
+    offer: Offer;
+    product?: Product;
+  };
 };
 
 export type BusinessStackParamList = {

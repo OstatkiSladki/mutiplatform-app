@@ -7,6 +7,7 @@ import { BookingScreen } from '../screens/client/booking';
 import { ProfileScreen } from '../screens/client/profile';
 import { ProfileEditScreen } from '../screens/client/profile-edit';
 import { PlaceholderScreen } from '../screens/client/placeholder';
+import { ProductDetailsScreen } from '../screens/client/product-details';
 
 const Stack = createNativeStackNavigator<ClientStackParamList>();
 
@@ -21,5 +22,6 @@ export const ClientStack = () => (
     <Stack.Screen name="Addresses" component={PlaceholderScreen} />
     <Stack.Screen name="NotificationsSettings" component={PlaceholderScreen} />
     <Stack.Screen name="About" component={PlaceholderScreen} />
+    <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
   </Stack.Navigator>
 );

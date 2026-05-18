@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
+    "@yandex/ymaps3-types": "^1.0.19487230",
     "babel-preset-expo": "^55.0.19",
     "typescript": "~5.9.2"
   },

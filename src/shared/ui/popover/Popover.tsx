@@ -5,7 +5,6 @@ import {
   Pressable,
   View,
   ViewStyle,
-  findNodeHandle,
 } from 'react-native';
 import {
   BottomSheetBackdrop,
@@ -80,20 +79,15 @@ const PopoverWeb = ({
   const open = useCallback(() => {
     const node = triggerRef.current;
     if (!node) return;
-    const handle = findNodeHandle(node);
-    if (handle == null) {
-      setIsOpen(true);
-      return;
-    }
     node.measureInWindow((x, y, w, h) => {
       setAnchor({ top: y, left: x, width: w, height: h });
-      setIsOpen(true);
     });
+    setIsOpen(true);
   }, []);
 
   const close = useCallback(() => setIsOpen(false), []);
 
-  const panelStyle: ViewStyle | null = anchor
+  const panelStyle: ViewStyle = anchor
     ? {
         position: 'absolute',
         top: anchor.top + anchor.height + offset,
@@ -103,7 +97,12 @@ const PopoverWeb = ({
             : anchor.left,
         width,
       }
-    : null;
+    : {
+        position: 'absolute',
+        top: 72,
+        right: 8,
+        width,
+      };
 
   return (
     <View ref={triggerRef} collapsable={false}>
@@ -115,11 +114,9 @@ const PopoverWeb = ({
         onRequestClose={close}
       >
         <Pressable style={styles.backdrop} onPress={close} />
-        {panelStyle ? (
-          <View style={[styles.panel, panelStyle]} pointerEvents="box-none">
-            <View style={styles.panelInner}>{children({ close })}</View>
-          </View>
-        ) : null}
+        <View style={[styles.panel, panelStyle]} pointerEvents="box-none">
+          <View style={styles.panelInner}>{children({ close })}</View>
+        </View>
       </Modal>
     </View>
   );

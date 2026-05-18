@@ -9,6 +9,7 @@ export const ruCatalog = {
   venueTagsDefault: 'Burger · Chiken · Biche · Wings',
   hoursDefault: '07:00–22:00',
   distanceDefault: '600 м',
+  carouselPrevA11y: 'Предыдущий слайд',
   carouselNextA11y: 'Следующее заведение',
   emptyVenues: 'Заведения скоро появятся',
   emptyVenuesDescription: 'Мы добавляем партнёров рядом с вами.',
@@ -23,6 +24,13 @@ export const ruCatalog = {
   open: 'Открыто',
   loadError: 'Не удалось загрузить данные',
   retry: 'Повторить',
+  basket: {
+    tabBasket: 'Корзина',
+    tabOrders: 'Заказы',
+    pickupTimeTitle: 'Выберите время получения',
+    clearCartA11y: 'Очистить корзину',
+    multiVenueHint: 'Показана корзина первого заведения',
+  },
   cart: {
     title: 'Корзина',
     emptyTitle: 'В вашей корзине\nпока пусто',
@@ -64,6 +72,7 @@ export const ruCatalog = {
     inCart: 'В корзине: {{count}}',
     ingredientsFallback:
       'Кардамон, бананы, сахар, растительное масло, соль, ванильный сахар, мука пшеничная, разрыхлитель теста, овсяная крупа, вода, мука миндальная',
+    trySurpriseSection: 'Попробуйте сюрприз бокс',
     nutrition: {
       kcal: 'ккал',
       protein: 'белки',
@@ -76,9 +85,9 @@ export const ruCatalog = {
     title: 'Сюрприз бокс',
     sizeLabel: 'Размер',
     sizeHint: {
-      S: 'S — 2–3 порции',
-      M: 'M — 4–5 порций',
-      L: 'L — 6+ порций',
+      S: 'S — 2–3 позиции',
+      M: 'M — 4–5 позиций',
+      L: 'L — 6+ позиций',
     },
     fillingLabel: 'Настройки',
     fillings: {
@@ -99,6 +108,8 @@ export const ruCatalog = {
       dessert: 'десертный бокс',
     },
     timeLabel: 'Выберите время',
+    payCta: 'Забронировать',
+    heroTitle: 'Сюрприз бокс «{{brand}}»',
     bookCta: 'Забронировать за {{price}}',
     itemName: 'Сюрприз бокс',
     available: 'Доступно: {{count}} шт.',

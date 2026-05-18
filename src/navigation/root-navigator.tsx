@@ -8,6 +8,8 @@ import { BusinessBlockedScreen } from '../screens/business/blocked';
 import { useAuthStore } from '../entities/auth/model/store';
 import { useBreakpoint } from '../shared/lib/responsive';
 import type { UserProfileResponse } from '../entities/auth/model/types';
+import { SplashScreen } from './splash-screen';
+import { OnboardingScreen } from './onboarding-screen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -44,7 +46,9 @@ export const RootNavigator = () => {
   }
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Splash" component={SplashScreen} />
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="Client" component={ClientStack} />
       <Stack.Screen
         name="Auth"

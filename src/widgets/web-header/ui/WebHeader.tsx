@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../../../shared/ui/avatar';
 import { Button } from '../../../shared/ui/button';
@@ -15,11 +17,14 @@ import { useCartStore, selectTotalItemCount } from '../../../entities/order';
 import { useAuthStore } from '../../../entities/auth';
 import { useLogout } from '../../../entities/auth/model/hooks';
 import { showBusinessToast } from '../../../shared/lib/business-toast';
-import type { ClientTabsParamList } from '../../../navigation/types';
+import type { ClientStackParamList, ClientTabsParamList } from '../../../navigation/types';
 import { styles } from './styles';
+
+type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
 export function WebHeader({ navigation }: BottomTabBarProps) {
   const { t } = useTranslation('common');
+  const stackNav = useNavigation<Nav>();
   const [query, setQuery] = useState('');
   const cartCount = useCartStore(selectTotalItemCount);
   const user = useAuthStore((s) => s.user);
@@ -97,11 +102,11 @@ export function WebHeader({ navigation }: BottomTabBarProps) {
                 userName={user?.email ?? t('header.profileGuest')}
                 onOrders={() => {
                   close();
-                  goToTab('Orders');
+                  showBusinessToast(t('header.comingSoon'), 'info');
                 }}
                 onSettings={() => {
                   close();
-                  goToTab('Profile');
+                  stackNav.navigate('Profile');
                 }}
                 onSupport={() => {
                   close();

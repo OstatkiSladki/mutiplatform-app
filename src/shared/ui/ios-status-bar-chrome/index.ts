@@ -1,0 +1,1 @@
+export { IosStatusBarChrome } from './IosStatusBarChrome';

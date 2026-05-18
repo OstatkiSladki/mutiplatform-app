@@ -31,6 +31,8 @@ export interface ButtonProps extends TouchableOpacityProps {
   icon?: IconName;
   iconColor?: string;
   iconSize?: number;
+  /** Merged into title `Text` for default filled variants (primary / secondary / neutral). */
+  titleStyle?: TextStyle;
 }
 
 function effectiveSize(
@@ -60,6 +62,7 @@ export const Button = ({
   icon,
   iconColor,
   iconSize,
+  titleStyle,
   style,
   ...props
 }: ButtonProps) => {
@@ -195,7 +198,7 @@ export const Button = ({
       {isLoading ? (
         <ActivityIndicator color={textColor} />
       ) : (
-        <Text style={[textSizeStyle, { color: textColor } as TextStyle]}>{title}</Text>
+        <Text style={[textSizeStyle, { color: textColor } as TextStyle, titleStyle]}>{title}</Text>
       )}
     </TouchableOpacity>
   );

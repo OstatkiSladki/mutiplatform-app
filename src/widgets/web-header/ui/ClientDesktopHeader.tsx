@@ -15,10 +15,7 @@ import { useCartStore, selectTotalItemCount } from '../../../entities/order';
 import { useAuthStore } from '../../../entities/auth';
 import { useLogout } from '../../../entities/auth/model/hooks';
 import { showBusinessToast } from '../../../shared/lib/business-toast';
-import type {
-  ClientStackParamList,
-  ClientTabsParamList,
-} from '../../../navigation/types';
+import type { ClientStackParamList, ClientTabsParamList } from '../../../navigation/types';
 import { styles } from './styles';
 
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
@@ -108,11 +105,11 @@ export function ClientDesktopHeader(_props: ClientDesktopHeaderProps) {
                 userName={user?.email ?? t('header.profileGuest')}
                 onOrders={() => {
                   close();
-                  goToTab('Orders');
+                  showBusinessToast(t('header.comingSoon'), 'info');
                 }}
                 onSettings={() => {
                   close();
-                  goToTab('Profile');
+                  navigation.navigate('ProfileEdit');
                 }}
                 onSupport={() => {
                   close();

@@ -1,5 +1,8 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+# Cursor IDE
+.cursor/
+
 # dependencies
 node_modules/
 
@@ -31,6 +34,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
@@ -39,3 +43,9 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+*.log
+*.yml
+*.png
+web_business/
+web_client/

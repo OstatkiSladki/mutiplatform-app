@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, type StyleProp, type ViewStyle } from 'react-native';
 import { Controller, FieldValues, Path, Control } from 'react-hook-form';
 import { Icon } from '../../../../shared/ui/icon';
 import { theme } from '../../../../shared/config/theme';
@@ -9,20 +9,25 @@ export interface ControlledCheckboxProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
   label: string;
+  /** Приглушённый подпись (Neutral 5, paragraph small) — для «Запомнить меня». */
+  labelMuted?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export const ControlledCheckbox = <T extends FieldValues>({
   control,
   name,
   label,
+  labelMuted,
+  containerStyle,
 }: ControlledCheckboxProps<T>) => (
   <Controller
     control={control}
     name={name}
     render={({ field: { value, onChange }, fieldState: { error } }) => (
-      <View>
+      <>
         <TouchableOpacity
-          style={styles.container}
+          style={[styles.container, containerStyle]}
           onPress={() => onChange(!value)}
           activeOpacity={0.7}
           accessibilityRole="checkbox"
@@ -37,10 +42,10 @@ export const ControlledCheckbox = <T extends FieldValues>({
           >
             {value ? <Icon name="check" size={14} color={theme.colors.neutral.white} /> : null}
           </View>
-          <Text style={styles.label}>{label}</Text>
+          <Text style={[styles.label, labelMuted && styles.labelMuted]}>{label}</Text>
         </TouchableOpacity>
         {error?.message ? <Text style={styles.errorText}>{error.message}</Text> : null}
-      </View>
+      </>
     )}
   />
 );

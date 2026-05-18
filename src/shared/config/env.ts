@@ -1,0 +1,3 @@
+export const YANDEX_MAPS_API_KEY = process.env.EXPO_PUBLIC_YANDEX_MAPS_KEY ?? '';
+export const YANDEX_MAPS_JS_KEY =
+  process.env.EXPO_PUBLIC_YANDEX_MAPS_JS_KEY ?? YANDEX_MAPS_API_KEY;

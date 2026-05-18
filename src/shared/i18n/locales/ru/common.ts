@@ -8,6 +8,7 @@ export const ruCommon = {
   closed: 'Закрыто',
   cartA11y: 'Корзина',
   mapPlaceholder: 'Карта появится позже',
+  mapLoadError: 'Не удалось загрузить карту',
   tabs: {
     home: 'Главная',
     nearby: 'Рядом',

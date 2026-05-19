@@ -6,6 +6,7 @@ import {
   SourceSansPro_600SemiBold,
   SourceSansPro_700Bold,
 } from '@expo-google-fonts/source-sans-pro';
+import { Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface FontProviderProps {
   children: ReactNode;
@@ -16,6 +17,9 @@ export function FontProvider({ children }: FontProviderProps) {
     SourceSansPro_400Regular,
     SourceSansPro_600SemiBold,
     SourceSansPro_700Bold,
+    ...Feather.font,
+    ...FontAwesome.font,
+    ...MaterialCommunityIcons.font,
   });
 
   if (!loaded) {

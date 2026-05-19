@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosRequestConfig } from 'axios';
 
-interface RetryableRequestConfig extends AxiosRequestConfig {
+export interface RetryableRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
+  _skipAuthRefresh?: boolean;
 }
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:81';
@@ -49,9 +50,17 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    if (original._skipAuthRefresh) {
+      return Promise.reject(error);
+    }
+
+    const store = getAuthStore();
+
     if (original.url?.includes('/auth/api/v1/auth/refresh')) {
-      const store = getAuthStore();
-      store.getState().clearAuth();
+      // During boot, AuthProvider is the sole auth authority — never wipe state.
+      if (!store.getState().isInitializing) {
+        store.getState().clearAuth();
+      }
       return Promise.reject(error);
     }
 
@@ -80,8 +89,9 @@ apiClient.interceptors.response.use(
       return apiClient(original);
     } catch (refreshError) {
       flushQueue(null, refreshError);
-      const store = getAuthStore();
-      store.getState().clearAuth();
+      if (!store.getState().isInitializing) {
+        store.getState().clearAuth();
+      }
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

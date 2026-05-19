@@ -3,17 +3,19 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { DimensionValue } from 'react-native';
 import { Image } from 'expo-image';
 import type { Offer } from '../../../entities/offer';
+import type { Product } from '../../../entities/product';
 import { theme } from '../../../shared/config/theme';
 import { formatPrice } from '../../../shared/lib/format';
 import { Icon } from '../../../shared/ui/icon';
 
-const productImage = require('../../../../assets/surbricebox.png');
+const placeholderImage = require('../../../../assets/surbricebox.png');
 
 export interface CategoryProductCardProps {
   offer: Offer;
   title: string;
   width: DimensionValue;
   weight?: string;
+  product?: Product;
   onPress: () => void;
 }
 
@@ -22,8 +24,10 @@ export const CategoryProductCard = ({
   title,
   width,
   weight = '130г',
+  product,
   onPress,
 }: CategoryProductCardProps) => {
+  const imageUrl = product?.image_urls?.[0];
   const price = parseFloat(offer.current_price) || 0;
   const originalPrice = parseFloat(offer.original_price) || 0;
 
@@ -37,7 +41,11 @@ export const CategoryProductCard = ({
       >
         <View style={styles.inner}>
           <View style={styles.imageFrame}>
-            <Image source={productImage} style={styles.image} contentFit="cover" />
+            <Image
+              source={imageUrl ? { uri: imageUrl } : placeholderImage}
+              style={styles.image}
+              contentFit="cover"
+            />
           </View>
           <View style={styles.priceRow}>
             <View style={styles.priceBlock}>

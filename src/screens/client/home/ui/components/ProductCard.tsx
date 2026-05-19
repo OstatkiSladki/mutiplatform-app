@@ -1,6 +1,7 @@
 import React from 'react';
 import type { DimensionValue } from 'react-native';
 import type { Offer } from '../../../../../entities/offer';
+import type { Product } from '../../../../../entities/product';
 import { CategoryProductCard } from '../../../../../widgets/category-product-card';
 
 export interface ProductCardProps {
@@ -8,6 +9,7 @@ export interface ProductCardProps {
   venueName: string;
   width: DimensionValue;
   weight?: string;
+  product?: Product;
   onPress: () => void;
 }
 
@@ -16,6 +18,7 @@ export const ProductCard = ({
   venueName,
   width,
   weight = '130г',
+  product,
   onPress,
 }: ProductCardProps) => {
   return (
@@ -24,6 +27,7 @@ export const ProductCard = ({
       title={venueName}
       width={width}
       weight={weight}
+      product={product}
       onPress={onPress}
     />
   );

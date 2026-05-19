@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Offer } from '../../../../../entities/offer';
+import type { Product } from '../../../../../entities/product';
 import { theme } from '../../../../../shared/config/theme';
 import { EmptyState } from '../../../../../widgets/empty-state';
 import { CategoryChips } from './CategoryChips';
@@ -18,6 +19,7 @@ export interface CategoryProductsSectionProps {
   offers: Offer[];
   isLoading: boolean;
   venueNameById: Record<number, string>;
+  productsById: Record<number, Product>;
   emptyTitle: string;
   emptyDescription: string;
   resolveVenueName: (venueId: number) => string;
@@ -28,6 +30,7 @@ export const CategoryProductsSection = ({
   offers,
   isLoading,
   venueNameById,
+  productsById,
   emptyTitle,
   emptyDescription,
   resolveVenueName,
@@ -41,6 +44,8 @@ export const CategoryProductsSection = ({
 
   const renderOffer = ({ item }: { item: Offer }) => {
     const venueName = venueNameById[item.venue_id] ?? resolveVenueName(item.venue_id);
+    const productId = item.items[0]?.product_id;
+    const product = productId !== undefined ? productsById[productId] : undefined;
 
     return (
       <View style={[styles.gridCell, { width: cardWidth }]}>
@@ -49,6 +54,7 @@ export const CategoryProductsSection = ({
           venueName={venueName}
           width="100%"
           weight="130г"
+          product={product}
           onPress={() => onPressOffer(item, venueName)}
         />
       </View>
@@ -59,11 +65,12 @@ export const CategoryProductsSection = ({
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{t('productsAvailable')}</Text>
       <CategoryChips />
-      {isLoading ? (
+      {isLoading && (
         <View style={styles.loader}>
           <ActivityIndicator color={theme.client.colors.primary} />
         </View>
-      ) : offers.length > 0 ? (
+      )}
+      {!isLoading && offers.length > 0 && (
         <FlatList
           data={offers}
           numColumns={2}
@@ -74,7 +81,8 @@ export const CategoryProductsSection = ({
           columnWrapperStyle={styles.row}
           removeClippedSubviews={false}
         />
-      ) : (
+      )}
+      {!isLoading && offers.length === 0 && (
         <EmptyState
           icon="package"
           title={emptyTitle}

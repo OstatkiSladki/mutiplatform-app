@@ -113,6 +113,23 @@ const createNetworkError = (url: string, method: string) =>
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
+const BUSINESS_MOCK_EMAILS = ['business@dev.local'];
+
+const getMockOverrides = (email: string): Partial<UserProfileResponse> => {
+  if (BUSINESS_MOCK_EMAILS.includes(normalizeEmail(email))) {
+    return {
+      role: 'staff',
+      staff_profile: {
+        id: 1,
+        user_id: getUserId(email),
+        venue_id: 1,
+        role: 'owner',
+      },
+    };
+  }
+  return {};
+};
+
 const shouldFailLogin = ({ email, password }: LoginRequest) => {
   const normalizedEmail = normalizeEmail(email);
 
@@ -159,7 +176,7 @@ export const mockAuthApi = {
     return createResponse(
       '/auth/api/v1/auth/login',
       'post',
-      createMockUser(email),
+      createMockUser(email, getMockOverrides(email)),
       getMockToken(email),
     );
   },
@@ -183,6 +200,7 @@ export const mockAuthApi = {
       '/auth/api/v1/auth/register',
       'post',
       createMockUser(email, {
+        ...getMockOverrides(email),
         first_name: data.first_name,
         last_name: data.last_name ?? null,
         phone: data.phone ?? null,
@@ -219,6 +237,10 @@ export const mockAuthApi = {
       );
     }
 
-    return createResponse('/auth/api/v1/users/me', 'get', createMockUser(email));
+    return createResponse(
+      '/auth/api/v1/users/me',
+      'get',
+      createMockUser(email, getMockOverrides(email)),
+    );
   },
 };

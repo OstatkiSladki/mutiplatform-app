@@ -21,6 +21,8 @@ const resolveWeight = (product?: Product): string | undefined => {
 
 const primaryProductId = (offer: Offer) => offer.items[0]?.product_id;
 
+const Separator = () => <View style={styles.gap} />;
+
 export const RelatedProductsSection = ({
   offers,
   productsById,
@@ -42,7 +44,7 @@ export const RelatedProductsSection = ({
         keyExtractor={(item) => String(item.id)}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
-        ItemSeparatorComponent={() => <View style={styles.gap} />}
+        ItemSeparatorComponent={Separator}
         renderItem={({ item }) => {
           const pid = primaryProductId(item);
           const product = pid !== undefined ? productsById[pid] : undefined;
@@ -54,6 +56,7 @@ export const RelatedProductsSection = ({
               title={title}
               width={cardWidth}
               weight={resolveWeight(product)}
+              product={product}
               onPress={() => onSelectOffer(item, product)}
             />
           );

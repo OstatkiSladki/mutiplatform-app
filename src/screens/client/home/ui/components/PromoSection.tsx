@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import type { ImageSource } from 'expo-image';
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { theme } from '../../../../../shared/config/theme';
+import { useBreakpoint } from '../../../../../shared/lib/responsive/use-breakpoint';
 
 const promoAssets = {
   surprise: require('../../../../../../assets/surbricebox.png'),
@@ -11,23 +12,22 @@ const promoAssets = {
   stock: require('../../../../../../assets/stock.png'),
 } as const;
 
-export interface PromoSectionProps {
-  isTablet: boolean;
-}
-
-export const PromoSection = ({ isTablet }: PromoSectionProps) => (
-  <View style={styles.grid}>
-    <PromoCard
-      title="Сюрприз бокс"
-      image={promoAssets.surprise}
-      size={isTablet ? 'largeTablet' : 'largePhone'}
-    />
-    <View style={[styles.column, isTablet ? styles.columnTablet : styles.columnPhone]}>
-      <PromoCard title="Рядом" image={promoAssets.nearby} size="compact" />
-      <PromoCard title="Акции" image={promoAssets.stock} size="compact" />
+export const PromoSection = () => {
+  const { isMobile } = useBreakpoint();
+  return (
+    <View style={styles.grid}>
+      <PromoCard
+        title="Сюрприз бокс"
+        image={promoAssets.surprise}
+        size={isMobile ? 'largePhone' : 'largeTablet'}
+      />
+      <View style={[styles.column, !isMobile && styles.columnTablet]}>
+        <PromoCard title="Рядом" image={promoAssets.nearby} size="compact" />
+        <PromoCard title="Акции" image={promoAssets.stock} size="compact" />
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 type PromoCardSize = 'largePhone' | 'largeTablet' | 'compact';
 
@@ -79,37 +79,36 @@ const PromoCard = ({ title, image, size }: PromoCardProps) => {
 const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: theme.spacing[2],
   },
   column: {
-    flexGrow: 1,
+    flex: 1,
     gap: theme.spacing[2],
-    minWidth: 150,
   },
-  columnPhone: {
-    flexBasis: '48%',
-  },
+  /** Tablet/desktop: column is narrower than the large card (ratio ~5:8). */
   columnTablet: {
-    flexBasis: '31%',
+    flex: 5,
   },
   card: {
-    flexGrow: 1,
-    minWidth: 150,
     borderRadius: theme.client.radius.card,
     overflow: 'hidden',
     ...theme.client.shadows.card,
   },
   cardLargePhone: {
-    flexBasis: '48%',
+    flex: 1,
     aspectRatio: 1,
   },
   cardLargeTablet: {
-    flexBasis: '31%',
+    flex: 8,
     aspectRatio: 1,
   },
+  /**
+   * Compact cards expand equally to fill the column height, which equals
+   * the large card height (both sides of the row are flex siblings with a
+   * shared height set by the tallest child — the aspect-ratio large card).
+   */
   cardCompact: {
-    aspectRatio: 2.2,
+    flex: 1,
   },
   imageFill: {
     ...StyleSheet.absoluteFillObject,

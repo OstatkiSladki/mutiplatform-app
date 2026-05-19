@@ -53,11 +53,7 @@ export const HomeScreen = () => {
   const offersQuery = useOfferList({ status: 'active', limit: 10 });
 
   const goToVenue = useCallback(
-    (venueId: number) =>
-      navigation.navigate('ClientTabs', {
-        screen: 'Venue',
-        params: { venueId },
-      }),
+    (venueId: number) => navigation.navigate('Venue', { venueId }),
     [navigation],
   );
 
@@ -65,13 +61,10 @@ export const HomeScreen = () => {
 
   const goToOffer = useCallback(
     (offer: Offer, venueName: string) =>
-      navigation.navigate('ClientTabs', {
-        screen: 'ProductDetails',
-        params: {
-          venueId: offer.venue_id,
-          venueName,
-          offer,
-        },
+      navigation.navigate('ProductDetails', {
+        venueId: offer.venue_id,
+        venueName,
+        offer,
       }),
     [navigation],
   );

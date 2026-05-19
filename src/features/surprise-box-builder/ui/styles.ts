@@ -1,14 +1,16 @@
 import { StyleSheet } from 'react-native';
 import { theme } from '../../../shared/config/theme';
+import { clientTextParagraphBase, clientTextParagraphBaseHeavy } from '../../../shared/config/theme/client-text-styles';
 
 export const styles = StyleSheet.create({
+  root: {
+    gap: theme.spacing[4],
+  },
   group: {
     gap: theme.spacing[2],
   },
   groupLabel: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[3],
+    ...clientTextParagraphBaseHeavy,
   },
   chipsRow: {
     flexDirection: 'row',
@@ -22,8 +24,6 @@ export const styles = StyleSheet.create({
   },
   sizeHint: {
     flex: 1,
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[3],
+    ...clientTextParagraphBase,
   },
 });

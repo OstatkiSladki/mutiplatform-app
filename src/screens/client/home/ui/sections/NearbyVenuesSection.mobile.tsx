@@ -65,6 +65,8 @@ export const NearbyVenuesSection = ({
   const { t } = useTranslation('catalog');
   const { isWeb, isAtLeast } = useBreakpoint();
   const twoCol = isWeb && isAtLeast('lg');
+  const sectionTitleStyle =
+    isWeb && isAtLeast('wide') ? styles.sectionTitleWebWide : styles.sectionTitle;
   const items = (venues ?? []).slice(0, 4);
 
   const list = (
@@ -79,7 +81,7 @@ export const NearbyVenuesSection = ({
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{t('sectionNearby')}</Text>
+      <Text style={sectionTitleStyle}>{t('sectionNearby')}</Text>
       <View style={styles.nearbyCard}>
         {twoCol ? (
           <View style={styles.nearbyGridDesktop}>

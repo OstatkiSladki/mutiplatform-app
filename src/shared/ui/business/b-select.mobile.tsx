@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
     rowGap: 6,
   },
   label: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   trigger: {

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.status.errorBg,
   },
   text: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.status.error,
   },

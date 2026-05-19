@@ -24,9 +24,9 @@ export const styles = StyleSheet.create({
     columnGap: 12,
   },
   headerText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.mutedForeground,
     textTransform: 'uppercase',
     letterSpacing: 0.4,

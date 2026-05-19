@@ -2,6 +2,10 @@
 // Used only by the business stack on RN-Web (≥md). Native phones never render these.
 // Source of truth: web_business/src/index.css :root block.
 
+import { tokens } from './tokens';
+
+const ff = tokens.typography.fontFamilies;
+
 export const businessTokens = {
   colors: {
     background: '#ffffff',
@@ -100,17 +104,34 @@ export const businessTokens = {
     topbarHeight: 96,
   },
   typography: {
-    fontFamily: 'Inter',
+    fontFamily: ff.sourceSansProRegular,
+    fontFamilySemiBold: ff.sourceSansProSemiBold,
+    fontFamilyBold: ff.sourceSansProBold,
     letterSpacing: { tight: -0.5, wide: 0.4, normal: 0 },
-    title: { fontSize: 42, fontWeight: '700' as const, letterSpacing: -0.5 },
-    subtitle: { fontSize: 14, fontWeight: '400' as const },
-    h2: { fontSize: 28, fontWeight: '700' as const, lineHeight: 34 },
-    h3: { fontSize: 20, fontWeight: '700' as const },
-    body: { fontSize: 14, fontWeight: '400' as const, lineHeight: 22 },
-    label: { fontSize: 12, fontWeight: '500' as const },
-    pill: { fontSize: 12, fontWeight: '500' as const },
-    button: { fontSize: 15, fontWeight: '600' as const },
-    footnote: { fontSize: 12, fontWeight: '400' as const },
+    title: {
+      fontSize: 42,
+      fontFamily: ff.sourceSansProBold,
+      fontWeight: '400' as const,
+      letterSpacing: -0.5,
+    },
+    subtitle: { fontSize: 14, fontFamily: ff.sourceSansProRegular, fontWeight: '400' as const },
+    h2: {
+      fontSize: 28,
+      fontFamily: ff.sourceSansProBold,
+      fontWeight: '400' as const,
+      lineHeight: 34,
+    },
+    h3: { fontSize: 20, fontFamily: ff.sourceSansProBold, fontWeight: '400' as const },
+    body: {
+      fontSize: 14,
+      fontFamily: ff.sourceSansProRegular,
+      fontWeight: '400' as const,
+      lineHeight: 22,
+    },
+    label: { fontSize: 12, fontFamily: ff.sourceSansProSemiBold, fontWeight: '400' as const },
+    pill: { fontSize: 12, fontFamily: ff.sourceSansProSemiBold, fontWeight: '400' as const },
+    button: { fontSize: 15, fontFamily: ff.sourceSansProSemiBold, fontWeight: '400' as const },
+    footnote: { fontSize: 12, fontFamily: ff.sourceSansProRegular, fontWeight: '400' as const },
   },
 } as const;
 

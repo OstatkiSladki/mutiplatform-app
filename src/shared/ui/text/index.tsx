@@ -36,7 +36,7 @@ export const Text = ({
 
 const styles = StyleSheet.create({
   base: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
   },
   title: {
     fontSize: theme.typography.fontSizes[9],
@@ -54,9 +54,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   medium: {
-    fontWeight: '500',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
   },
   bold: {
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
+    fontWeight: '400',
   },
 });

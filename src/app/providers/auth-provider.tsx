@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { useGetMe } from '../../entities/auth/model/hooks';
+import React, { ReactNode, useEffect, useRef } from 'react';
+import { authApi } from '../../entities/auth/api/auth-api';
 import { useAuthStore } from '../../entities/auth/model/store';
 import { useCartStore } from '../../entities/order';
 import { tokenStorage } from '../../shared/lib/storage';
@@ -11,11 +11,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const setInitializing = useAuthStore((s) => s.setInitializing);
   const isInitializing = useAuthStore((s) => s.isInitializing);
-  const accessToken = useAuthStore((s) => s.accessToken);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const user = useAuthStore((s) => s.user);
 
-  const [hydrated, setHydrated] = useState(false);
   const prevAuthRef = useRef(isAuthenticated);
 
   useEffect(() => {
@@ -27,51 +24,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let cancelled = false;
-    tokenStorage.load().then((token) => {
+    (async () => {
+      const stored = await tokenStorage.load();
       if (cancelled) return;
-      if (token) setAccessToken(token);
-      setHydrated(true);
-    });
+      if (stored) setAccessToken(stored);
+      try {
+        // No / expired token → getMe returns 401 → the response interceptor
+        // refreshes via the httpOnly cookie and retries automatically.
+        const { data } = await authApi.getMe();
+        if (!cancelled) {
+          setUser(data, useAuthStore.getState().accessToken ?? undefined);
+        }
+      } catch {
+        if (!cancelled) clearAuth();
+      } finally {
+        if (!cancelled) setInitializing(false);
+      }
+    })();
     return () => {
       cancelled = true;
     };
-  }, [setAccessToken]);
-
-  const shouldHydrateUser = hydrated && !!accessToken && !user;
-  const { data, isLoading, isError } = useGetMe({
-    accessToken,
-    enabled: shouldHydrateUser,
-  });
-
-  useEffect(() => {
-    if (!hydrated) return;
-    if (!accessToken) {
-      setInitializing(false);
-      return;
-    }
-    if (isAuthenticated) {
-      setInitializing(false);
-      return;
-    }
-    if (shouldHydrateUser && isLoading) return;
-    if (data) {
-      setUser(data, accessToken ?? undefined);
-    } else if (shouldHydrateUser && isError) {
-      clearAuth();
-    }
-    setInitializing(false);
-  }, [
-    hydrated,
-    accessToken,
-    isAuthenticated,
-    shouldHydrateUser,
-    isLoading,
-    isError,
-    data,
-    setUser,
-    clearAuth,
-    setInitializing,
-  ]);
+  }, [setAccessToken, setUser, clearAuth, setInitializing]);
 
   if (isInitializing) return <Loader fullScreen />;
   return <>{children}</>;

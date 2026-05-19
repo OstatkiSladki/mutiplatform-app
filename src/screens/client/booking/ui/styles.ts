@@ -22,8 +22,7 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.colors.neutral.white,
   },
   topTitle: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[7],
     color: theme.colors.neutral[1],
   },
@@ -63,8 +62,7 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[3],
   },
   sectionTitle: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[7],
     color: theme.colors.neutral[1],
   },
@@ -79,13 +77,12 @@ export const styles = StyleSheet.create({
     gap: 2,
   },
   itemName: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '500',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[1],
   },
   itemPrice: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[3],
   },
@@ -94,24 +91,23 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   breakdownLabel: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[3],
   },
   breakdownValue: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[1],
   },
   totalLabel: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
     fontSize: theme.typography.fontSizes[6],
-    fontWeight: '600',
+    fontWeight: '400',
     color: theme.colors.neutral[1],
   },
   totalValue: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[10],
     color: theme.colors.primary[100],
   },
@@ -119,6 +115,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
     gap: theme.spacing[3],
+  },
+  upsellRowDesktop: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: theme.spacing[4],
+    width: '100%',
+  },
+  upsellCellDesktop: {
+    minWidth: 0,
+    width: '100%',
   },
   upsellCarousel: {
     gap: theme.spacing[3],

@@ -49,3 +49,4 @@ yarn-error.*
 *.png
 web_business/
 web_client/
+.vercel

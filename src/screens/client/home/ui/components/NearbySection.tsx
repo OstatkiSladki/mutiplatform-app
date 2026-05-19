@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -153,6 +154,9 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.neutral[7],
     backgroundColor: theme.client.colors.card,
     overflow: 'hidden',
+    ...(Platform.OS === 'web'
+      ? ({ cursor: 'pointer' } as Record<string, unknown>)
+      : {}),
   },
   cover: {
     width: '100%',

@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
     borderBottomColor: b.colors.primary,
   },
   labelActive: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primary,
   },
   labelInactive: {

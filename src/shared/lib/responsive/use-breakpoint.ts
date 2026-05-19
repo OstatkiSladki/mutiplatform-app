@@ -1,7 +1,7 @@
 import { Platform, useWindowDimensions } from 'react-native';
 import { theme } from '../../config/theme';
 
-export type BreakpointKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type BreakpointKey = 'xs' | 'sm' | 'md' | 'lg' | 'wide' | 'xl';
 
 export interface BreakpointInfo {
   width: number;
@@ -15,8 +15,9 @@ export interface BreakpointInfo {
 }
 
 function resolveBp(width: number): BreakpointKey {
-  const { sm, md, lg, xl } = theme.breakpoints;
+  const { sm, md, lg, wide, xl } = theme.breakpoints;
   if (width >= xl) return 'xl';
+  if (width >= wide) return 'wide';
   if (width >= lg) return 'lg';
   if (width >= md) return 'md';
   if (width >= sm) return 'sm';

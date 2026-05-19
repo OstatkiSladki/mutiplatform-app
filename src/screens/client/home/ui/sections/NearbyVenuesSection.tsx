@@ -1,6 +1,7 @@
-import { ScrollView, Text, View } from 'react-native';
+import { Platform, ScrollView, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Venue } from '../../../../../entities/venue';
+import { theme } from '../../../../../shared/config/theme';
 import { MapWidget } from '../../../../../widgets/map-widget';
 import { Loader } from '../../../../../shared/ui/loader';
 import { useBreakpoint } from '../../../../../shared/lib/responsive';
@@ -20,6 +21,7 @@ interface VenueListProps {
   onPressVenue: (venueId: number) => void;
   emptyTitle: string;
   emptyDescription: string;
+  desktopScroll?: boolean;
 }
 
 const VenueList = ({
@@ -28,6 +30,7 @@ const VenueList = ({
   onPressVenue,
   emptyTitle,
   emptyDescription,
+  desktopScroll,
 }: VenueListProps) => {
   if (isLoading) {
     return (
@@ -45,16 +48,39 @@ const VenueList = ({
       />
     );
   }
-  return (
+
+  const rows = (
     <>
       {items.map((venue, idx) => (
         <View key={venue.id}>
-          {idx > 0 ? <View style={styles.vSeparator} /> : null}
-          <VenueListItem venue={venue} onPress={onPressVenue} />
+          {idx > 0 && Platform.OS !== 'web' ? (
+            <View style={styles.listHairline} />
+          ) : null}
+          <VenueListItem
+            venue={venue}
+            onPress={onPressVenue}
+            layout={Platform.OS === 'web' ? 'embedded' : 'card'}
+          />
         </View>
       ))}
     </>
   );
+
+  if (desktopScroll) {
+    return (
+      <ScrollView
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+        style={styles.nearbyListDesktop}
+        contentContainerStyle={styles.nearbyListDesktopContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        {rows}
+      </ScrollView>
+    );
+  }
+
+  return <View style={styles.nearbyListMobile}>{rows}</View>;
 };
 
 export const NearbyVenuesSection = ({
@@ -64,8 +90,14 @@ export const NearbyVenuesSection = ({
 }: NearbyVenuesSectionProps) => {
   const { t } = useTranslation('catalog');
   const { isWeb, isAtLeast } = useBreakpoint();
-  const twoCol = isWeb && isAtLeast('lg');
+  const twoCol = isWeb && isAtLeast('md');
+  const sectionTitleStyle =
+    isWeb && isAtLeast('md') ? styles.sectionTitleWeb : styles.sectionTitle;
   const items = (venues ?? []).slice(0, 4);
+  const mapVenues = venues ?? [];
+  const mapHeight = twoCol
+    ? theme.layout.nearbyDesktopPanelHeight
+    : styles.nearbyMapMobile.height;
 
   const list = (
     <VenueList
@@ -74,38 +106,37 @@ export const NearbyVenuesSection = ({
       onPressVenue={onPressVenue}
       emptyTitle={t('emptyVenues')}
       emptyDescription={t('emptyVenuesDescription')}
+      desktopScroll={twoCol}
     />
   );
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{t('sectionNearby')}</Text>
-      <View style={styles.nearbyCard}>
+      <Text style={sectionTitleStyle}>{t('sectionNearby')}</Text>
+      <View style={styles.nearbySectionSurface}>
         {twoCol ? (
           <View style={styles.nearbyGridDesktop}>
-            <View style={styles.nearbyMapDesktop}>
-              <MapWidget
-                venues={items}
-                onVenuePress={(v) => onPressVenue(v.id)}
-                style={{ flex: 1, minHeight: 350 }}
-              />
+            <View style={styles.nearbyMapShell}>
+              <View style={styles.nearbyMapDesktop}>
+                <MapWidget
+                  venues={mapVenues}
+                  onVenuePress={(v) => onPressVenue(v.id)}
+                  style={{ width: '100%', height: mapHeight }}
+                />
+              </View>
             </View>
-            <ScrollView style={styles.nearbyListDesktop} showsVerticalScrollIndicator={false}>
-              {list}
-            </ScrollView>
+            <View style={styles.nearbyListSurface}>{list}</View>
           </View>
         ) : (
           <>
             <View style={styles.nearbyMapMobile}>
               <MapWidget
-                venues={items}
+                venues={mapVenues}
                 onVenuePress={(v) => onPressVenue(v.id)}
-                style={{ flex: 1, minHeight: 250 }}
+                style={{ width: '100%', height: mapHeight }}
               />
             </View>
-            <ScrollView style={styles.nearbyListMobile} showsVerticalScrollIndicator={false} nestedScrollEnabled>
-              {list}
-            </ScrollView>
+            <View style={styles.nearbyListSurfaceMobile}>{list}</View>
           </>
         )}
       </View>

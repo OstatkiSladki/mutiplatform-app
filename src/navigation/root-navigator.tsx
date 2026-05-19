@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import { AuthNavigator } from './auth-navigator';
@@ -45,10 +46,19 @@ export const RootNavigator = () => {
     );
   }
 
+  const skipSplashOnWeb = Platform.OS === 'web';
+
   return (
-    <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Splash" component={SplashScreen} />
-      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+    <Stack.Navigator
+      initialRouteName={skipSplashOnWeb ? 'Client' : 'Splash'}
+      screenOptions={{ headerShown: false }}
+    >
+      {!skipSplashOnWeb ? (
+        <>
+          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        </>
+      ) : null}
       <Stack.Screen name="Client" component={ClientStack} />
       <Stack.Screen
         name="Auth"

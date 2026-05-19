@@ -24,8 +24,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: 'center',
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[7],
     color: theme.colors.neutral[1],
   },
@@ -58,7 +57,7 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary[10],
   },
   genderText: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[2],
   },
@@ -67,7 +66,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   fieldLabel: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[3],
   },

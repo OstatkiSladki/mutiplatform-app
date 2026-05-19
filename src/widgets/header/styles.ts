@@ -14,9 +14,9 @@ export const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: theme.typography.fontSizes[7],
-    fontWeight: '700',
+    fontWeight: '400',
     color: theme.colors.neutral[1],
   },
   iconButton: {
@@ -41,8 +41,8 @@ export const styles = StyleSheet.create({
   },
   badgeText: {
     color: theme.colors.neutral.white,
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '400',
   },
 });

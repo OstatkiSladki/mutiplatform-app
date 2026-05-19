@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Chip } from '../../../shared/ui/chip';
-import { theme } from '../../../shared/config/theme';
+import { useBreakpoint } from '../../../shared/lib/responsive';
 import {
   ADDITION_KEYS,
   FILLING_KEYS,
@@ -12,6 +12,7 @@ import {
 } from '../model/constants';
 import type { UseSurpriseBoxBuilderResult } from '../model/use-surprise-box-builder';
 import { styles } from './styles';
+import { surpriseBoxBuilderWebStyles } from './surprise-box-builder-web.styles';
 
 export interface SurpriseBoxBuilderProps {
   builder: UseSurpriseBoxBuilderResult;
@@ -19,11 +20,15 @@ export interface SurpriseBoxBuilderProps {
 
 export const SurpriseBoxBuilder = ({ builder }: SurpriseBoxBuilderProps) => {
   const { t } = useTranslation('catalog');
+  const { isWeb, isAtLeast } = useBreakpoint();
+  const wideWeb = isWeb && isAtLeast('wide');
+  const webChipLabel = wideWeb ? surpriseBoxBuilderWebStyles.chipLabelActionSmall : undefined;
+  const webGroupLabelStyle = wideWeb ? surpriseBoxBuilderWebStyles.groupLabelF6 : undefined;
   const { config, setSize, setFilling, setRestriction, setAddition, setTime } =
     builder;
 
   return (
-    <View style={{ gap: theme.spacing[3] }}>
+    <View style={styles.root}>
       <View style={styles.sizeRow}>
         <Text style={styles.groupLabel}>{t('surpriseBox.sizeLabel')}</Text>
         {SIZE_KEYS.map((s) => (
@@ -40,7 +45,7 @@ export const SurpriseBoxBuilder = ({ builder }: SurpriseBoxBuilderProps) => {
       </View>
 
       <View style={styles.group}>
-        <Text style={styles.groupLabel}>{t('surpriseBox.fillingLabel')}</Text>
+        <Text style={[styles.groupLabel, webGroupLabelStyle]}>{t('surpriseBox.fillingLabel')}</Text>
         <View style={styles.chipsRow}>
           {FILLING_KEYS.map((f) => (
             <Chip
@@ -48,13 +53,14 @@ export const SurpriseBoxBuilder = ({ builder }: SurpriseBoxBuilderProps) => {
               label={t(`surpriseBox.fillings.${f}`)}
               active={config.filling === f}
               onPress={() => setFilling(f)}
+              labelStyle={webChipLabel}
             />
           ))}
         </View>
       </View>
 
       <View style={styles.group}>
-        <Text style={styles.groupLabel}>{t('surpriseBox.restrictionLabel')}</Text>
+        <Text style={[styles.groupLabel, webGroupLabelStyle]}>{t('surpriseBox.restrictionLabel')}</Text>
         <View style={styles.chipsRow}>
           {RESTRICTION_KEYS.map((r) => (
             <Chip
@@ -62,13 +68,14 @@ export const SurpriseBoxBuilder = ({ builder }: SurpriseBoxBuilderProps) => {
               label={t(`surpriseBox.restrictions.${r}`)}
               active={config.restriction === r}
               onPress={() => setRestriction(r)}
+              labelStyle={webChipLabel}
             />
           ))}
         </View>
       </View>
 
       <View style={styles.group}>
-        <Text style={styles.groupLabel}>{t('surpriseBox.additionLabel')}</Text>
+        <Text style={[styles.groupLabel, webGroupLabelStyle]}>{t('surpriseBox.additionLabel')}</Text>
         <View style={styles.chipsRow}>
           {ADDITION_KEYS.map((a) => (
             <Chip
@@ -76,6 +83,7 @@ export const SurpriseBoxBuilder = ({ builder }: SurpriseBoxBuilderProps) => {
               label={t(`surpriseBox.additions.${a}`)}
               active={config.addition === a}
               onPress={() => setAddition(a)}
+              labelStyle={webChipLabel}
             />
           ))}
         </View>

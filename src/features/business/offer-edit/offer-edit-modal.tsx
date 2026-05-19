@@ -88,9 +88,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
     marginBottom: 8,
   },
@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
     borderRadius: b.radius.md,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   actions: {
@@ -121,9 +121,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cancelText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   saveBtn: {
@@ -139,9 +139,9 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   saveText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primaryForeground,
   },
 });

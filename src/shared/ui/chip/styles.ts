@@ -6,33 +6,42 @@ export const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing[3],
     paddingVertical: theme.spacing[1],
     borderRadius: theme.radius.full,
-    backgroundColor: theme.colors.neutral[9],
+    backgroundColor: theme.colors.neutral.white,
+    borderWidth: 1,
+    borderColor: theme.colors.neutral[8],
     alignSelf: 'flex-start',
   },
   chipAccent: {
     backgroundColor: theme.client.colors.accent,
+    borderColor: theme.colors.neutral[8],
   },
   chipSuccess: {
     backgroundColor: theme.client.colors.chipGreenBg,
+    borderColor: 'transparent',
   },
   chipActive: {
     backgroundColor: theme.colors.primary[100],
+    borderColor: theme.colors.primary[100],
   },
   text: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
-    color: theme.colors.neutral[1],
+    fontWeight: '400',
+    color: theme.colors.neutral[5],
   },
   textAccent: {
     color: theme.client.colors.accentForeground,
-    fontWeight: '500',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
   },
   textSuccess: {
     color: theme.client.colors.chipGreenFg,
-    fontWeight: '500',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
   },
   textActive: {
     color: theme.colors.neutral.white,
-    fontWeight: '600',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
   },
 });

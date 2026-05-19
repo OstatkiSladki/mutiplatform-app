@@ -1,14 +1,21 @@
 import { StyleSheet } from 'react-native';
 import { theme } from '../../../shared/config/theme';
+import {
+  clientTextF6Heavy,
+  clientTextParagraphBase,
+} from '../../../shared/config/theme/client-text-styles';
 
 export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing[3],
-    paddingVertical: theme.spacing[3],
-    paddingHorizontal: theme.spacing[3],
-    borderRadius: theme.client.radius.md,
+    gap: theme.spacing[4],
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
+    borderRadius: theme.spacing[3],
+  },
+  rowHovered: {
+    backgroundColor: theme.colors.neutral[9],
   },
   logo: {
     width: 56,
@@ -19,9 +26,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logoText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
-    fontSize: 11,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
+    fontSize: theme.typography.fontSizes[3],
   },
   body: {
     flex: 1,
@@ -37,16 +43,11 @@ export const styles = StyleSheet.create({
     minWidth: 0,
   },
   name: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
-    fontSize: 15,
-    color: theme.client.colors.foreground,
+    ...clientTextF6Heavy,
   },
   address: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: 12,
-    color: theme.client.colors.mutedForeground,
-    marginTop: 2,
+    ...clientTextParagraphBase,
+    marginTop: theme.spacing[1],
   },
   hours: {
     flexDirection: 'row',
@@ -54,9 +55,7 @@ export const styles = StyleSheet.create({
     gap: theme.spacing[1],
   },
   hoursText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontSize: 12,
-    color: theme.client.colors.mutedForeground,
+    ...clientTextParagraphBase,
   },
   metaRow: {
     flexDirection: 'row',
@@ -66,6 +65,7 @@ export const styles = StyleSheet.create({
   },
   tags: {
     flexDirection: 'row',
-    gap: theme.spacing[1],
+    gap: theme.spacing[2],
+    flexWrap: 'wrap',
   },
 });

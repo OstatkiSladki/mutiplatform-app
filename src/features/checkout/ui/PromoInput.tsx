@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing[2],
   },
   label: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[1],
     fontWeight: '500',
@@ -119,12 +119,12 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing[3],
   },
   success: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.status.success,
   },
   error: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.status.error,
   },

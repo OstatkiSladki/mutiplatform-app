@@ -111,6 +111,7 @@ export const ruCatalog = {
     payCta: 'Забронировать',
     heroTitle: 'Сюрприз бокс «{{brand}}»',
     bookCta: 'Забронировать за {{price}}',
+    priceLabel: 'Цена:',
     itemName: 'Сюрприз бокс',
     available: 'Доступно: {{count}} шт.',
   },

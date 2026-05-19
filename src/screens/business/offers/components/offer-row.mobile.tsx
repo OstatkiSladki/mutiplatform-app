@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
     columnGap: 8,
   },
   name: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   sku: {
@@ -118,9 +118,9 @@ const styles = StyleSheet.create({
     color: b.colors.mutedForeground,
   },
   bold: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   strikethrough: {
@@ -140,9 +140,9 @@ const styles = StyleSheet.create({
     ...b.shadows.glow,
   },
   publishText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.primaryForeground,
   },
   iconBtn: {

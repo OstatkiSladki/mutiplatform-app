@@ -2,6 +2,8 @@
 // Used by RN client screens (mobile + web). Visual parity with web_client is the goal.
 // Source of truth: web_client/src/index.css :root block (light theme only).
 
+import { tokens } from './tokens';
+
 export const clientTokens = {
   colors: {
     // hsl(30 25% 96%)
@@ -88,6 +90,22 @@ export const clientTokens = {
       shadowRadius: 24,
       elevation: 3,
     },
+    /** Desktop client cards — 0 8px 24px rgba(26, 21, 18, 0.04). */
+    sectionSoft: {
+      shadowColor: '#1a1512',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.04,
+      shadowRadius: 24,
+      elevation: 2,
+    },
+    /** Десктоп — карточка сюрприз-бокса: 0 4px 16px rgba(26, 21, 18, 0.04). */
+    surpriseBoxDesktopCard: {
+      shadowColor: '#1a1512',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.04,
+      shadowRadius: 16,
+      elevation: 2,
+    },
   },
   radius: {
     // --radius: 0.875rem (14px)
@@ -98,9 +116,32 @@ export const clientTokens = {
     pill: 9999,
     /** Primary CTA in booking bars (e.g. cart footer). */
     bookingCta: 40,
+    /** Десктоп — внешний контейнер карточки сюрприз-бокса. */
+    surpriseBoxDesktopOuter: 28,
+    /** Десктоп — дропдаун времени. */
+    surpriseBoxDesktopDropdown: 20,
   },
   typography: {
-    fontFamily: 'Inter',
+    fontFamily: tokens.typography.fontFamilies.sourceSansProRegular,
+  },
+  /** Desktop client chrome — pixel-aligned spec (logo, header controls, establishment tiles). */
+  chrome: {
+    headerLogoWidth: 230,
+    headerLogoHeight: 32,
+    /** Search pill, address pill, round icon buttons — one height. */
+    headerBarHeight: 34,
+    /** Карусель «Заведения» веб — опорная ширина карточки (узкая колонка масштабируется через layout). */
+    establishmentCardWidth: 392,
+    /**
+     * Референс области фото на карточке (веб): соотношение сохраняется при любой ширине карточки.
+     * Раньше фиксировали высоту всей карточки — теперь высота считается от контента.
+     */
+    establishmentCoverWidthRef: 392,
+    /** Было 182; +16px по вертикали к области фото при опорной ширине 392. */
+    establishmentCoverHeightRef: 198,
+    /** Сюрприз-бокс (веб): референс фото 280×500 — масштаб через aspect-ratio, не фикс. px. */
+    surpriseBoxImageWidthRef: 280,
+    surpriseBoxImageHeightRef: 500,
   },
 } as const;
 

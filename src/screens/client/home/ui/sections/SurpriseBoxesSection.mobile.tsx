@@ -21,12 +21,14 @@ export const SurpriseBoxesSection = ({
   onAdded,
 }: SurpriseBoxesSectionProps) => {
   const { t } = useTranslation('catalog');
-  const { isAtLeast } = useBreakpoint();
+  const { isWeb, isAtLeast } = useBreakpoint();
   const twoCol = isAtLeast('lg');
+  const sectionTitleStyle =
+    isWeb && isAtLeast('wide') ? styles.sectionTitleWebWide : styles.sectionTitle;
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{t('sectionSurpriseBoxes')}</Text>
+      <Text style={sectionTitleStyle}>{t('sectionSurpriseBoxes')}</Text>
       {isLoading ? (
         <View style={styles.loaderRow}>
           <Loader size="small" />

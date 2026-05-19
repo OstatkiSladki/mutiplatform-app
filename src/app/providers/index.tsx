@@ -6,6 +6,7 @@ import { QueryProvider } from './query-provider';
 import { ThemeProvider } from './theme-provider';
 import { AuthProvider } from './auth-provider';
 import { initMaps } from './init-maps';
+import { FontProvider } from './font-provider';
 
 initMaps();
 
@@ -18,9 +19,11 @@ export const AppProvider = ({ children }: AppProviderProps) => (
     <SafeAreaProvider>
       <QueryProvider>
         <ThemeProvider>
-          <AuthProvider>
-            <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-          </AuthProvider>
+          <FontProvider>
+            <AuthProvider>
+              <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+            </AuthProvider>
+          </FontProvider>
         </ThemeProvider>
       </QueryProvider>
     </SafeAreaProvider>

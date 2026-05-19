@@ -48,9 +48,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   text: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
     fontSize: theme.typography.fontSizes[2],
-    fontWeight: '600',
+    fontWeight: '400',
     textTransform: 'uppercase',
   },
 });

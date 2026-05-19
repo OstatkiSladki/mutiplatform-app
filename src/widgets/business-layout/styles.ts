@@ -43,14 +43,14 @@ export const styles = StyleSheet.create({
   },
   navLabelActive: {
     fontSize: 15,
-    fontWeight: '600' as const,
-    fontFamily: b.typography.fontFamily,
+    fontWeight: '400' as const,
+    fontFamily: b.typography.fontFamilySemiBold,
     color: b.colors.primary,
   },
   navLabelInactive: {
     fontSize: 15,
-    fontWeight: '600' as const,
-    fontFamily: b.typography.fontFamily,
+    fontWeight: '400' as const,
+    fontFamily: b.typography.fontFamilySemiBold,
     color: b.colors.foreground,
     opacity: 0.7,
   },
@@ -84,7 +84,7 @@ export const styles = StyleSheet.create({
   topbarTitle: {
     fontSize: b.typography.title.fontSize,
     fontWeight: b.typography.title.fontWeight,
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.title.fontFamily,
     color: b.colors.foreground,
     letterSpacing: b.typography.letterSpacing.tight,
     lineHeight: b.typography.title.fontSize,
@@ -146,16 +146,16 @@ export const styles = StyleSheet.create({
   avatarText: {
     color: b.colors.background,
     fontSize: 12,
-    fontWeight: '700' as const,
-    fontFamily: b.typography.fontFamily,
+    fontWeight: '400' as const,
+    fontFamily: b.typography.fontFamilyBold,
   },
   userInfoBlock: {
     rowGap: 2,
   },
   userName: {
     fontSize: 14,
-    fontWeight: '600' as const,
-    fontFamily: b.typography.fontFamily,
+    fontWeight: '400' as const,
+    fontFamily: b.typography.fontFamilySemiBold,
     color: b.colors.foreground,
   },
   userRoleText: {

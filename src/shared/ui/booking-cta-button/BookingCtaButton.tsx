@@ -4,9 +4,11 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  View,
   type PressableProps,
   type ViewStyle,
 } from 'react-native';
+import { Icon } from '../icon';
 import { theme } from '../../config/theme';
 
 /** Shared primary booking CTA — flat orange pill (no elevation/shadow), 42px tall, 40 radius, 18px bold label. */
@@ -23,6 +25,8 @@ export interface BookingCtaButtonProps extends Omit<PressableProps, 'children' |
   isLoading?: boolean;
   /** Default `compact` (42px). `comfortable` = 56px. `medium` = 32px + 16px semibold. */
   size?: BookingCtaButtonSize;
+  /** Белый кружок со стрелкой справа (десктоп сюрприз-бокс). */
+  showTrailingArrow?: boolean;
   style?: ViewStyle;
 }
 
@@ -73,9 +77,34 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     shadowOffset: { width: 0, height: 0 },
   },
+  rootWithArrow: {
+    paddingHorizontal: theme.spacing[2],
+    paddingLeft: theme.spacing[5],
+  },
   rootComfortable: {
     height: BOOKING_CTA_HEIGHT_COMFORTABLE,
     minWidth: BOOKING_CTA_HEIGHT_COMFORTABLE,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing[3],
+    width: '100%',
+    paddingHorizontal: theme.spacing[2],
+  },
+  labelWithArrow: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  arrowDisc: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: theme.colors.neutral.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
   },
   rootMedium: {
     height: BOOKING_CTA_HEIGHT_MEDIUM,
@@ -89,17 +118,18 @@ const styles = StyleSheet.create({
     opacity: 0.55,
   },
   label: {
-    fontFamily: theme.client.typography.fontFamily,
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: ACTION_BTN_FS,
     lineHeight: ACTION_BTN_FS,
-    fontWeight: '700',
+    fontWeight: '400',
     color: theme.colors.neutral.white,
     textAlign: 'center',
     includeFontPadding: false,
   },
   labelMedium: {
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
     fontSize: ACTION_BTN_MEDIUM_FS,
     lineHeight: ACTION_BTN_MEDIUM_FS,
-    fontWeight: '600',
+    fontWeight: '400',
   },
 });

@@ -224,13 +224,13 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   text: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
     fontSize: theme.typography.fontSizes[4],
   },
   textSmall: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
     fontSize: theme.typography.fontSizes[3],
   },
   row: {
@@ -253,8 +253,8 @@ const styles = StyleSheet.create({
     height: 48,
   },
   pillText: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '600',
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
     fontSize: theme.typography.fontSizes[4],
   },
   ghost: {

@@ -70,13 +70,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   name: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[8],
     color: theme.colors.neutral[1],
   },
   description: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[4],
     color: theme.colors.neutral[3],
     lineHeight: theme.typography.fontSizes[4] * theme.typography.lineHeights.loose,
@@ -87,13 +86,12 @@ const styles = StyleSheet.create({
     gap: theme.spacing[3],
   },
   price: {
-    fontFamily: theme.typography.fontFamilies.inter,
-    fontWeight: '700',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
     fontSize: theme.typography.fontSizes[10],
     color: theme.colors.primary[100],
   },
   meta: {
-    fontFamily: theme.typography.fontFamilies.inter,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
     fontSize: theme.typography.fontSizes[3],
     color: theme.colors.neutral[4],
   },

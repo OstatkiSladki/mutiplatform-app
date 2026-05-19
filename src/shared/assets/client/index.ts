@@ -1,5 +1,7 @@
 export const clientAssets = {
   logoHands: require('./logo-hands.png'),
+  /** Full brand lockup — desktop client header (logoweb.png) */
+  logoFull: require('../../../../assets/logoweb.png'),
   cafeKeks: require('./cafe-keks.jpg'),
   cafeSurf: require('./cafe-surf.jpg'),
   cafeBread: require('./cafe-bread.jpg'),

@@ -201,9 +201,9 @@ const styles = StyleSheet.create({
     minWidth: 200,
   },
   title: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilyBold,
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '400',
     color: b.colors.foreground,
   },
   subtitle: {
@@ -226,9 +226,9 @@ const styles = StyleSheet.create({
     marginTop: -8,
   },
   tooltipText: {
-    fontFamily: b.typography.fontFamily,
+    fontFamily: b.typography.fontFamilySemiBold,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
     color: b.colors.background,
   },
   xAxis: {

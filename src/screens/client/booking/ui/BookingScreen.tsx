@@ -194,13 +194,18 @@ const BookingScreenContent = () => {
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>{t('upsellTitle')}</Text>
                   {isDesktop ? (
-                    <View style={styles.upsellRow}>
+                    <View style={[styles.upsellRow, styles.upsellRowDesktop]}>
                       {upsellOffersQuery.data.items.slice(0, 2).map((offer) => (
-                        <SurpriseBoxCard
-                          key={offer.id}
-                          offer={offer}
-                          venueName={venueQuery.data?.name ?? ''}
-                        />
+                        <View key={offer.id} style={styles.upsellCellDesktop}>
+                          <SurpriseBoxCard
+                            offer={offer}
+                            venueName={venueQuery.data?.name ?? ''}
+                            venue={venue}
+                            onVenuePress={(id) =>
+                              navigation.navigate('Venue', { venueId: id })
+                            }
+                          />
+                        </View>
                       ))}
                     </View>
                   ) : (

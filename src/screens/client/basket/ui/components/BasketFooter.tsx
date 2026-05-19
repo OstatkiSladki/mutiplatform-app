@@ -4,6 +4,7 @@ import {
   MobilePriceCtaBar,
   MOBILE_PRICE_CTA_SCROLL_PADDING,
 } from '../../../../../shared/ui/mobile-price-cta-bar';
+import { useMobileBottomNavHeight } from '../../../../../widgets/mobile-bottom-nav';
 
 /** Matches fixed footer height for list bottom inset. */
 export const BOOKING_STICKY_SCROLL_PADDING = MOBILE_PRICE_CTA_SCROLL_PADDING;
@@ -26,8 +27,12 @@ export const BasketFooter = ({
   disabled,
   horizontalPadding,
 }: BasketFooterProps) => {
+  const bottomNavHeight = useMobileBottomNavHeight();
   return (
-    <View pointerEvents="box-none" style={styles.anchor}>
+    <View
+      pointerEvents="box-none"
+      style={[styles.anchor, { bottom: bottomNavHeight }]}
+    >
       <MobilePriceCtaBar
         priceLabel={totalLabel}
         ctaTitle={ctaTitle}

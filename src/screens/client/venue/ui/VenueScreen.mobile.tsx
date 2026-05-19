@@ -17,6 +17,7 @@ import { ProductDetailsSheet, type ProductDetailsSheetRef } from '../../../../fe
 import { VenueInfo } from './components/VenueInfo.mobile';
 import { VenueProductGrid } from './components/VenueProductGrid.mobile';
 import { CategoryChips, DEFAULT_MOBILE_CATEGORY_LABELS } from '../../../../widgets/category-chips';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 
 type VenueRoute = RouteProp<ClientStackParamList, 'Venue'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
@@ -26,6 +27,7 @@ export const VenueScreen = () => {
   const navigation = useNavigation<Nav>();
   const { t } = useTranslation('catalog');
   const { width } = useWindowDimensions();
+  const bottomNavHeight = useMobileBottomNavHeight();
   const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
   const [activeCategory, setActiveCategory] = useState<string>(DEFAULT_MOBILE_CATEGORY_LABELS[0]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -113,7 +115,10 @@ export const VenueScreen = () => {
           }
         />
       )}
-      <View pointerEvents="box-none" style={styles.cartDock}>
+      <View
+        pointerEvents="box-none"
+        style={[styles.cartDock, { bottom: bottomNavHeight }]}
+      >
         <CartSummary mode="dock" venueId={venueId} onPressCheckout={goToBooking} />
       </View>
 

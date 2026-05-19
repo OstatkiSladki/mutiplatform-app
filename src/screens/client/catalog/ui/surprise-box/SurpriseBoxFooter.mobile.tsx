@@ -1,10 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '../../../../../shared/ui/button';
 import { theme } from '../../../../../shared/config/theme';
 import { PickupTimeSelector } from '../../../../../shared/ui/mobile/pickup-time-selector';
+import { useMobileBottomNavHeight } from '../../../../../widgets/mobile-bottom-nav';
 
 export interface SurpriseBoxFooterProps {
   pickupTitle: string;
@@ -23,9 +22,7 @@ export const SurpriseBoxFooter = ({
   ctaLabel,
   onPay,
 }: SurpriseBoxFooterProps) => {
-  const insets = useSafeAreaInsets();
-  const tabBarHeight = useBottomTabBarHeight();
-  const bottomPad = Math.max(tabBarHeight, insets.bottom + theme.spacing[2]);
+  const bottomPad = useMobileBottomNavHeight() + theme.spacing[2];
 
   return (
     <View style={[styles.wrap, { paddingBottom: bottomPad }]}>

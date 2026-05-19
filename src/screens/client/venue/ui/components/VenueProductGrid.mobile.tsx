@@ -6,6 +6,7 @@ import { CategoryProductCard } from '../../../../../widgets/category-product-car
 import { EmptyState } from '../../../../../widgets/empty-state';
 import { Loader } from '../../../../../shared/ui/loader';
 import { theme } from '../../../../../shared/config/theme';
+import { useMobileBottomNavHeight } from '../../../../../widgets/mobile-bottom-nav';
 
 interface VenueProductGridProps {
   offers: Offer[];
@@ -15,6 +16,9 @@ interface VenueProductGridProps {
   onPressDetails: (offer: Offer, product?: Product) => void;
   horizontalPadding?: number;
 }
+
+/** Reserved space for the absolutely-docked CartSummary above the grid. */
+const CART_DOCK_CLEARANCE = 136;
 
 type GridItem = Offer | { id: string; placeholder: true };
 
@@ -30,6 +34,7 @@ export const VenueProductGrid = ({
   horizontalPadding: horizontalPaddingProp,
 }: VenueProductGridProps) => {
   const { width } = useWindowDimensions();
+  const bottomNavHeight = useMobileBottomNavHeight();
   const horizontalPadding =
     horizontalPaddingProp ??
     (width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3]);
@@ -56,7 +61,8 @@ export const VenueProductGrid = ({
         styles.content,
         {
           paddingHorizontal: horizontalPadding,
-          paddingVertical: theme.spacing[2],
+          paddingTop: theme.spacing[2],
+          paddingBottom: CART_DOCK_CLEARANCE + bottomNavHeight,
         },
       ]}
       ListHeaderComponent={ListHeaderComponent}
@@ -87,6 +93,7 @@ export const VenueProductGrid = ({
               title={product?.name ?? `Сюрприз бокс №${item.id}`}
               width="100%"
               weight="130г"
+              product={product}
               onPress={() => onPressDetails(item, product)}
             />
           </View>

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { ClientStackParamList } from '../../../../navigation/types';
+import { useSafeGoBack } from '../../../../shared/lib/navigation';
 import { useVenue } from '../../../../entities/venue';
 import { useOfferList } from '../../../../entities/offer';
 import { useAuthStore } from '../../../../entities/auth/model/store';
@@ -18,6 +19,7 @@ import { Icon } from '../../../../shared/ui/icon';
 import { Loader } from '../../../../shared/ui/loader';
 import { useBreakpoint } from '../../../../shared/lib/responsive';
 import { theme } from '../../../../shared/config/theme';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { SurpriseBoxCard } from '../../../../widgets/surprise-box-card';
 import { ClientDesktopHeader } from '../../../../widgets/web-header';
@@ -56,6 +58,7 @@ const BookingScreenContent = () => {
   const venueQuery = useVenue(venueId);
   const { isAtLeast, isWeb } = useBreakpoint();
   const isDesktop = isWeb && isAtLeast('md');
+  const bottomNavHeight = useMobileBottomNavHeight();
   const upsellOffersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 6 });
 
   const cart = useCartStore(selectVenueCart(venueId));
@@ -97,7 +100,7 @@ const BookingScreenContent = () => {
     [subtotal, fee, discount],
   );
 
-  const goBack = useCallback(() => navigation.goBack(), [navigation]);
+  const goBack = useSafeGoBack();
 
   const onSuccess = useCallback(() => {
     paidRef.current = true;
@@ -151,6 +154,7 @@ const BookingScreenContent = () => {
           contentContainerStyle={[
             styles.scrollContent,
             isDesktop ? styles.scrollContentDesktop : styles.scrollContentMobile,
+            isDesktop ? null : { paddingBottom: 120 + bottomNavHeight },
           ]}
           showsVerticalScrollIndicator={false}
         >

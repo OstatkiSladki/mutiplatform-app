@@ -11,11 +11,13 @@ import { Button } from '../../../../shared/ui/button';
 import { Icon } from '../../../../shared/ui/icon';
 import { useUserLocation } from '../../../../shared/lib/hooks';
 import { theme } from '../../../../shared/config/theme';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
 
 export const NearbyScreen = () => {
   const navigation = useNavigation<Nav>();
+  const bottomNavHeight = useMobileBottomNavHeight();
   const { coords } = useUserLocation();
   const venuesQuery = useVenueList({
     limit: 10,
@@ -30,7 +32,10 @@ export const NearbyScreen = () => {
   return (
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
     <ScrollView
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[
+        styles.content,
+        { paddingBottom: bottomNavHeight + theme.spacing[6] },
+      ]}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >

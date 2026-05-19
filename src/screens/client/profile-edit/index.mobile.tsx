@@ -1,13 +1,15 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { Icon } from '../../../shared/ui/icon';
+import { useSafeGoBack } from '../../../shared/lib/navigation';
 import { ControlledInput } from '../../../features/auth/ui/controlled-input';
 import { useAuthStore } from '../../../entities/auth/model/store';
 import { theme } from '../../../shared/config/theme';
+import { useMobileBottomNavHeight } from '../../../widgets/mobile-bottom-nav';
 import { styles } from './styles';
 
 interface FormValues {
@@ -26,6 +28,7 @@ export const ProfileEditScreen = ({ embedded = false }: ProfileEditProps) => {
   const { t } = useTranslation('profile');
   const navigation = useNavigation();
   const user = useAuthStore((s) => s.user);
+  const bottomNavHeight = useMobileBottomNavHeight();
 
   const { control, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
@@ -39,7 +42,7 @@ export const ProfileEditScreen = ({ embedded = false }: ProfileEditProps) => {
 
   const gender = watch('gender');
 
-  const goBack = useCallback(() => navigation.goBack(), [navigation]);
+  const goBack = useSafeGoBack();
 
   const onSave = handleSubmit(() => {
     if (!embedded) navigation.goBack();
@@ -122,7 +125,14 @@ export const ProfileEditScreen = ({ embedded = false }: ProfileEditProps) => {
           <Icon name="check" size={20} color={theme.colors.primary[100]} />
         </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={styles.scroll}>{Body}</ScrollView>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scroll,
+          { paddingBottom: bottomNavHeight + theme.spacing[6] },
+        ]}
+      >
+        {Body}
+      </ScrollView>
     </SafeAreaView>
   );
 };

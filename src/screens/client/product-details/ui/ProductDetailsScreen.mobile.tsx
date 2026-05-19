@@ -12,6 +12,7 @@ import type { ClientStackParamList, ClientTabsParamList } from '../../../../navi
 import { theme } from '../../../../shared/config/theme';
 import { MOBILE_PRICE_CTA_SCROLL_PADDING } from '../../../../shared/ui/mobile-price-cta-bar';
 import { MobileScreenChrome } from '../../../../shared/ui/mobile';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 import { formatPrice } from '../../../../shared/lib/format';
 import { useAddToCart } from '../../../../features/add-to-cart';
 import {
@@ -49,6 +50,7 @@ export const ProductDetailsScreen = () => {
   const navigation = useNavigation<Nav>();
   const { width } = useWindowDimensions();
   const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[3];
+  const bottomNavHeight = useMobileBottomNavHeight();
   const [searchQuery, setSearchQuery] = useState('');
   const { venueId, venueName, offer, product: routeProduct } = route.params;
 
@@ -127,7 +129,16 @@ export const ProductDetailsScreen = () => {
     <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.scrollContent, { paddingHorizontal: pagePadding }]}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingHorizontal: pagePadding,
+            paddingBottom:
+              MOBILE_PRICE_CTA_SCROLL_PADDING +
+              theme.spacing[4] +
+              bottomNavHeight,
+          },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         <MobileScreenChrome

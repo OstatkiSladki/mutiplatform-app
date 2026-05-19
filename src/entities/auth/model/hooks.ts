@@ -1,20 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
 import { authApi } from '../api/auth-api';
+import { getAccessTokenFromResponse } from './access-token';
 import { useAuthStore } from './store';
-
-const getAccessTokenFromResponse = (
-  response: AxiosResponse<unknown>,
-): string | undefined => {
-  const headerValue =
-    response.headers['x-access-token'] ?? response.headers.authorization;
-
-  if (typeof headerValue !== 'string') return undefined;
-
-  return headerValue.startsWith('Bearer ')
-    ? headerValue.slice('Bearer '.length)
-    : headerValue;
-};
 
 export const useLogin = () =>
   useMutation({

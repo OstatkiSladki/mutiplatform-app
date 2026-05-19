@@ -49,7 +49,7 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (original.url?.includes('/auth/refresh')) {
+    if (original.url?.includes('/auth/api/v1/auth/refresh')) {
       const store = getAuthStore();
       store.getState().clearAuth();
       return Promise.reject(error);
@@ -70,9 +70,9 @@ apiClient.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      await apiClient.post('/api/v1/auth/refresh');
-      const store = getAuthStore();
-      const newToken: string | null = store.getState().accessToken;
+      const refreshAccessToken: () => Promise<string | null> =
+        require('../../entities/auth/model/access-token').refreshAccessToken;
+      const newToken = await refreshAccessToken();
       flushQueue(newToken);
       if (newToken && original.headers) {
         original.headers.Authorization = `Bearer ${newToken}`;

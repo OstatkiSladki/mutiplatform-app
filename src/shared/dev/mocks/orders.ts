@@ -1,3 +1,9 @@
+import type { PickupCode } from '../../../entities/order/model/types';
+
+export const MOCK_PICKUP_CODES: Record<number, PickupCode> = {
+  101: { code: '7421', expires_at: '2026-05-05T18:00:00.000Z' },
+};
+
 export const MOCK_ORDERS = [
   {
     id: 101,

@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createAsyncStorage } from '../../../shared/lib/storage';
-import { DEV_MOCKS_ENABLED } from '../../../shared/dev';
-import { MOCK_CARTS } from '../../../shared/dev/mocks';
 
 export interface DraftCartItem {
   productId: number | string;
@@ -48,7 +46,7 @@ const key = (id: number | string) => String(id);
 export const useCartStore = create<CartState & CartActions>()(
   persist(
     (set) => ({
-      carts: DEV_MOCKS_ENABLED ? (MOCK_CARTS as CartState['carts']) : {},
+      carts: {},
 
       addItem: (venueId, venueName, item) =>
         set((state) => {
@@ -121,8 +119,14 @@ export const useCartStore = create<CartState & CartActions>()(
     }),
     {
       name: 'cart-store',
+      version: 1,
       storage: createAsyncStorage<CartState>(),
       partialize: (state) => ({ carts: state.carts }) as CartState,
+      migrate: (persistedState: unknown, version: number): CartState => {
+        // v0 → v1: drop legacy dev-seeded carts. Newer versions pass through.
+        if (version < 1) return { carts: {} };
+        return (persistedState as CartState) ?? { carts: {} };
+      },
     },
   ),
 );

@@ -28,3 +28,24 @@ export function withMockFallback<T>(
     fetchStatus: 'idle' as const,
   } as unknown as UseQueryResult<T>;
 }
+
+export function withMockFallbackLazy<T>(
+  result: UseQueryResult<T>,
+  factory: () => T | undefined,
+): UseQueryResult<T> {
+  if (!DEV_MOCKS_ENABLED) return result;
+  if (!result.isError && !isEmpty(result.data)) return result;
+  const fallback = factory();
+  if (fallback === undefined) return result;
+  return {
+    ...result,
+    data: fallback,
+    isSuccess: true,
+    isPending: false,
+    isLoading: false,
+    isError: false,
+    error: null,
+    status: 'success' as const,
+    fetchStatus: 'idle' as const,
+  } as unknown as UseQueryResult<T>;
+}

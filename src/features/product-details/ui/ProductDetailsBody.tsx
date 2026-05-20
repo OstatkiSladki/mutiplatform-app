@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import type { Offer } from '../../../entities/offer';
 import type { Product } from '../../../entities/product';
@@ -33,10 +34,24 @@ export const ProductDetailsBody = ({ venueId, venueName, offer, product }: Produ
   return (
     <View style={styles.container}>
       <View style={styles.imageBox}>
-        <Icon name="gift" size={56} color={theme.colors.primary[100]} />
+        {imageUrl ? (
+          <Image source={{ uri: imageUrl }} style={styles.image} contentFit="contain" />
+        ) : (
+          <Icon name="gift" size={56} color={theme.colors.primary[100]} />
+        )}
       </View>
       <Text style={styles.name}>{displayName}</Text>
       {product?.description ? <Text style={styles.description}>{product.description}</Text> : null}
+      {product?.characteristics_json && Object.keys(product.characteristics_json).length > 0 ? (
+        <View style={styles.characteristics}>
+          {Object.entries(product.characteristics_json).map(([key, value]) => (
+            <View key={key} style={styles.characteristicRow}>
+              <Text style={styles.characteristicKey}>{key}</Text>
+              <Text style={styles.characteristicValue}>{String(value)}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
       <View style={styles.row}>
         <Text style={styles.price}>{formatPrice(price)}</Text>
         <View style={{ flex: 1 }} />
@@ -68,9 +83,32 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary[10],
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  characteristics: {
+    gap: theme.spacing[1],
+  },
+  characteristicRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: theme.spacing[2],
+  },
+  characteristicKey: {
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
+    fontSize: theme.typography.fontSizes[4],
+    color: theme.colors.neutral[4],
+  },
+  characteristicValue: {
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
+    fontSize: theme.typography.fontSizes[4],
+    color: theme.colors.neutral[2],
   },
   name: {
-    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: theme.typography.fontSizes[8],
     color: theme.colors.neutral[1],
   },
@@ -86,7 +124,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing[3],
   },
   price: {
-    fontFamily: theme.typography.fontFamilies.sourceSansProBold, fontWeight: '400',
+    fontFamily: theme.typography.fontFamilies.sourceSansProBold,
     fontSize: theme.typography.fontSizes[10],
     color: theme.colors.primary[100],
   },

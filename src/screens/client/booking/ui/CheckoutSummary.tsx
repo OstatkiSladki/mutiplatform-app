@@ -5,6 +5,7 @@ import { Button } from '../../../../shared/ui/button';
 import { Divider } from '../../../../shared/ui/divider';
 import { theme } from '../../../../shared/config/theme';
 import { formatPrice } from '../../../../shared/lib/format';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 
 export type CheckoutSummaryMode = 'desktop' | 'mobile-bar';
 
@@ -28,6 +29,7 @@ export const CheckoutSummary = ({
   disabled,
 }: CheckoutSummaryProps) => {
   const { t } = useTranslation('checkout');
+  const bottomNavHeight = useMobileBottomNavHeight();
   const cta = (
     <Button
       title={t('payCtaWithAmount', { amount: formatPrice(total) })}
@@ -39,7 +41,7 @@ export const CheckoutSummary = ({
 
   if (mode === 'mobile-bar') {
     return (
-      <View style={styles.bar}>
+      <View style={[styles.bar, { bottom: bottomNavHeight }]}>
         <View style={styles.barInfo}>
           <Text style={styles.barLabel}>{t('total')}</Text>
           <Text style={styles.barTotal}>{formatPrice(total)}</Text>

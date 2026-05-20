@@ -8,16 +8,18 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import type { Offer } from '../../../../entities/offer';
 import { useOfferList } from '../../../../entities/offer';
+import type { Product } from '../../../../entities/product';
+import { useProductList } from '../../../../entities/product';
 import { useVenueList } from '../../../../entities/venue';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
 import { useUserLocation } from '../../../../shared/lib/hooks';
 import { MobileScreenChrome } from '../../../../shared/ui/mobile';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 import {
   CategoryProductsSection,
   NearbySection,
@@ -32,7 +34,7 @@ export const HomeScreen = () => {
   const navigation = useNavigation<Nav>();
   const queryClient = useQueryClient();
   const { width } = useWindowDimensions();
-  const tabBarHeight = useBottomTabBarHeight();
+  const tabBarHeight = useMobileBottomNavHeight();
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -43,6 +45,13 @@ export const HomeScreen = () => {
     Math.max(width * (isTablet ? 0.18 : 0.36), 132),
     150,
   );
+
+  const productsQuery = useProductList({ limit: 100 });
+  const productsById = useMemo<Record<number, Product>>(() => {
+    const map: Record<number, Product> = {};
+    productsQuery.data?.items.forEach((p) => { map[p.id] = p; });
+    return map;
+  }, [productsQuery.data]);
 
   const { coords } = useUserLocation();
   const venuesQuery = useVenueList({
@@ -112,11 +121,12 @@ export const HomeScreen = () => {
           onSearchChange={setSearchQuery}
           onPressProfile={goProfile}
         />
-        <PromoSection isTablet={isTablet} />
+        <PromoSection />
         <UrgentSection
           offers={offersQuery.data?.items ?? []}
           isLoading={offersQuery.isLoading}
           venueNameById={venueNameById}
+          productsById={productsById}
           cardWidth={urgentCardWidth}
           emptyTitle={t('emptyOffers')}
           emptyDescription={t('emptyOffersDescription')}
@@ -137,6 +147,7 @@ export const HomeScreen = () => {
           offers={offersQuery.data?.items ?? []}
           isLoading={offersQuery.isLoading}
           venueNameById={venueNameById}
+          productsById={productsById}
           emptyTitle={t('emptyProducts')}
           emptyDescription={t('emptyProductsDescription')}
           resolveVenueName={resolveVenueName}

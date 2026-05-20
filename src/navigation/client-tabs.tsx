@@ -4,7 +4,6 @@ import {
   type BottomTabBarProps,
 } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ClientTabsParamList } from './types';
 import { HomeScreen } from '../screens/client/home';
 import { NearbyScreen } from '../screens/client/nearby/index';
@@ -36,7 +35,6 @@ const tabLabelKeys: Record<TabName, string> = {
 export const ClientTabs = () => {
   const { t } = useTranslation('common');
   const { isWeb, isAtLeast } = useBreakpoint();
-  const insets = useSafeAreaInsets();
   const useWebHeader = isWeb && isAtLeast('md');
   const renderWebHeader = useCallback(
     (props: BottomTabBarProps) => <WebHeader {...props} />,
@@ -69,19 +67,9 @@ export const ClientTabs = () => {
           paddingBottom: 0,
           justifyContent: 'center',
         },
-        tabBarStyle: useWebHeader
-          ? undefined
-          : {
-              height: 78 + insets.bottom,
-              minHeight: 78 + insets.bottom,
-              paddingTop: theme.spacing[4],
-              paddingBottom: insets.bottom,
-              borderTopWidth: 0,
-              backgroundColor: theme.client.colors.card,
-              borderTopLeftRadius: theme.client.radius.md,
-              borderTopRightRadius: theme.client.radius.md,
-              ...theme.client.shadows.tabBar,
-            },
+        // Mobile: built-in bar hidden — a single persistent custom bar is
+        // rendered at the ClientStack level (see widgets/mobile-bottom-nav).
+        tabBarStyle: useWebHeader ? undefined : { display: 'none' },
         tabBarLabelStyle: {
           fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
           fontSize: theme.typography.fontSizes[2],

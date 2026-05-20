@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { apiClient } from '../../../shared/api';
+import type { RetryableRequestConfig } from '../../../shared/api';
 import { mockAuthApi } from './mock-auth-api';
 import type {
   LoginRequest,
@@ -8,10 +9,12 @@ import type {
   UserProfileResponse,
 } from '../model/types';
 
+const forceMock = process.env.EXPO_PUBLIC_USE_MOCK_AUTH === 'true';
 const useMockAuth =
-  Platform.OS !== 'web' &&
-  process.env.EXPO_PUBLIC_USE_MOCK_AUTH !== 'false' &&
-  (__DEV__ || process.env.EXPO_PUBLIC_USE_MOCK_AUTH === 'true');
+  forceMock ||
+  (Platform.OS !== 'web' &&
+    process.env.EXPO_PUBLIC_USE_MOCK_AUTH !== 'false' &&
+    __DEV__);
 
 export const authApi = {
   login: (data: LoginRequest) =>
@@ -34,8 +37,8 @@ export const authApi = {
       ? mockAuthApi.refresh()
       : apiClient.post<MessageResponse>('/auth/api/v1/auth/refresh'),
 
-  getMe: () =>
+  getMe: (config?: RetryableRequestConfig) =>
     useMockAuth
       ? mockAuthApi.getMe()
-      : apiClient.get<UserProfileResponse>('/auth/api/v1/users/me'),
+      : apiClient.get<UserProfileResponse>('/auth/api/v1/users/me', config),
 };

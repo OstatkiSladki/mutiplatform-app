@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Order, OrderStatus } from '../../../../entities/order';
 import { Badge } from '../../../../shared/ui/badge';
@@ -33,8 +33,11 @@ export const OrderCard = ({ order, onPressPickupCode }: OrderCardProps) => {
     .join(', ');
   const more = itemsCount > 2 ? ` +${itemsCount - 2}` : '';
 
-  return (
-    <View style={styles.card}>
+  const canReveal = order.status === 'paid' && !!onPressPickupCode;
+  const handlePress = () => onPressPickupCode?.(order);
+
+  const cardBody = (
+    <>
       <View style={styles.cardHeader}>
         <View style={styles.headerText}>
           <Text style={styles.orderTitle}>
@@ -60,11 +63,11 @@ export const OrderCard = ({ order, onPressPickupCode }: OrderCardProps) => {
 
       <View style={styles.footerRow}>
         <Text style={styles.total}>{formatPrice(order.total_amount)}</Text>
-        {order.status === 'paid' && onPressPickupCode ? (
+        {canReveal ? (
           <TouchableOpacity
             style={styles.pickupBtn}
             activeOpacity={0.85}
-            onPress={() => onPressPickupCode(order)}
+            onPress={handlePress}
             accessibilityRole="button"
             accessibilityLabel={t('orders.pickupCodeCta')}
           >
@@ -79,6 +82,22 @@ export const OrderCard = ({ order, onPressPickupCode }: OrderCardProps) => {
           </TouchableOpacity>
         ) : null}
       </View>
-    </View>
+    </>
   );
+
+  if (canReveal) {
+    return (
+      <Pressable
+        onPress={handlePress}
+        accessibilityRole="button"
+        accessibilityLabel={t('orders.orderTitle', { id: order.id })}
+        accessibilityHint={t('orders.pickupCodeHint')}
+        style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      >
+        {cardBody}
+      </Pressable>
+    );
+  }
+
+  return <View style={styles.card}>{cardBody}</View>;
 };

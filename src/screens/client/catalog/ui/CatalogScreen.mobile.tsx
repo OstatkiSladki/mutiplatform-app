@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +26,7 @@ import { theme } from '../../../../shared/config/theme';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { formatPrice } from '../../../../shared/lib/format';
 import { venueAvatarLabel } from '../../../../shared/lib/venue-avatar';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 import {
   SurpriseBoxCheckoutBar,
   SurpriseBoxHero,
@@ -42,7 +42,7 @@ export const SurpriseBoxScreen = () => {
   const { t } = useTranslation('catalog');
   const navigation = useNavigation<Nav>();
   const { width } = useWindowDimensions();
-  const tabBarHeight = useBottomTabBarHeight();
+  const tabBarHeight = useMobileBottomNavHeight();
   /** Tab clearance only — pickup + checkout scroll inside content */
   const scrollBottomPadOffer = tabBarHeight + theme.spacing[6];
   const scrollBottomPadEmpty = theme.spacing[10];

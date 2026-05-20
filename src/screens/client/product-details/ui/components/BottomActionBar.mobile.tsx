@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MobilePriceCtaBar } from '../../../../../shared/ui/mobile-price-cta-bar';
+import { useMobileBottomNavHeight } from '../../../../../widgets/mobile-bottom-nav';
 
 export interface BottomActionBarProps {
   priceLabel: string;
@@ -16,8 +17,12 @@ export const BottomActionBar = ({
   onAddPress,
   disabled,
 }: BottomActionBarProps) => {
+  const bottomNavHeight = useMobileBottomNavHeight();
   return (
-    <View pointerEvents="box-none" style={styles.anchor}>
+    <View
+      pointerEvents="box-none"
+      style={[styles.anchor, { bottom: bottomNavHeight }]}
+    >
       <MobilePriceCtaBar
         priceLabel={priceLabel}
         ctaTitle={buttonTitle}

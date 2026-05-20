@@ -25,18 +25,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const stored = await tokenStorage.load();
-      if (cancelled) return;
-      if (stored) setAccessToken(stored);
       try {
-        // No / expired token → getMe returns 401 → the response interceptor
-        // refreshes via the httpOnly cookie and retries automatically.
-        const { data } = await authApi.getMe();
-        if (!cancelled) {
-          setUser(data, useAuthStore.getState().accessToken ?? undefined);
+        const stored = await tokenStorage.load();
+        if (cancelled) return;
+        if (stored) setAccessToken(stored);
+        try {
+          // Boot session restore. _skipAuthRefresh keeps this call out of the
+          // refresh-retry chain so AuthProvider stays the sole auth authority
+          // during boot; the interceptor must not wipe state here.
+          const { data } = await authApi.getMe({ _skipAuthRefresh: true });
+          if (!cancelled) {
+            setUser(data, useAuthStore.getState().accessToken ?? undefined);
+          }
+        } catch {
+          if (!cancelled) clearAuth();
         }
-      } catch {
-        if (!cancelled) clearAuth();
       } finally {
         if (!cancelled) setInitializing(false);
       }

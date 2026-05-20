@@ -16,6 +16,7 @@ import { theme } from '../../../../shared/config/theme';
 import { formatPrice } from '../../../../shared/lib/format';
 import { AuthRequiredScreen } from '../../../../widgets/auth-required';
 import { MobileScreenChrome, TimeSlotPickerSheet } from '../../../../shared/ui/mobile';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 import {
   BasketBasketBody,
   BasketMainTab,
@@ -77,7 +78,9 @@ const BasketScreenContent = () => {
   const latestOrder = sortedOrders[0];
   const ordersFooterTotal = latestOrder ? latestOrder.final_amount : 0;
 
-  const listBottomPad = theme.spacing[10] + theme.spacing[6];
+  const bottomNavHeight = useMobileBottomNavHeight();
+  const listBottomPad =
+    theme.spacing[10] + theme.spacing[6] + bottomNavHeight;
 
   const goHome = useCallback(() => {
     navigation.navigate('ClientTabs', { screen: 'Home' });
@@ -142,7 +145,7 @@ const BasketScreenContent = () => {
                 styles.emptyContent,
                 {
                   paddingHorizontal: pagePadding,
-                  paddingBottom: theme.spacing[6],
+                  paddingBottom: theme.spacing[6] + bottomNavHeight,
                 },
               ]}
               showsVerticalScrollIndicator={false}

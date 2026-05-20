@@ -1,11 +1,17 @@
 import '../shared/i18n';
-import React from 'react';
+import React, { useState } from 'react';
 import { Platform } from 'react-native';
-import { NavigationContainer, type LinkingOptions } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+  type LinkingOptions,
+  type NavigationState,
+} from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import Toast from 'react-native-toast-message';
 import { AppProvider } from './providers';
 import { RootNavigator } from '../navigation';
+import { MobileBottomNav } from '../widgets/mobile-bottom-nav';
 import type { RootStackParamList } from '../navigation/types';
 
 const linking: LinkingOptions<RootStackParamList> = {
@@ -46,12 +52,23 @@ const linking: LinkingOptions<RootStackParamList> = {
   },
 };
 
-export const AppEntry = () => (
-  <AppProvider>
-    <NavigationContainer linking={linking}>
-      <RootNavigator />
-    </NavigationContainer>
-    <StatusBar style="auto" />
-    <Toast />
-  </AppProvider>
-);
+export const AppEntry = () => {
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
+  const [rootState, setRootState] = useState<NavigationState | undefined>();
+
+  return (
+    <AppProvider>
+      <NavigationContainer
+        ref={navigationRef}
+        linking={linking}
+        onReady={() => setRootState(navigationRef.getRootState())}
+        onStateChange={setRootState}
+      >
+        <RootNavigator />
+        <MobileBottomNav navigationRef={navigationRef} rootState={rootState} />
+      </NavigationContainer>
+      <StatusBar style="auto" />
+      <Toast />
+    </AppProvider>
+  );
+};

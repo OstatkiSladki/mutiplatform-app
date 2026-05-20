@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import type { DraftCartItem, DraftVenueCart } from '../../../../../entities/order';
 import type { Venue } from '../../../../../entities/venue';
 import { theme } from '../../../../../shared/config/theme';
+import { useMobileBottomNavHeight } from '../../../../../widgets/mobile-bottom-nav';
 import { BasketFooter, BOOKING_STICKY_SCROLL_PADDING } from './BasketFooter';
 import { BasketItemCard } from './BasketItemCard';
 import { BasketPickupSection } from './BasketPickupSection';
@@ -45,6 +46,7 @@ export const BasketBasketBody = ({
   multiVenueHint,
   setQuantity,
 }: BasketBasketBodyProps) => {
+  const bottomNavHeight = useMobileBottomNavHeight();
   const renderItem = useCallback(
     ({ item }: { item: DraftCartItem }) => (
       <BasketItemCard
@@ -86,7 +88,7 @@ export const BasketBasketBody = ({
           styles.listContent,
           {
             paddingHorizontal: pagePadding,
-            paddingBottom: BOOKING_STICKY_SCROLL_PADDING,
+            paddingBottom: BOOKING_STICKY_SCROLL_PADDING + bottomNavHeight,
           },
         ]}
         showsVerticalScrollIndicator={false}

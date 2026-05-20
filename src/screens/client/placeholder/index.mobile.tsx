@@ -1,10 +1,12 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { Icon } from '../../../shared/ui/icon';
+import { useSafeGoBack } from '../../../shared/lib/navigation';
 import { theme } from '../../../shared/config/theme';
+import { useMobileBottomNavHeight } from '../../../widgets/mobile-bottom-nav';
 
 const titles: Record<string, string> = {
   Support: 'profile.menu.support',
@@ -15,9 +17,9 @@ const titles: Record<string, string> = {
 
 export const PlaceholderScreen = () => {
   const { t } = useTranslation('profile');
-  const navigation = useNavigation();
   const route = useRoute();
-  const goBack = useCallback(() => navigation.goBack(), [navigation]);
+  const goBack = useSafeGoBack();
+  const bottomNavHeight = useMobileBottomNavHeight();
   const titleKey = titles[route.name] ?? 'profile.placeholder';
 
   return (
@@ -37,7 +39,7 @@ export const PlaceholderScreen = () => {
         </Text>
         <View style={{ width: 40 }} />
       </View>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: theme.spacing[5] }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: theme.spacing[5], paddingBottom: theme.spacing[5] + bottomNavHeight }}>
         <Text style={{ fontFamily: theme.typography.fontFamilies.sourceSansProRegular, fontSize: theme.typography.fontSizes[5], color: theme.colors.neutral[3] }}>
           {t('profile.placeholder')}
         </Text>

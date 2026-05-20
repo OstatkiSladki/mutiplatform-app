@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useVenueList } from '../../../../entities/venue';
+import type { ClientStackParamList } from '../../../../navigation/types';
+import { MapWidget } from '../../../../widgets/map-widget';
 import { Input } from '../../../../shared/ui/input';
-import { MapPlaceholder } from '../../../../shared/ui/map-placeholder';
 import { Button } from '../../../../shared/ui/button';
 import { Icon } from '../../../../shared/ui/icon';
+import { useUserLocation } from '../../../../shared/lib/hooks';
 import { theme } from '../../../../shared/config/theme';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 
-export const NearbyScreen = () => (
-  <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+type Nav = NativeStackNavigationProp<ClientStackParamList>;
+
+export const NearbyScreen = () => {
+  const navigation = useNavigation<Nav>();
+  const bottomNavHeight = useMobileBottomNavHeight();
+  const { coords } = useUserLocation();
+  const venuesQuery = useVenueList({
+    limit: 10,
+    lat: coords?.lat ?? null,
+    lon: coords?.lon ?? null,
+  });
+  const goToVenue = useCallback(
+    (venueId: number) => navigation.navigate('Venue', { venueId }),
+    [navigation],
+  );
+
+  return (
+    <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
     <ScrollView
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[
+        styles.content,
+        { paddingBottom: bottomNavHeight + theme.spacing[6] },
+      ]}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
@@ -40,10 +65,14 @@ export const NearbyScreen = () => (
         </View>
       </TouchableOpacity>
 
-      <MapPlaceholder
-        label="Здесь будет карта с заведениями рядом"
-        style={styles.map}
-      />
+      <View style={styles.map}>
+        <MapWidget
+          venues={venuesQuery.data?.items ?? []}
+          initialCenter={coords ? { lat: coords.lat, lon: coords.lon } : undefined}
+          onVenuePress={(v) => goToVenue(v.id)}
+          style={{ width: '100%', height: 260 }}
+        />
+      </View>
 
       <View style={styles.savedBlock}>
         <Text style={styles.sectionTitle}>Популярные адреса</Text>
@@ -59,8 +88,9 @@ export const NearbyScreen = () => (
 
       <Button title="Показать рядом" size="large" />
     </ScrollView>
-  </SafeAreaView>
-);
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   root: {
@@ -128,6 +158,7 @@ const styles = StyleSheet.create({
   map: {
     minHeight: 260,
     borderRadius: theme.client.radius.card,
+    overflow: 'hidden',
   },
   savedBlock: {
     gap: theme.spacing[2],

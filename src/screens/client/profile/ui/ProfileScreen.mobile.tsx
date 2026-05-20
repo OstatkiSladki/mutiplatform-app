@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,8 @@ import { useAuthStore } from '../../../../entities/auth/model/store';
 import { useLogout } from '../../../../entities/auth/model/hooks';
 import { AuthRequiredScreen } from '../../../../widgets/auth-required';
 import type { ClientStackParamList } from '../../../../navigation/types';
+import { useSafeGoBack } from '../../../../shared/lib/navigation';
+import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 import { EcoStatsCardMobile } from './EcoStatsCard.mobile';
 import { ProfileInfoCard } from './ProfileInfoCard.mobile';
 import { ProfileMenuCard } from './ProfileMenuCard.mobile';
@@ -27,15 +29,13 @@ const ProfileScreenMobileContent = () => {
   const { t: tCommon } = useTranslation('common');
   const navigation = useNavigation<Nav>();
   const { width } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
+  const bottomNavHeight = useMobileBottomNavHeight();
   const user = useAuthStore((s) => s.user);
   const logout = useLogout();
 
   const pagePadding = width >= theme.breakpoints.md ? theme.spacing[6] : theme.spacing[4];
 
-  const goBack = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
+  const goBack = useSafeGoBack();
 
   const goEdit = useCallback(() => {
     navigation.navigate('ProfileEdit');
@@ -81,7 +81,7 @@ const ProfileScreenMobileContent = () => {
           styles.content,
           {
             paddingHorizontal: pagePadding,
-            paddingBottom: insets.bottom + theme.spacing[5],
+            paddingBottom: bottomNavHeight + theme.spacing[5],
           },
         ]}
         showsVerticalScrollIndicator={false}

@@ -111,4 +111,29 @@ export const styles = StyleSheet.create({
   modalLoading: {
     paddingVertical: theme.spacing[4],
   },
+  cardPressed: {
+    opacity: 0.85,
+  },
+  pickupCodeHint: {
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
+    fontSize: theme.typography.fontSizes[3],
+    color: theme.colors.neutral[3],
+    textAlign: 'center',
+  },
+  copyBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.radius.lg,
+    backgroundColor: theme.colors.primary[100],
+    marginTop: theme.spacing[2],
+  },
+  copyBtnText: {
+    color: theme.colors.neutral.white,
+    fontFamily: theme.typography.fontFamilies.sourceSansProSemiBold,
+    fontWeight: '400',
+    fontSize: theme.typography.fontSizes[4],
+  },
 });

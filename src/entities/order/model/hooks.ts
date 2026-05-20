@@ -2,8 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { cartApi } from '../api/cart-api';
 import { orderApi } from '../api/order-api';
 import type { CartItemCreate, OrderListParams, OrderStatusUpdate } from './types';
-import { withMockFallback } from '../../../shared/dev/with-mock-fallback';
-import { MOCK_ORDER_LIST_RESPONSE } from '../../../shared/dev/mocks';
+import { withMockFallback, withMockFallbackLazy } from '../../../shared/dev/with-mock-fallback';
+import { MOCK_ORDER_LIST_RESPONSE, MOCK_PICKUP_CODES } from '../../../shared/dev/mocks';
 
 const cartKeys = {
   root: ['cart'] as const,
@@ -87,14 +87,17 @@ export const useCreateOrder = () => {
 };
 
 export const usePickupCode = (orderId: number) =>
-  useQuery({
-    queryKey: orderKeys.pickupCode(orderId),
-    queryFn: async () => {
-      const { data } = await orderApi.getPickupCode(orderId);
-      return data;
-    },
-    enabled: !!orderId,
-  });
+  withMockFallbackLazy(
+    useQuery({
+      queryKey: orderKeys.pickupCode(orderId),
+      queryFn: async () => {
+        const { data } = await orderApi.getPickupCode(orderId);
+        return data;
+      },
+      enabled: !!orderId,
+    }),
+    () => MOCK_PICKUP_CODES[orderId],
+  );
 
 export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();

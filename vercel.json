@@ -1,7 +1,15 @@
 {
   "buildCommand": "expo export --platform web",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "rewrites": [
+    { "source": "/auth/:path*", "destination": "https://filthily-jovial-frog.cloudpub.ru/auth/:path*" },
+    { "source": "/catalog/:path*", "destination": "https://filthily-jovial-frog.cloudpub.ru/catalog/:path*" },
+    { "source": "/venues/:path*", "destination": "https://filthily-jovial-frog.cloudpub.ru/venues/:path*" },
+    { "source": "/orders/:path*", "destination": "https://filthily-jovial-frog.cloudpub.ru/orders/:path*" },
+    { "source": "/payments/:path*", "destination": "https://filthily-jovial-frog.cloudpub.ru/payments/:path*" },
+    { "source": "/notifications/:path*", "destination": "https://filthily-jovial-frog.cloudpub.ru/notifications/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)\\.(ttf|otf|woff|woff2)",

@@ -30,10 +30,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (cancelled) return;
         if (stored) setAccessToken(stored);
         try {
-          // Boot session restore. _skipAuthRefresh keeps this call out of the
-          // refresh-retry chain so AuthProvider stays the sole auth authority
-          // during boot; the interceptor must not wipe state here.
-          const { data } = await authApi.getMe({ _skipAuthRefresh: true });
+          // Boot session restore. Interceptor runs the /refresh chain on 401;
+          // the !isInitializing guards in client.ts keep AuthProvider the sole
+          // authority that wipes state on boot failure.
+          const { data } = await authApi.getMe();
           if (!cancelled) {
             setUser(data, useAuthStore.getState().accessToken ?? undefined);
           }

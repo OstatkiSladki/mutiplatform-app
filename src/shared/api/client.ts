@@ -1,11 +1,19 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosRequestConfig } from 'axios';
+import { Platform } from 'react-native';
 
 export interface RetryableRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
   _skipAuthRefresh?: boolean;
 }
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:81';
+// Web: empty BASE_URL → relative URLs → Vercel rewrites proxy to backend
+// (first-party cookies). Native: full backend URL.
+const BASE_URL =
+  Platform.OS === 'web'
+    ? process.env.EXPO_PUBLIC_API_URL ?? ''
+    : process.env.EXPO_PUBLIC_API_URL_NATIVE ??
+      process.env.EXPO_PUBLIC_API_URL ??
+      'http://localhost:81';
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,

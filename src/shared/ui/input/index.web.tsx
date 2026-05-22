@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { theme } from '../../config/theme';
 import { Icon, IconName } from '../icon';
+import { BOOKING_CTA_HEIGHT } from '../booking-cta-button';
 
 export type InputVariant = 'default' | 'pill';
 
@@ -20,7 +21,7 @@ export interface InputProps extends TextInputProps {
   containerStyle?: StyleProp<ViewStyle>;
   variant?: InputVariant;
   /** Pill search in desktop header — 34px tall, r20, Neutral 9 (matches mobile spec). */
-  pillTone?: 'default' | 'headerSearch';
+  pillTone?: 'default' | 'headerSearch' | 'addressModal';
   leadingIcon?: IconName;
   onClear?: () => void;
   showPasswordToggle?: boolean;
@@ -51,18 +52,24 @@ export const Input = ({
           style={[
             styles.pillWrap,
             pillTone === 'headerSearch' && styles.pillWrapHeaderSearch,
+            pillTone === 'addressModal' && styles.pillWrapAddressModal,
             error ? styles.pillWrapError : null,
           ]}
         >
           {leadingIcon ? (
             <Icon
               name={leadingIcon}
-              size={16}
+              size={pillTone === 'addressModal' ? 20 : 16}
               color={theme.client.colors.mutedForeground}
             />
           ) : null}
           <TextInput
-            style={[styles.pillInput, pillTone === 'headerSearch' && styles.pillInputHeaderSearch, style]}
+            style={[
+              styles.pillInput,
+              pillTone === 'headerSearch' && styles.pillInputHeaderSearch,
+              pillTone === 'addressModal' && styles.pillInputAddressModal,
+              style,
+            ]}
             placeholderTextColor={theme.client.colors.mutedForeground}
             value={value}
             {...props}
@@ -159,5 +166,18 @@ const styles = StyleSheet.create({
   },
   pillInputHeaderSearch: {
     fontSize: theme.typography.fontSizes[3],
+  },
+  pillWrapAddressModal: {
+    height: BOOKING_CTA_HEIGHT,
+    borderRadius: theme.client.radius.bookingCta,
+    backgroundColor: theme.colors.neutral[9],
+    borderColor: theme.colors.neutral[8],
+    paddingHorizontal: theme.spacing[4],
+    marginBottom: 0,
+  },
+  pillInputAddressModal: {
+    fontSize: theme.typography.fontSizes[5],
+    lineHeight: 24,
+    fontFamily: theme.typography.fontFamilies.sourceSansProRegular,
   },
 });

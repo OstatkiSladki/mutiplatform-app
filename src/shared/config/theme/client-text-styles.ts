@@ -17,6 +17,35 @@ function lh(fontSize: number): number {
 const lh120 = (fontSize: number) =>
   Math.round(fontSize * (tokens.typography.lineHeights.normal as number));
 
+const familySemiBold = tokens.typography.fontFamilies.sourceSansProSemiBold;
+
+/** F3 SemiBold @≥1200px — venue section titles (32px, line-height 24px). */
+export const clientTextF3SemiBold1200: TextStyle = {
+  fontFamily: familySemiBold,
+  fontWeight: '400',
+  fontSize: tokens.typography.fontSizes[13],
+  lineHeight: 24,
+  color: tokens.colors.neutral[1],
+};
+
+/** F4 SemiBold @≥1200px — venue name (28px, line-height 24px). */
+export const clientTextF4SemiBold1200: TextStyle = {
+  fontFamily: familySemiBold,
+  fontWeight: '400',
+  fontSize: tokens.typography.fontSizes[12],
+  lineHeight: 24,
+  color: tokens.colors.neutral[1],
+};
+
+/** F5 SemiBold @≥1200px — product card title (22px, line-height 24px). */
+export const clientTextF5SemiBold1200: TextStyle = {
+  fontFamily: familySemiBold,
+  fontWeight: '400',
+  fontSize: tokens.typography.fontSizes[9],
+  lineHeight: 24,
+  color: tokens.colors.neutral[1],
+};
+
 /** F3 Heavy — web section titles @≥1200px (32px, line-height 120%). */
 export const clientTextF3Heavy: TextStyle = {
   fontFamily: familyBold,
@@ -41,6 +70,24 @@ export const clientTextF1Heavy: TextStyle = {
   fontWeight: '400',
   fontSize: tokens.typography.fontSizes[13],
   lineHeight: lh(tokens.typography.fontSizes[13]),
+  color: tokens.colors.neutral[1],
+};
+
+/** F4 Heavy @≥1200px — venue page title (28px, line-height 120%). */
+export const clientTextF4Heavy1200: TextStyle = {
+  fontFamily: familyBold,
+  fontWeight: '400',
+  fontSize: tokens.typography.fontSizes[12],
+  lineHeight: lh120(tokens.typography.fontSizes[12]),
+  color: tokens.colors.neutral[1],
+};
+
+/** F2 Regular @≥1200px — product price on venue page (40px, line-height 120%). */
+export const clientTextF2Regular1200: TextStyle = {
+  fontFamily: familyRegular,
+  fontWeight: '400',
+  fontSize: tokens.typography.fontSizes[16],
+  lineHeight: lh120(tokens.typography.fontSizes[16]),
   color: tokens.colors.neutral[1],
 };
 

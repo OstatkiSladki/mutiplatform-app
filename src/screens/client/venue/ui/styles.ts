@@ -1,10 +1,9 @@
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { theme } from '../../../../shared/config/theme';
+import { clientTextF3SemiBold1200 } from '../../../../shared/config/theme/client-text-styles';
+import { venuePageSurface, CART_WIDTH, VENUE_PAGE_TOP_PADDING } from './components/styles';
 
-const cardShadow = Platform.select({
-  web: { boxShadow: '0 2px 12px rgba(0, 0, 0, 0.06)' },
-  default: theme.client.shadows.card,
-}) as object;
+export { VENUE_PAGE_TOP_PADDING };
 
 export const styles = StyleSheet.create({
   root: {
@@ -28,39 +27,36 @@ export const styles = StyleSheet.create({
     borderColor: theme.client.colors.border,
   },
   desktopScroll: {
-    paddingHorizontal: theme.spacing[6],
-    paddingVertical: theme.spacing[6],
     width: '100%',
     maxWidth: theme.layout.containerMaxWidthDesktop,
     alignSelf: 'center',
-    gap: theme.spacing[6],
+    paddingTop: VENUE_PAGE_TOP_PADDING,
+  },
+  desktopScrollWithFooter: {
+    flexGrow: 1,
   },
   desktopMain: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: theme.spacing[6],
+    alignItems: 'stretch',
+    gap: theme.spacing[4],
   },
   desktopLeft: {
     flex: 1,
-    gap: theme.spacing[6],
+    minWidth: 0,
+    gap: theme.spacing[4],
   },
   desktopRight: {
-    width: 320,
+    width: CART_WIDTH,
+    flexShrink: 0,
+    alignSelf: 'stretch',
   },
   productsCard: {
-    backgroundColor: theme.client.colors.card,
-    borderRadius: theme.client.radius.card,
-    borderWidth: 1,
-    borderColor: theme.client.colors.border,
-    padding: theme.spacing[5],
+    ...venuePageSurface,
+    padding: theme.spacing[6],
     gap: theme.spacing[4],
-    ...cardShadow,
   },
   productsTitle: {
-    fontFamily: theme.client.typography.fontFamily,
-    fontWeight: '700',
-    fontSize: theme.typography.fontSizes[7],
-    color: theme.client.colors.foreground,
+    ...clientTextF3SemiBold1200,
   },
   mobileColumn: {
     flex: 1,

@@ -1,9 +1,12 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { theme } from '../../../shared/config/theme';
+import { Modal, Pressable, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { Offer } from '../../../entities/offer';
 import type { Product } from '../../../entities/product';
-import { ProductDetailsBody } from './ProductDetailsBody';
+import { Icon } from '../../../shared/ui/icon';
+import { theme } from '../../../shared/config/theme';
+import { ProductDetailsDesktopBody } from './ProductDetailsDesktopBody';
+import { styles } from './product-details-desktop.styles';
 
 export interface ProductDetailsModalRef {
   present: () => void;
@@ -20,6 +23,7 @@ export interface ProductDetailsModalProps {
 
 export const ProductDetailsModal = forwardRef<ProductDetailsModalRef, ProductDetailsModalProps>(
   ({ venueId, venueName, offer, product, onClose }, ref) => {
+    const { t } = useTranslation('catalog');
     const [visible, setVisible] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -38,14 +42,21 @@ export const ProductDetailsModal = forwardRef<ProductDetailsModalRef, ProductDet
       <Modal visible={visible} transparent animationType="fade" onRequestClose={close}>
         <Pressable style={styles.backdrop} onPress={close}>
           <Pressable style={styles.card} onPress={(e) => e.stopPropagation()}>
-            <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-              <ProductDetailsBody
-                venueId={venueId}
-                venueName={venueName}
-                offer={offer}
-                product={product}
-              />
-            </ScrollView>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={close}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={t('productDetails.close')}
+            >
+              <Icon name="x" size={24} color={theme.client.colors.mutedForeground} />
+            </TouchableOpacity>
+            <ProductDetailsDesktopBody
+              venueId={venueId}
+              venueName={venueName}
+              offer={offer}
+              product={product}
+            />
           </Pressable>
         </Pressable>
       </Modal>
@@ -54,25 +65,3 @@ export const ProductDetailsModal = forwardRef<ProductDetailsModalRef, ProductDet
 );
 
 ProductDetailsModal.displayName = 'ProductDetailsModal';
-
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing[4],
-  },
-  card: {
-    width: '100%',
-    maxWidth: 480,
-    maxHeight: '90%',
-    backgroundColor: theme.colors.neutral.white,
-    borderRadius: theme.radius.xl,
-    overflow: 'hidden',
-    ...theme.shadows.fluffy[5],
-  },
-  scroll: {
-    padding: theme.spacing[5],
-  },
-});

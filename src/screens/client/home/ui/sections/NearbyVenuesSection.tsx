@@ -1,5 +1,6 @@
 import { Platform, ScrollView, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import type { UserAddress, WalkingRadiusMinutes } from '../../../../../entities/location';
 import type { Venue } from '../../../../../entities/venue';
 import { theme } from '../../../../../shared/config/theme';
 import { MapWidget } from '../../../../../widgets/map-widget';
@@ -13,8 +14,12 @@ export interface NearbyVenuesSectionProps {
   venues: Venue[] | undefined;
   isLoading: boolean;
   onPressVenue: (venueId: number) => void;
+  deliveryAddress?: UserAddress;
+  walkingRadiusMinutes?: WalkingRadiusMinutes;
+  onWalkingRadiusChange?: (minutes: WalkingRadiusMinutes) => void;
+  walkingRadiusRing?: [number, number][];
+  walkingFilterActive?: boolean;
 }
-
 interface VenueListProps {
   items: Venue[];
   isLoading: boolean;
@@ -32,7 +37,7 @@ const VenueList = ({
   emptyDescription,
   desktopScroll,
 }: VenueListProps) => {
-  if (isLoading) {
+  if (isLoading && items.length === 0) {
     return (
       <View style={styles.loaderRow}>
         <Loader size="small" />
@@ -87,12 +92,16 @@ export const NearbyVenuesSection = ({
   venues,
   isLoading,
   onPressVenue,
+  deliveryAddress,
+  walkingRadiusMinutes,
+  onWalkingRadiusChange,
+  walkingRadiusRing,
+  walkingFilterActive = false,
 }: NearbyVenuesSectionProps) => {
   const { t } = useTranslation('catalog');
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const twoCol = isWeb && isAtLeast('md');
-  const sectionTitleStyle =
-    isWeb && isAtLeast('md') ? styles.sectionTitleWeb : styles.sectionTitle;
+  const { isWebDesktop } = useBreakpoint();
+  const twoCol = isWebDesktop;
+  const sectionTitleStyle = isWebDesktop ? styles.sectionTitleWeb : styles.sectionTitle;
   const items = (venues ?? []).slice(0, 4);
   const mapVenues = venues ?? [];
   const mapHeight = twoCol
@@ -104,9 +113,36 @@ export const NearbyVenuesSection = ({
       items={items}
       isLoading={isLoading}
       onPressVenue={onPressVenue}
-      emptyTitle={t('emptyVenues')}
-      emptyDescription={t('emptyVenuesDescription')}
+      emptyTitle={walkingFilterActive ? t('emptyVenuesWalking') : t('emptyVenues')}
+      emptyDescription={
+        walkingFilterActive ? t('emptyVenuesWalkingDescription') : t('emptyVenuesDescription')
+      }
       desktopScroll={twoCol}
+    />
+  );
+
+  const mapWidget = (
+    <MapWidget
+      venues={mapVenues}
+      onVenuePress={(v) => onPressVenue(v.id)}
+      style={{ width: '100%', height: mapHeight }}
+      initialCenter={
+        deliveryAddress
+          ? { lat: deliveryAddress.lat, lon: deliveryAddress.lon }
+          : undefined
+      }
+      userLocation={
+        deliveryAddress
+          ? {
+              lat: deliveryAddress.lat,
+              lon: deliveryAddress.lon,
+              address: deliveryAddress.address,
+            }
+          : undefined
+      }
+      walkingRadiusRing={walkingRadiusRing}
+      walkingRadiusMinutes={walkingRadiusMinutes}
+      onWalkingRadiusChange={onWalkingRadiusChange}
     />
   );
 
@@ -117,25 +153,13 @@ export const NearbyVenuesSection = ({
         {twoCol ? (
           <View style={styles.nearbyGridDesktop}>
             <View style={styles.nearbyMapShell}>
-              <View style={styles.nearbyMapDesktop}>
-                <MapWidget
-                  venues={mapVenues}
-                  onVenuePress={(v) => onPressVenue(v.id)}
-                  style={{ width: '100%', height: mapHeight }}
-                />
-              </View>
+              <View style={styles.nearbyMapDesktop}>{mapWidget}</View>
             </View>
             <View style={styles.nearbyListSurface}>{list}</View>
           </View>
         ) : (
           <>
-            <View style={styles.nearbyMapMobile}>
-              <MapWidget
-                venues={mapVenues}
-                onVenuePress={(v) => onPressVenue(v.id)}
-                style={{ width: '100%', height: mapHeight }}
-              />
-            </View>
+            <View style={styles.nearbyMapMobile}>{mapWidget}</View>
             <View style={styles.nearbyListSurfaceMobile}>{list}</View>
           </>
         )}

@@ -88,12 +88,16 @@ export const Button = ({
         {isLoading ? (
           <ActivityIndicator color={textColor} />
         ) : (
-          <View style={styles.row}>
+          <View style={[styles.row, styles.pillRow]}>
             {icon && (
               <Icon name={icon} size={iconSize ?? 18} color={iconColor ?? textColor} />
             )}
             {title && (
-              <Text style={[styles.pillText, { color: textColor } as TextStyle]}>
+              <Text
+                style={[styles.pillText, { color: textColor } as TextStyle, titleStyle]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {title}
               </Text>
             )}
@@ -240,6 +244,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing[2],
+  },
+  pillRow: {
+    width: '100%',
+    minWidth: 0,
   },
   pill: {
     flexDirection: 'row',

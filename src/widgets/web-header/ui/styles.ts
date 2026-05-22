@@ -51,8 +51,20 @@ export const styles = StyleSheet.create({
   headerChromePill: {
     height: chrome.headerBarHeight,
     minHeight: chrome.headerBarHeight,
+    maxHeight: chrome.headerBarHeight,
     paddingVertical: 0,
     paddingHorizontal: theme.spacing[3],
+  },
+  headerAddressPill: {
+    width: chrome.headerAddressPillWidth,
+    minWidth: chrome.headerAddressPillWidth,
+    maxWidth: chrome.headerAddressPillWidth,
+    flexShrink: 0,
+    overflow: 'hidden',
+  },
+  headerAddressPillText: {
+    flex: 1,
+    minWidth: 0,
   },
   headerChromeIconCircle: {
     width: chrome.headerBarHeight,

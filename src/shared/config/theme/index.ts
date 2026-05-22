@@ -19,6 +19,11 @@ export const theme = {
 export type AppTheme = typeof theme;
 export {
   clientTextF1Heavy,
+  clientTextF3SemiBold1200,
+  clientTextF4SemiBold1200,
+  clientTextF5SemiBold1200,
+  clientTextF2Regular1200,
+  clientTextF4Heavy1200,
   clientTextF3Heavy,
   clientTextHomeSectionTitle,
   clientTextF4Heavy,

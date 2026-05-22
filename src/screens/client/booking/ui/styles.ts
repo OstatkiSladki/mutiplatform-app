@@ -6,6 +6,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.neutral[9],
   },
+  rootDesktop: {
+    backgroundColor: theme.client.colors.background,
+  },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',

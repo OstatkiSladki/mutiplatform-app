@@ -12,6 +12,14 @@ export const styles = StyleSheet.create({
     paddingTop: theme.spacing[3],
     paddingBottom: theme.spacing[7],
   },
+  scrollContentWithFooter: {
+    paddingBottom: 0,
+  },
+  scrollMain: {
+    width: '100%',
+    alignSelf: 'center',
+    flexGrow: 1,
+  },
   staticContent: {
     flex: 1,
     paddingHorizontal: theme.spacing[4],

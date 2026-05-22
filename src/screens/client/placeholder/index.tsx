@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Icon } from '../../../shared/ui/icon';
 import { theme } from '../../../shared/config/theme';
+import { useBreakpoint } from '../../../shared/lib/responsive';
+import { ClientWebFooter } from '../../../widgets/client-web-footer';
 
 const titles: Record<string, string> = {
   Support: 'profile.menu.support',
@@ -17,6 +19,7 @@ export const PlaceholderScreen = () => {
   const { t } = useTranslation('profile');
   const navigation = useNavigation();
   const route = useRoute();
+  const { isWebDesktop } = useBreakpoint();
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
   const titleKey = titles[route.name] ?? 'profile.placeholder';
 
@@ -42,6 +45,7 @@ export const PlaceholderScreen = () => {
           {t('profile.placeholder')}
         </Text>
       </View>
+      {isWebDesktop ? <ClientWebFooter /> : null}
     </SafeAreaView>
   );
 };

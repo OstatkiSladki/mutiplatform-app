@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.neutral[8],
     padding: theme.spacing[4],
+    overflow: 'hidden',
     ...theme.client.shadows.surpriseBoxDesktopCard,
   },
   headerSlot: {
@@ -314,10 +315,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: theme.spacing[4],
     paddingTop: theme.spacing[1],
+    overflow: 'hidden',
   },
   rightTop: {
     gap: theme.spacing[3],
-    flexShrink: 0,
+    flexShrink: 1,
+    minWidth: 0,
+    overflow: 'hidden',
   },
   heroTitle: {
     ...clientTextSurpriseDesktopHeroTitle,

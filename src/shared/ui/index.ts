@@ -44,6 +44,8 @@ export type { StarsProps, StarsVariant } from './stars';
 
 export { Stepper } from './stepper';
 export type { StepperProps, StepperSize } from './stepper';
+export { DesktopQuantityStepper } from './stepper';
+export type { DesktopQuantityStepperProps } from './stepper';
 
 export { Chip } from './chip';
 export type { ChipProps, ChipVariant } from './chip';
@@ -65,6 +67,9 @@ export type { PopoverProps, PopoverRenderProps } from './popover';
 
 export { ProfileMenu } from './profile-menu';
 export type { ProfileMenuProps } from './profile-menu';
+
+export { CartMenu } from './cart-menu';
+export type { CartMenuProps } from './cart-menu';
 
 export { OnboardingPagination } from './onboarding-pagination';
 export type { OnboardingPaginationProps } from './onboarding-pagination';

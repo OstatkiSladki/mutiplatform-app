@@ -56,8 +56,8 @@ const BookingScreenContent = () => {
   const { venueId } = route.params;
 
   const venueQuery = useVenue(venueId);
-  const { isAtLeast, isWeb } = useBreakpoint();
-  const isDesktop = isWeb && isAtLeast('md');
+  const { isWebDesktop } = useBreakpoint();
+  const isDesktop = isWebDesktop;
   const bottomNavHeight = useMobileBottomNavHeight();
   const upsellOffersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 6 });
 

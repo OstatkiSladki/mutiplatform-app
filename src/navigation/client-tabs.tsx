@@ -34,8 +34,8 @@ const tabLabelKeys: Record<TabName, string> = {
 
 export const ClientTabs = () => {
   const { t } = useTranslation('common');
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const useWebHeader = isWeb && isAtLeast('md');
+  const { isWebDesktop } = useBreakpoint();
+  const useWebHeader = isWebDesktop;
   const renderWebHeader = useCallback(
     (props: BottomTabBarProps) => <WebHeader {...props} />,
     [],

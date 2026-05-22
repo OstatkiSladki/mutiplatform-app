@@ -4,5 +4,6 @@ export type {
   ProductDetailsSheetRef,
 } from './ui/ProductDetailsSheet';
 export { ProductDetailsBody } from './ui/ProductDetailsBody';
+export { ProductDetailsDesktopBody } from './ui/ProductDetailsDesktopBody';
 export { ProductDetailsModal } from './ui/ProductDetailsModal';
 export type { ProductDetailsModalRef } from './ui/ProductDetailsModal';

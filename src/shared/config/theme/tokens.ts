@@ -203,5 +203,7 @@ export const tokens = {
     nearbyWebVenueRowLogo: 102,
     /** Главная (веб): расстояние между блоками «Рядом», «Заведения», «Сюрприз-бокс». */
     clientHomeMajorSectionsGap: 56,
+    /** Веб: ниже этой ширины — мобильная вёрстка приложения. */
+    clientMobileWebMaxWidth: 500,
   },
 } as const;

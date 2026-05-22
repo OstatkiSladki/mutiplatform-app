@@ -11,7 +11,6 @@ import { Popover } from '../../../shared/ui/popover';
 import { ProfileMenu } from '../../../shared/ui/profile-menu';
 import { theme } from '../../../shared/config/theme';
 import { clientAssets } from '../../../shared/assets/client';
-import { useCartStore, selectTotalItemCount } from '../../../entities/order';
 import { useAuthStore } from '../../../entities/auth';
 import { useLogout } from '../../../entities/auth/model/hooks';
 import { showBusinessToast } from '../../../shared/lib/business-toast';
@@ -19,6 +18,7 @@ import type {
   ClientStackParamList,
   ClientTabsParamList,
 } from '../../../navigation/types';
+import { HeaderCartPopover } from './HeaderCartPopover';
 import { styles } from './styles';
 
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
@@ -31,7 +31,6 @@ export function ClientDesktopHeader(_props: ClientDesktopHeaderProps) {
   const { t } = useTranslation('common');
   const navigation = useNavigation<Nav>();
   const [query, setQuery] = useState('');
-  const cartCount = useCartStore(selectTotalItemCount);
   const user = useAuthStore((s) => s.user);
   const logoutMutation = useLogout();
 
@@ -74,21 +73,11 @@ export function ClientDesktopHeader(_props: ClientDesktopHeaderProps) {
             title={t('header.locationDefault')}
             accessibilityLabel={t('header.locationA11y')}
           />
-          <View>
-            <Button
-              variant="iconCircle"
-              icon="shopping-bag"
-              accessibilityLabel={t('cartA11y')}
-              onPress={() => goToTab('Cart')}
-            />
-            {cartCount > 0 ? (
-              <View style={styles.cartBadge} pointerEvents="none">
-                <Text style={styles.cartBadgeText}>
-                  {cartCount > 99 ? '99+' : cartCount}
-                </Text>
-              </View>
-            ) : null}
-          </View>
+          <HeaderCartPopover
+            onVenuePress={(venueId) => navigation.navigate('Booking', { venueId })}
+            onViewAll={() => goToTab('Cart')}
+            onGoHome={() => goToTab('Home')}
+          />
 
           <Popover
             align="end"

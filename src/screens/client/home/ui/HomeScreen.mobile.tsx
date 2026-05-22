@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import {
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -17,7 +18,7 @@ import { useProductList } from '../../../../entities/product';
 import { useVenueList } from '../../../../entities/venue';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
-import { useUserLocation } from '../../../../shared/lib/hooks';
+import { useMobileLayout } from '../../../../shared/lib/responsive';
 import { MobileScreenChrome } from '../../../../shared/ui/mobile';
 import { useMobileBottomNavHeight } from '../../../../widgets/mobile-bottom-nav';
 import {
@@ -34,11 +35,13 @@ export const HomeScreen = () => {
   const navigation = useNavigation<Nav>();
   const queryClient = useQueryClient();
   const { width } = useWindowDimensions();
+  const mobileLayoutActive = useMobileLayout();
+  const isMobileWebLayout = Platform.OS === 'web' && mobileLayoutActive;
   const tabBarHeight = useMobileBottomNavHeight();
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const isTablet = width >= theme.breakpoints.md;
+  const isTablet = !isMobileWebLayout && width >= theme.breakpoints.md;
   const pagePadding = isTablet ? theme.spacing[6] : theme.spacing[3];
   const contentMaxWidth = isTablet ? theme.layout.containerMaxWidth : undefined;
   const urgentCardWidth = Math.min(
@@ -53,12 +56,9 @@ export const HomeScreen = () => {
     return map;
   }, [productsQuery.data]);
 
-  const { coords } = useUserLocation();
-  const venuesQuery = useVenueList({
-    limit: 10,
-    lat: coords?.lat ?? null,
-    lon: coords?.lon ?? null,
-  });
+  const venuesQuery = useVenueList({ limit: 10 });
+  const venueItems = venuesQuery.data?.items;
+  const venuesInitialLoading = venuesQuery.isPending && !venueItems?.length;
   const offersQuery = useOfferList({ status: 'active', limit: 10 });
 
   const goToVenue = useCallback(
@@ -134,8 +134,8 @@ export const HomeScreen = () => {
           onPressOffer={goToOffer}
         />
         <NearbySection
-          venues={venuesQuery.data?.items}
-          isLoading={venuesQuery.isLoading}
+          venues={venueItems}
+          isLoading={venuesInitialLoading}
           emptyTitle={t('emptyVenues')}
           emptyDescription={t('emptyVenuesDescription')}
           tagText={t('venueTagsDefault')}

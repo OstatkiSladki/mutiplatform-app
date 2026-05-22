@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -7,10 +7,21 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { Venue } from '../../../../entities/venue';
 import { useVenueList } from '../../../../entities/venue';
 import { useOfferList } from '../../../../entities/offer';
+import {
+  selectDeliveryAddress,
+  selectWalkingRadiusMinutes,
+  useUserAddressStore,
+  type WalkingRadiusMinutes,
+} from '../../../../entities/location';
+import {
+  filterVenuesWithinWalkingMinutes,
+  useWalkingReach,
+} from '../../../../features/walking-radius';
 import { ClientMobileHeader } from '../../../../widgets/client-mobile-header';
+import { ClientWebFooter } from '../../../../widgets/client-web-footer';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { theme } from '../../../../shared/config/theme';
-import { useUserLocation } from '../../../../shared/lib/hooks';
+import { getClientWebShellPadding } from '../../../../shared/lib/client-web-shell';
 import { useBreakpoint } from '../../../../shared/lib/responsive';
 import { NearbyVenuesSection } from './sections/NearbyVenuesSection';
 import { EstablishmentsSection } from './sections/EstablishmentsSection';
@@ -24,22 +35,48 @@ export const HomeScreen = () => {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const showMobileHeader = !(isWeb && isAtLeast('md'));
-  const horizontalPad =
-    isWeb && isAtLeast('md')
-      ? isAtLeast('lg')
-        ? theme.spacing[7]
-        : theme.spacing[6]
-      : theme.spacing[6];
+  const { isWebDesktop, isAtLeast } = useBreakpoint();
+  const showMobileHeader = !isWebDesktop;
+  const horizontalPad = getClientWebShellPadding(isAtLeast);
 
-  const { coords } = useUserLocation();
-  const venuesQuery = useVenueList({
-    limit: 10,
-    lat: coords?.lat ?? null,
-    lon: coords?.lon ?? null,
-  });
+  const venuesQuery = useVenueList({ limit: 10 });
+  const venueItems = venuesQuery.data?.items;
+  const venuesInitialLoading = venuesQuery.isPending && !venueItems?.length;
   const offersQuery = useOfferList({ status: 'active', limit: 10 });
+
+  const deliveryAddress = useUserAddressStore(selectDeliveryAddress);
+  const walkingRadiusMinutes = useUserAddressStore(selectWalkingRadiusMinutes);
+  const setWalkingRadiusMinutes = useUserAddressStore((s) => s.setWalkingRadiusMinutes);
+
+  const walkingReachQuery = useWalkingReach(
+    { lat: deliveryAddress.lat, lon: deliveryAddress.lon },
+    walkingRadiusMinutes,
+    venueItems,
+    isWebDesktop,
+  );
+
+  const nearbyVenues = useMemo(() => {
+    if (!isWebDesktop) return venueItems;
+    if (!walkingReachQuery.data) return venueItems;
+    return filterVenuesWithinWalkingMinutes(
+      venueItems,
+      walkingReachQuery.data.venueDurationSeconds,
+      walkingRadiusMinutes,
+      deliveryAddress,
+      walkingReachQuery.data.radiusMeters,
+    );
+  }, [
+    isWebDesktop,
+    venueItems,
+    walkingReachQuery.data,
+    walkingRadiusMinutes,
+    deliveryAddress,
+  ]);
+
+  const handleWalkingRadiusChange = useCallback(
+    (minutes: WalkingRadiusMinutes) => setWalkingRadiusMinutes(minutes),
+    [setWalkingRadiusMinutes],
+  );
 
   const goToVenue = useCallback(
     (venueId: number) => navigation.navigate('Venue', { venueId }),
@@ -48,15 +85,15 @@ export const HomeScreen = () => {
 
   const venueNameById = React.useMemo(() => {
     const map: Record<number, string> = {};
-    for (const v of venuesQuery.data?.items ?? []) map[v.id] = v.name;
+    for (const v of venueItems ?? []) map[v.id] = v.name;
     return map;
-  }, [venuesQuery.data?.items]);
+  }, [venueItems]);
 
   const venueById = React.useMemo(() => {
     const map: Record<number, Venue> = {};
-    for (const v of venuesQuery.data?.items ?? []) map[v.id] = v;
+    for (const v of venueItems ?? []) map[v.id] = v;
     return map;
-  }, [venuesQuery.data?.items]);
+  }, [venueItems]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -82,21 +119,32 @@ export const HomeScreen = () => {
         style={styles.scrollOuter}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingHorizontal: horizontalPad },
+          isWebDesktop ? styles.scrollContentWeb : null,
         ]}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <View style={styles.shellInner}>
+        <View
+          style={[
+            styles.shellInner,
+            { paddingHorizontal: horizontalPad },
+            isWebDesktop ? styles.scrollMain : null,
+          ]}
+        >
           <View style={styles.homeMajorSectionsStack}>
             <NearbyVenuesSection
-              venues={venuesQuery.data?.items}
-              isLoading={venuesQuery.isLoading}
+              venues={nearbyVenues}
+              isLoading={venuesInitialLoading || (isWebDesktop && walkingReachQuery.isLoading)}
               onPressVenue={goToVenue}
+              deliveryAddress={isWebDesktop ? deliveryAddress : undefined}
+              walkingRadiusMinutes={isWebDesktop ? walkingRadiusMinutes : undefined}
+              onWalkingRadiusChange={isWebDesktop ? handleWalkingRadiusChange : undefined}
+              walkingRadiusRing={walkingReachQuery.data?.ring}
+              walkingFilterActive={isWebDesktop}
             />
             <EstablishmentsSection
-              venues={venuesQuery.data?.items}
-              isLoading={venuesQuery.isLoading}
+              venues={venueItems}
+              isLoading={venuesInitialLoading}
               onPressVenue={goToVenue}
             />
             <SurpriseBoxesSection
@@ -108,8 +156,9 @@ export const HomeScreen = () => {
               onAdded={goToVenue}
             />
           </View>
-          <View style={styles.scrollBottomSpacer} />
+          {!isWebDesktop ? <View style={styles.scrollBottomSpacer} /> : null}
         </View>
+        {isWebDesktop ? <ClientWebFooter /> : null}
       </ScrollView>
     </SafeAreaView>
   );

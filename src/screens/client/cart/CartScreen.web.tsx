@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Screen } from '../../../shared/ui/screen';
 import { EmptyState } from '../../../widgets/empty-state';
 import { AuthRequiredScreen } from '../../../widgets/auth-required';
+import { ClientWebFooter } from '../../../widgets/client-web-footer';
 import { useCartStore, type DraftVenueCart } from '../../../entities/order';
 import { useAuthStore } from '../../../entities/auth/model/store';
 import { formatPrice } from '../../../shared/lib/format';
@@ -62,7 +63,7 @@ export const CartScreen = () => {
 
   if (carts.length === 0) {
     return (
-      <Screen scroll maxWidth={720}>
+      <Screen scroll maxWidth={720} footer={<ClientWebFooter />}>
         <View style={styles.content}>
           <Text style={styles.title}>{t('cart.title')}</Text>
           <EmptyState
@@ -78,7 +79,7 @@ export const CartScreen = () => {
   }
 
   return (
-    <Screen scroll maxWidth={720}>
+    <Screen scroll maxWidth={720} footer={<ClientWebFooter />}>
       <View style={styles.content}>
         <Text style={styles.title}>{t('cart.title')}</Text>
         {carts.map((c) => (

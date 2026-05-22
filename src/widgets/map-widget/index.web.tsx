@@ -1,89 +1,74 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { YANDEX_MAPS_JS_KEY } from '../../shared/config/env';
+import { theme } from '../../shared/config/theme';
+import { ensureYmapsReady } from '../../shared/lib/yandex/inject-yandex-script';
 import { MapPlaceholder } from '../../shared/ui/map-placeholder';
+import { MapWalkingRadiusControl } from './MapWalkingRadiusControl.web';
 import type { MapWidgetProps } from './types';
-
-// Yandex Maps 3.0 global loaded from CDN
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyMap = any;
 
-declare global {
-  interface Window {
-    ymaps3?: AnyMap;
-  }
-}
-
-// Ростов-на-Дону (default market city)
 const DEFAULT_CENTER: [number, number] = [39.7015, 47.2357];
-const DEFAULT_ZOOM = 13;
+const DEFAULT_ZOOM = 14;
 
-const PIN_SVG =
+const VENUE_PIN_SVG =
   '<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">' +
   '<path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 24 16 24S32 26 32 16C32 7.163 24.837 0 16 0z" fill="#fa7201"/>' +
   '<circle cx="16" cy="16" r="6" fill="white"/>' +
   '</svg>';
 
-function injectYandexScript(apiKey: string): Promise<void> {
-  if (document.querySelector('[data-ymaps3]')) {
-    return new Promise((resolve) => {
-      const id = setInterval(() => {
-        if (window.ymaps3) {
-          clearInterval(id);
-          resolve();
-        }
-      }, 50);
-    });
-  }
-  return new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = `https://api-maps.yandex.ru/v3/?apikey=${apiKey}&lang=ru_RU`;
-    s.setAttribute('data-ymaps3', '1');
-    s.onload = () => resolve();
-    s.onerror = (err) => {
-      document.querySelector('[data-ymaps3]')?.remove();
-      reject(err);
-    };
-    document.head.appendChild(s);
-  });
-}
+const HOME_PIN_SVG =
+  '<svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+  '<path d="M20 0C9.507 0 1 8.507 1 19c0 11.875 18.5 28 18.5 28S38 30.875 38 19C38 8.507 29.493 0 20 0z" fill="#fa7201"/>' +
+  '<circle cx="20" cy="19" r="8" fill="white"/>' +
+  '<circle cx="20" cy="17" r="3" fill="#fa7201"/>' +
+  '</svg>';
 
+const RADIUS_CIRCLE_STYLE = {
+  simplificationRate: 0,
+  stroke: [{ width: 2, color: theme.colors.primary[100] }],
+  fill: 'rgba(250, 114, 1, 0.15)',
+  fillRule: 'nonzero',
+};
 export const MapWidget = ({
   venues = [],
   style,
   initialCenter,
+  userLocation,
+  walkingRadiusRing,
+  walkingRadiusMinutes,
+  onWalkingRadiusChange,
   onVenuePress,
 }: MapWidgetProps) => {
-  const { t } = useTranslation('common');
+  const { t: tCommon } = useTranslation('common');
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<AnyMap>(null);
   const markersRef = useRef<AnyMap[]>([]);
+  const overlayRef = useRef<AnyMap[]>([]);
   const [mapReady, setMapReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const onVenuePressRef = useRef(onVenuePress);
   onVenuePressRef.current = onVenuePress;
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+  const center: [number, number] = userLocation
+    ? [userLocation.lon, userLocation.lat]
+    : initialCenter
+      ? [initialCenter.lon, initialCenter.lat]
+      : DEFAULT_CENTER;
+
+  useEffect(() => {    if (!containerRef.current) return;
     if (!YANDEX_MAPS_JS_KEY) {
-      console.warn(
-        '[MapWidget] Set EXPO_PUBLIC_YANDEX_MAPS_JS_KEY (or EXPO_PUBLIC_YANDEX_MAPS_KEY) in .env',
-      );
       setFailed(true);
       return;
     }
 
     let alive = true;
 
-    const center: [number, number] = initialCenter
-      ? [initialCenter.lon, initialCenter.lat]
-      : DEFAULT_CENTER;
-
-    injectYandexScript(YANDEX_MAPS_JS_KEY)
-      .then(() => window.ymaps3!.ready as Promise<void>)
-      .then(() => {
+    ensureYmapsReady(YANDEX_MAPS_JS_KEY)
+      .then((ymaps3) => {
         if (!alive || !containerRef.current) return;
-        const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer } = window.ymaps3!;
+        const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer } = ymaps3;
         const map = new YMap(containerRef.current, {
           location: { center, zoom: DEFAULT_ZOOM },
         });
@@ -92,9 +77,8 @@ export const MapWidget = ({
         mapRef.current = map;
         setMapReady(true);
       })
-      .catch((err) => {
-        console.error(err);
-        setFailed(true);
+      .catch(() => {
+        if (alive) setFailed(true);
       });
 
     return () => {
@@ -102,6 +86,7 @@ export const MapWidget = ({
       mapRef.current?.destroy();
       mapRef.current = null;
       markersRef.current = [];
+      overlayRef.current = [];
       setMapReady(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,16 +94,42 @@ export const MapWidget = ({
 
   useEffect(() => {
     if (!mapReady || !mapRef.current || !window.ymaps3) return;
-    const { YMapMarker } = window.ymaps3;
+    const { YMapMarker, YMapFeature } = window.ymaps3;
 
-    markersRef.current.forEach((m) => mapRef.current?.removeChild(m));
+    markersRef.current.forEach((marker) => mapRef.current?.removeChild(marker));
+    overlayRef.current.forEach((feature) => mapRef.current?.removeChild(feature));
     markersRef.current = [];
+    overlayRef.current = [];
+
+    if (walkingRadiusRing && walkingRadiusRing.length >= 3) {
+      const polygon = new YMapFeature({
+        geometry: {
+          type: 'Polygon',
+          coordinates: [walkingRadiusRing],
+        },
+        style: RADIUS_CIRCLE_STYLE,
+      });
+      mapRef.current.addChild(polygon);
+      overlayRef.current.push(polygon);
+    }
+
+    if (userLocation) {
+      const homeEl = document.createElement('div');
+      homeEl.innerHTML = HOME_PIN_SVG;
+      homeEl.style.cssText = 'pointer-events:none;transform:translate(-50%,-100%);line-height:0;';
+      const homeMarker = new YMapMarker(
+        { coordinates: [userLocation.lon, userLocation.lat], zIndex: 2000 },
+        homeEl,
+      );
+      mapRef.current.addChild(homeMarker);
+      overlayRef.current.push(homeMarker);
+    }
 
     venues
-      .filter((v) => v.latitude && v.longitude)
+      .filter((venue) => venue.latitude && venue.longitude)
       .forEach((venue) => {
         const el = document.createElement('div');
-        el.innerHTML = PIN_SVG;
+        el.innerHTML = VENUE_PIN_SVG;
         el.style.cssText = 'cursor:pointer;transform:translate(-50%,-100%);line-height:0;';
         el.addEventListener('click', () => onVenuePressRef.current?.(venue));
 
@@ -129,7 +140,11 @@ export const MapWidget = ({
         mapRef.current!.addChild(marker);
         markersRef.current.push(marker);
       });
-  }, [mapReady, venues]);
+
+    if (userLocation) {
+      mapRef.current.setLocation({ center: [userLocation.lon, userLocation.lat], duration: 250 });
+    }
+  }, [mapReady, venues, userLocation, walkingRadiusRing]);
 
   const height =
     (typeof style?.height === 'number' ? style.height : undefined) ??
@@ -144,12 +159,21 @@ export const MapWidget = ({
     borderRadius,
     overflow: 'hidden',
     position: 'relative',
-    backgroundColor: '#f7f4f2',
+    backgroundColor: theme.client.colors.secondaryMuted,
   };
 
   if (failed) {
-    return <MapPlaceholder label={t('mapLoadError')} style={style} />;
+    return <MapPlaceholder label={tCommon('mapLoadError')} style={style} />;
   }
 
-  return <div ref={containerRef} style={containerStyle} />;
+  return (
+    <div style={containerStyle}>
+      <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+      {walkingRadiusMinutes && onWalkingRadiusChange ? (
+        <MapWalkingRadiusControl
+          minutes={walkingRadiusMinutes}
+          onChange={onWalkingRadiusChange}
+        />
+      ) : null}    </div>
+  );
 };

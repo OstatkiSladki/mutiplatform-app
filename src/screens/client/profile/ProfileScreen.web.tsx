@@ -7,12 +7,13 @@ import { useAuthStore } from '../../../entities/auth/model/store';
 import { AuthRequiredScreen } from '../../../widgets/auth-required';
 import { ProfileLanding } from './ui/ProfileLanding';
 import { ProfileEditScreen } from '../profile-edit';
+import { ClientWebFooter } from '../../../widgets/client-web-footer';
 import { styles } from './ui/styles';
 
 export const ProfileScreenWeb = () => {
-  const { isAtLeast, isWeb } = useBreakpoint();
+  const { isWebDesktop } = useBreakpoint();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const split = isWeb && isAtLeast('md');
+  const split = isWebDesktop;
 
   if (!isAuthenticated) {
     return <AuthRequiredScreen />;
@@ -21,7 +22,7 @@ export const ProfileScreenWeb = () => {
   if (split) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.neutral[9] }} edges={['top', 'left', 'right']}>
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.splitRoot}>
             <View style={styles.splitColumn}>
               <ProfileLanding />
@@ -30,6 +31,7 @@ export const ProfileScreenWeb = () => {
               <ProfileEditScreen embedded />
             </View>
           </View>
+          <ClientWebFooter />
         </ScrollView>
       </SafeAreaView>
     );

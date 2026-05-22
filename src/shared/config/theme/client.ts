@@ -90,6 +90,14 @@ export const clientTokens = {
       shadowRadius: 24,
       elevation: 3,
     },
+    /** Desktop client cards — 0 8px 24px -4px rgba(26, 21, 18, 0.04). */
+    venueDesktopCard: {
+      shadowColor: '#1a1512',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.04,
+      shadowRadius: 24,
+      elevation: 2,
+    },
     /** Desktop client cards — 0 8px 24px rgba(26, 21, 18, 0.04). */
     sectionSoft: {
       shadowColor: '#1a1512',
@@ -130,6 +138,8 @@ export const clientTokens = {
     headerLogoHeight: 32,
     /** Search pill, address pill, round icon buttons — one height. */
     headerBarHeight: 34,
+    /** Fixed width for header address pill — text truncates with ellipsis. */
+    headerAddressPillWidth: 192,
     /** Карусель «Заведения» веб — опорная ширина карточки (узкая колонка масштабируется через layout). */
     establishmentCardWidth: 392,
     /**

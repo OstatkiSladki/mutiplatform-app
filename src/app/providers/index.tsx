@@ -6,9 +6,11 @@ import { QueryProvider } from './query-provider';
 import { ThemeProvider } from './theme-provider';
 import { AuthProvider } from './auth-provider';
 import { initMaps } from './init-maps';
+import { initWebViewport } from '../../shared/lib/init-web-viewport';
 import { FontProvider } from './font-provider';
 
 initMaps();
+initWebViewport();
 
 interface AppProviderProps {
   children: ReactNode;

@@ -22,10 +22,9 @@ export const EstablishmentsSection = ({
   onPressVenue,
 }: EstablishmentsSectionProps) => {
   const { t } = useTranslation('catalog');
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const desktop = isWeb && isAtLeast('md');
-  const sectionTitleStyle =
-    isWeb && isAtLeast('md') ? styles.sectionTitleWeb : styles.sectionTitle;
+  const { isWebDesktop } = useBreakpoint();
+  const desktop = isWebDesktop;
+  const sectionTitleStyle = isWebDesktop ? styles.sectionTitleWeb : styles.sectionTitle;
   const list = venues ?? [];
   const count = list.length;
   const useFluidRow = desktop && count >= 1 && count <= 4;
@@ -34,7 +33,7 @@ export const EstablishmentsSection = ({
   return (
     <View style={styles.section}>
       <Text style={sectionTitleStyle}>{t('sectionEstablishments')}</Text>
-      {venues === undefined || isLoading ? (
+      {isLoading && list.length === 0 ? (
         <View style={styles.loaderRow}>
           <Loader size="small" />
         </View>

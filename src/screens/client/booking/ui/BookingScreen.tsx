@@ -7,6 +7,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { ClientStackParamList } from '../../../../navigation/types';
 import { useVenue } from '../../../../entities/venue';
 import { useOfferList } from '../../../../entities/offer';
+import { useProductList, type Product } from '../../../../entities/product';
 import { useAuthStore } from '../../../../entities/auth/model/store';
 import { AuthRequiredScreen } from '../../../../widgets/auth-required';
 import {
@@ -21,6 +22,7 @@ import { theme } from '../../../../shared/config/theme';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { SurpriseBoxCard } from '../../../../widgets/surprise-box-card';
 import { ClientDesktopHeader } from '../../../../widgets/web-header';
+import { ClientWebFooter } from '../../../../widgets/client-web-footer';
 import {
   type AppliedPromo,
   CheckoutForm,
@@ -35,6 +37,9 @@ import {
 import { OrderItemsList } from './OrderItemsList';
 import { PriceBreakdown } from './PriceBreakdown';
 import { CheckoutSummary } from './CheckoutSummary';
+import { BookingOrderCard } from './components/BookingOrderCard';
+import { CheckoutPriceCard } from './components/CheckoutPriceCard';
+import { bookingDesktopStyles } from './components/booking-desktop.styles';
 import { styles } from './styles';
 
 type BookingRoute = RouteProp<ClientStackParamList, 'Booking'>;
@@ -54,9 +59,24 @@ const BookingScreenContent = () => {
   const { venueId } = route.params;
 
   const venueQuery = useVenue(venueId);
-  const { isAtLeast, isWeb } = useBreakpoint();
-  const isDesktop = isWeb && isAtLeast('md');
-  const upsellOffersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 6 });
+  const { isWebDesktop } = useBreakpoint();
+  const isDesktop = isWebDesktop;
+  const venueOffersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 50 });
+  const productsQuery = useProductList({ limit: 100 });
+  const upsellOffers = venueOffersQuery.data?.items ?? [];
+
+  const productByOfferId = useMemo(() => {
+    const productsById: Record<number, Product> = {};
+    productsQuery.data?.items.forEach((product) => {
+      productsById[product.id] = product;
+    });
+    const map = new Map<number, Product>();
+    upsellOffers.forEach((offer) => {
+      const product = productsById[offer.product_id];
+      if (product) map.set(offer.id, product);
+    });
+    return map;
+  }, [productsQuery.data, upsellOffers]);
 
   const cart = useCartStore(selectVenueCart(venueId));
   const subtotal = useCartStore(selectVenueTotal(venueId));
@@ -131,7 +151,7 @@ const BookingScreenContent = () => {
   }
 
   return (
-    <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={[styles.root, isDesktop && styles.rootDesktop]} edges={['top', 'left', 'right']}>
       {isDesktop ? <ClientDesktopHeader activeTab="Cart" /> : null}
       {!isDesktop ? (
         <View style={styles.topBar}>
@@ -151,13 +171,54 @@ const BookingScreenContent = () => {
       <View style={styles.bodyWrap}>
         <ScrollView
           contentContainerStyle={[
-            styles.scrollContent,
-            isDesktop ? styles.scrollContentDesktop : styles.scrollContentMobile,
+            isDesktop ? bookingDesktopStyles.pageScroll : styles.scrollContent,
+            !isDesktop && styles.scrollContentMobile,
           ]}
           showsVerticalScrollIndicator={false}
         >
-          <View style={isDesktop ? styles.layoutRow : null}>
-            <View style={isDesktop ? styles.mainCol : null}>
+          {isDesktop ? (
+            <>
+              <View style={bookingDesktopStyles.topRow}>
+                <BookingOrderCard
+                  venueName={venue.name}
+                  slot={slot}
+                  onChangeSlot={setSlot}
+                  address={venue.address}
+                  items={cart.items}
+                  productByOfferId={productByOfferId}
+                  onChangeQuantity={(productId, quantity) =>
+                    setQuantity(venueId, productId, quantity)
+                  }
+                />
+                <CheckoutPriceCard
+                  subtotal={subtotal}
+                  serviceFee={fee}
+                  discount={discount}
+                  total={total}
+                  onPay={openPayment}
+                />
+              </View>
+
+              {upsellOffers.length ? (
+                <View style={bookingDesktopStyles.upsellSection}>
+                  <Text style={bookingDesktopStyles.upsellTitle}>{t('upsellTitle')}</Text>
+                  <View style={bookingDesktopStyles.upsellGrid}>
+                    {upsellOffers.slice(0, 2).map((offer) => (
+                      <View key={offer.id} style={bookingDesktopStyles.upsellCell}>
+                        <SurpriseBoxCard
+                          offer={offer}
+                          venueName={venue.name}
+                          venue={venue}
+                          onVenuePress={(id) => navigation.navigate('Venue', { venueId: id })}
+                        />
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+            </>
+          ) : (
+            <>
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>{venue.name}</Text>
               </View>
@@ -181,66 +242,32 @@ const BookingScreenContent = () => {
                 />
               </View>
 
-              {!isDesktop ? (
-                <PriceBreakdown
-                  subtotal={subtotal}
-                  serviceFee={fee}
-                  discount={discount}
-                  total={total}
-                />
-              ) : null}
+              <PriceBreakdown
+                subtotal={subtotal}
+                serviceFee={fee}
+                discount={discount}
+                total={total}
+              />
 
-              {upsellOffersQuery.data?.items?.length ? (
+              {upsellOffers.length ? (
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>{t('upsellTitle')}</Text>
-                  {isDesktop ? (
-                    <View style={[styles.upsellRow, styles.upsellRowDesktop]}>
-                      {upsellOffersQuery.data.items.slice(0, 2).map((offer) => (
-                        <View key={offer.id} style={styles.upsellCellDesktop}>
-                          <SurpriseBoxCard
-                            offer={offer}
-                            venueName={venueQuery.data?.name ?? ''}
-                            venue={venue}
-                            onVenuePress={(id) =>
-                              navigation.navigate('Venue', { venueId: id })
-                            }
-                          />
-                        </View>
-                      ))}
-                    </View>
-                  ) : (
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={styles.upsellCarousel}
-                    >
-                      {upsellOffersQuery.data.items.map((offer) => (
-                        <View key={offer.id} style={styles.upsellSlide}>
-                          <SurpriseBoxCard
-                            offer={offer}
-                            venueName={venueQuery.data?.name ?? ''}
-                          />
-                        </View>
-                      ))}
-                    </ScrollView>
-                  )}
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.upsellCarousel}
+                  >
+                    {upsellOffers.map((offer) => (
+                      <View key={offer.id} style={styles.upsellSlide}>
+                        <SurpriseBoxCard offer={offer} venueName={venue.name} />
+                      </View>
+                    ))}
+                  </ScrollView>
                 </View>
               ) : null}
-            </View>
-
-            {isDesktop ? (
-              <View style={styles.summaryCol}>
-                <CheckoutSummary
-                  mode="desktop"
-                  subtotal={subtotal}
-                  serviceFee={fee}
-                  discount={discount}
-                  total={total}
-                  onPay={openPayment}
-                />
-              </View>
-            ) : null}
-          </View>
+            </>
+          )}
+          {isDesktop ? <ClientWebFooter /> : null}
         </ScrollView>
 
         {!isDesktop ? (

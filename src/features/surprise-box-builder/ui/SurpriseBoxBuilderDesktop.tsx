@@ -192,9 +192,12 @@ const styles = StyleSheet.create({
     gap: theme.spacing[3],
     flexGrow: 1,
     minHeight: 0,
+    minWidth: 0,
+    overflow: 'hidden',
   },
   group: {
     gap: theme.spacing[3],
+    minWidth: 0,
   },
   groupLabel: {
     ...clientTextF6Regular,
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
   chipsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    flexWrap: 'nowrap',
+    flexWrap: 'wrap',
   },
   timeTrigger: {
     flexDirection: 'row',

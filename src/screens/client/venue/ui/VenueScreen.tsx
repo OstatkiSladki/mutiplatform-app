@@ -11,15 +11,19 @@ import { useProductList, type Product } from '../../../../entities/product';
 import { Loader } from '../../../../shared/ui/loader';
 import { Icon } from '../../../../shared/ui/icon';
 import { theme } from '../../../../shared/config/theme';
-import { ProductGrid } from '../../../../widgets/product-grid';
+import { ProductGrid as TabletProductGrid } from '../../../../widgets/product-grid';
 import { CartSummary } from '../../../../widgets/cart-summary';
 import { EmptyState } from '../../../../widgets/empty-state';
 import { ClientDesktopHeader } from '../../../../widgets/web-header';
+import { ClientWebFooter } from '../../../../widgets/client-web-footer';
 import { VenueHeaderCard } from '../../../../widgets/venue-header-card';
+import { VenueInfoCard } from './components/VenueInfoCard';
+import { ProductGrid } from './components/ProductGrid';
+import { CartSidebar } from './components/CartSidebar';
 import { useBreakpoint } from '../../../../shared/lib/responsive';
 import { AddToCartStepper } from '../../../../features/add-to-cart';
 import { ProductDetailsSheet, type ProductDetailsSheetRef } from '../../../../features/product-details';
-import { styles } from './styles';
+import { styles, VENUE_PAGE_TOP_PADDING } from './styles';
 
 type VenueRoute = RouteProp<ClientStackParamList, 'Venue'>;
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
@@ -27,7 +31,7 @@ type Nav = NativeStackNavigationProp<ClientStackParamList>;
 // Web-only `position: sticky` — RN core type lacks it but RN-Web supports it natively.
 const stickySidebarStyle =
   Platform.OS === 'web'
-    ? ({ position: 'sticky', top: theme.spacing[6] } as unknown as ViewStyle)
+    ? ({ position: 'sticky', top: VENUE_PAGE_TOP_PADDING } as unknown as ViewStyle)
     : null;
 
 export const VenueScreen = () => {
@@ -37,9 +41,9 @@ export const VenueScreen = () => {
   const { venueId } = route.params;
 
   const venueQuery = useVenue(venueId);
-  const { isAtLeast, isWeb } = useBreakpoint();
-  const showDesktopHeader = isWeb && isAtLeast('md');
-  const isDesktop = isWeb && isAtLeast('lg');
+  const { isWebDesktop, isAtLeast } = useBreakpoint();
+  const showDesktopHeader = isWebDesktop;
+  const isDesktop = isWebDesktop && isAtLeast('lg');
   const offersQuery = useOfferList({ venue_id: venueId, status: 'active', limit: 50 });
   const productsQuery = useProductList({ limit: 100 });
 
@@ -91,12 +95,12 @@ export const VenueScreen = () => {
       <SafeAreaView style={styles.root} edges={['top', 'left', 'right']}>
         <ClientDesktopHeader />
         <ScrollView
-          contentContainerStyle={styles.desktopScroll}
+          contentContainerStyle={[styles.desktopScroll, styles.desktopScrollWithFooter]}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.desktopMain}>
             <View style={styles.desktopLeft}>
-              <VenueHeaderCard venue={venue} />
+              <VenueInfoCard venue={venue} />
               <View style={styles.productsCard}>
                 <Text style={styles.productsTitle}>{t('productsAvailable')}</Text>
                 {offersQuery.isError ? (
@@ -108,25 +112,25 @@ export const VenueScreen = () => {
                   />
                 ) : (
                   <ProductGrid
-                    layout="flex"
+                    venueId={venueId}
+                    venueName={venue.name}
                     offers={offers}
                     productsById={productsById}
                     isLoading={offersQuery.isLoading}
                     onPressDetails={openDetails}
-                    renderQuantitySlot={renderQuantitySlot}
                   />
                 )}
               </View>
             </View>
             <View style={[styles.desktopRight, stickySidebarStyle]}>
-              <CartSummary
-                mode="sidebar"
+              <CartSidebar
                 venueId={venueId}
                 onPressCheckout={goToBooking}
                 onPressBackToVenues={goBack}
               />
             </View>
           </View>
+          <ClientWebFooter />
         </ScrollView>
         <ProductDetailsSheet ref={sheetRef} venueId={venueId} venueName={venue.name} />
       </SafeAreaView>
@@ -157,7 +161,7 @@ export const VenueScreen = () => {
             onAction={() => offersQuery.refetch()}
           />
         ) : (
-          <ProductGrid
+          <TabletProductGrid
             layout="list"
             offers={offers}
             productsById={productsById}

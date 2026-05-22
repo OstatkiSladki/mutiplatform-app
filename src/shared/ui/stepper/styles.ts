@@ -34,6 +34,12 @@ export const styles = StyleSheet.create({
   buttonSecondary: {
     backgroundColor: theme.client.colors.secondary,
   },
+  buttonAccentMuted: {
+    backgroundColor: 'transparent',
+  },
+  buttonAccentPrimary: {
+    backgroundColor: theme.client.colors.primary,
+  },
   valueSpread: {
     color: theme.client.colors.foreground,
   },

@@ -11,14 +11,20 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.client.colors.background,
   },
   scrollOuter: {
+    flex: 1,
     width: '100%',
-    maxWidth: theme.layout.clientShellMaxWidth,
-    alignSelf: 'center',
   },
   scrollContent: {
     paddingTop: theme.spacing[5],
     paddingBottom: theme.spacing[8],
     gap: theme.spacing[7],
+  },
+  scrollContentWeb: {
+    flexGrow: 1,
+    paddingBottom: 0,
+  },
+  scrollMain: {
+    flexGrow: 1,
   },
   shellInner: {
     width: '100%',

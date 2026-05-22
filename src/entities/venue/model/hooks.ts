@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { companyApi } from '../api/company-api';
 import { venueApi } from '../api/venue-api';
 import { payoutApi } from '../api/payout-api';
@@ -87,8 +87,10 @@ export const useVenueList = (params?: VenueListParams) =>
         const { data } = await venueApi.list(params);
         return data;
       },
+      placeholderData: keepPreviousData,
     }),
     MOCK_VENUE_LIST_RESPONSE,
+    { merge: true },
   );
 
 export const useVenue = (id: number) =>

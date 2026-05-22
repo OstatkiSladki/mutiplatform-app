@@ -18,8 +18,8 @@ const isBusinessUser = (user: UserProfileResponse | null): boolean =>
   user?.role === 'staff' || user?.role === 'admin' || !!user?.staff_profile;
 
 const BusinessGate = () => {
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const eligible = isWeb && isAtLeast('md');
+  const { isWebDesktop } = useBreakpoint();
+  const eligible = isWebDesktop;
   return eligible ? <BusinessStack /> : <BusinessBlockedScreen />;
 };
 

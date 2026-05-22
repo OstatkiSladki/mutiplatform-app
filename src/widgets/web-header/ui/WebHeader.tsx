@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
@@ -11,13 +11,15 @@ import { Input } from '../../../shared/ui/input';
 import { Popover } from '../../../shared/ui/popover';
 import { ProfileMenu } from '../../../shared/ui/profile-menu';
 import { theme } from '../../../shared/config/theme';
+import { getClientWebShellPadding } from '../../../shared/lib/client-web-shell';
 import { useBreakpoint } from '../../../shared/lib/responsive';
 import { clientAssets } from '../../../shared/assets/client';
-import { useCartStore, selectTotalItemCount } from '../../../entities/order';
 import { useAuthStore } from '../../../entities/auth';
 import { useLogout } from '../../../entities/auth/model/hooks';
 import { showBusinessToast } from '../../../shared/lib/business-toast';
 import type { ClientStackParamList, ClientTabsParamList } from '../../../navigation/types';
+import { HeaderAddressButton } from './HeaderAddressButton';
+import { HeaderCartPopover } from './HeaderCartPopover';
 import { styles } from './styles';
 
 type Nav = NativeStackNavigationProp<ClientStackParamList>;
@@ -26,9 +28,8 @@ export function WebHeader({ navigation }: BottomTabBarProps) {
   const { t } = useTranslation('common');
   const stackNav = useNavigation<Nav>();
   const { isAtLeast } = useBreakpoint();
-  const shellPadX = isAtLeast('lg') ? theme.spacing[7] : theme.spacing[6];
+  const shellPadX = getClientWebShellPadding(isAtLeast);
   const [query, setQuery] = useState('');
-  const cartCount = useCartStore(selectTotalItemCount);
   const user = useAuthStore((s) => s.user);
   const logoutMutation = useLogout();
 
@@ -65,32 +66,12 @@ export function WebHeader({ navigation }: BottomTabBarProps) {
           </View>
 
           <View style={styles.actions}>
-            <Button
-              variant="pill"
-              icon="map-pin"
-              iconSize={16}
-              iconColor={theme.colors.primary[100]}
-              title={t('header.locationDefault')}
-              accessibilityLabel={t('header.locationA11y')}
-              style={styles.headerChromePill}
+            <HeaderAddressButton />
+            <HeaderCartPopover
+              onVenuePress={(venueId) => stackNav.navigate('Booking', { venueId })}
+              onViewAll={() => goToTab('Cart')}
+              onGoHome={() => goToTab('Home')}
             />
-            <View>
-              <Button
-                variant="iconCircle"
-                icon="shopping-bag"
-                iconSize={16}
-                accessibilityLabel={t('cartA11y')}
-                onPress={() => goToTab('Cart')}
-                style={styles.headerChromeIconCircle}
-              />
-              {cartCount > 0 ? (
-                <View style={styles.cartBadge} pointerEvents="none">
-                  <Text style={styles.cartBadgeText}>
-                    {cartCount > 99 ? '99+' : cartCount}
-                  </Text>
-                </View>
-              ) : null}
-            </View>
 
             <Popover
               align="end"

@@ -21,6 +21,8 @@ export interface ScreenProps {
   edges?: Edge[];
   keyboardAware?: boolean;
   maxWidth?: ScreenMaxWidth;
+  /** Rendered after children inside the scroll area (e.g. site footer on web). */
+  footer?: ReactNode;
 }
 
 function resolveMaxWidth(
@@ -40,9 +42,10 @@ export function Screen({
   edges = ['top', 'left', 'right'],
   keyboardAware = false,
   maxWidth,
+  footer,
 }: ScreenProps) {
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const constrainedWidth = resolveMaxWidth(maxWidth, isWeb && isAtLeast('md'));
+  const { isWebDesktop } = useBreakpoint();
+  const constrainedWidth = resolveMaxWidth(maxWidth, isWebDesktop);
   const constraintStyle: ViewStyle | undefined = constrainedWidth
     ? { maxWidth: constrainedWidth }
     : undefined;
@@ -53,13 +56,19 @@ export function Screen({
       contentContainerStyle={[
         styles.scrollContent,
         styles.centered,
-        constraintStyle,
-        contentStyle,
+        footer ? styles.scrollContentWithFooter : null,
+        !footer ? constraintStyle : null,
+        !footer ? contentStyle : null,
       ]}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      {children}
+      {footer ? (
+        <View style={[styles.scrollMain, constraintStyle, contentStyle]}>{children}</View>
+      ) : (
+        children
+      )}
+      {footer}
     </ScrollView>
   ) : (
     <View style={[styles.staticContent, styles.centered, constraintStyle, contentStyle]}>

@@ -40,11 +40,10 @@ export const SurpriseBoxesSection = ({
   onAdded,
 }: SurpriseBoxesSectionProps) => {
   const { t } = useTranslation('catalog');
-  const { isWeb, isAtLeast } = useBreakpoint();
-  const desktopWeb = isWeb && isAtLeast('md');
+  const { isWebDesktop, isAtLeast } = useBreakpoint();
+  const desktopWeb = isWebDesktop;
   const twoCol = desktopWeb || isAtLeast('lg');
-  const sectionTitleStyle =
-    isWeb && isAtLeast('md') ? styles.sectionTitleWeb : styles.sectionTitle;
+  const sectionTitleStyle = isWebDesktop ? styles.sectionTitleWeb : styles.sectionTitle;
 
   return (
     <View style={styles.section}>
